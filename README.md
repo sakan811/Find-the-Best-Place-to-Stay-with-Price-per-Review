@@ -3,9 +3,9 @@ Finding the Best Place to Stay with Price per Review from Booking.com using Web 
 
 Aim to provide places with Price/Review Score when finding a place to stay during a trip.  
 
-A lower Price/Review Score indicates that the place is inexpensive, yet, with a great review score.   
+A lower Price/Review Score indicates that the place isn't expensive, yet, with a great review score.   
 
-# Code
+## Code
 - Adjust these variables as needed:
   - city
   - check_in (format: yyyy-mm-dd)
@@ -17,8 +17,8 @@ A lower Price/Review Score indicates that the place is inexpensive, yet, with a 
     - Example:    
     ```python
     city = 'London'
-    check_in = '2023-12-22'
-    check_out = '2023-12-23'
+    check_in = '2024-12-22'
+    check_out = '2024-12-23'
     group_adults = '2'
     num_rooms = '1'
     group_children = '0'
