@@ -1,6 +1,7 @@
 import re
 import time
 
+import bs4
 import pandas as pd
 from bs4 import BeautifulSoup
 from loguru import logger
@@ -75,7 +76,97 @@ def click_load_more_result_button(driver: WebDriver) -> None:
         logger.info(f'{load_more_result_css_selector} clicked successfully')
 
 
-def scrap(url, data):
+def scroll_down_until_page_bottom(driver: WebDriver) -> None:
+    """
+    Scroll down and click 'Load more result' button if present.
+
+    Scroll down until reach the bottom of the page.
+    :param driver: Selenium WebDriver.
+    :return: None
+    """
+    logger.info("Scrolling down until the bottom of the page...")
+    logger.info("Click 'Load more result' button if present.")
+    while True:
+        # Get current height
+        current_height = driver.execute_script("return window.scrollY")
+        logger.debug(f'{current_height = }')
+
+        # Scroll down to the bottom
+        driver.execute_script("window.scrollBy(0, 2000);")
+
+        # Wait for some time to load more content (adjust as needed)
+        time.sleep(1)
+
+        # Get current height
+        new_height = driver.execute_script("return window.scrollY")
+        logger.debug(f'{new_height = }')
+
+        # If the new height is the same as the last height, then the bottom is reached
+        if current_height == new_height:
+            logger.info("Reached the bottom of the page.")
+            break
+
+        time.sleep(2)
+
+        click_load_more_result_button(driver)
+
+
+def scrape_data_from_box_class(
+        soup: bs4.BeautifulSoup,
+        box_class: str,
+        hotel_class: str,
+        price_class: str,
+        review_class: str,
+        data: pd.DataFrame) -> None:
+    """
+    Scrape data from box class.
+    :param soup: bs4.BeautifulSoup object.
+    :param box_class: Class name of the box that contains the hotel data.
+    :param hotel_class: Class name of the hotel name data.
+    :param price_class: Class name of the price data.
+    :param review_class: Class name of the review score data.
+    :param data: Pandas dataframe.
+    :return: None
+    """
+    logger.info("Scraping data from box class...")
+
+    # Find the box elements
+    box_elements = soup.select(f'.{box_class}')
+
+    for box_element in box_elements:
+        # Find the elements within the box element
+        hotel_element = box_element.select(f'.{hotel_class}')
+        price_element = box_element.select(f'.{price_class}')
+        review_element = box_element.select(f'.{review_class}')
+
+        # Check if all elements are presented before extracting data
+        if hotel_element and price_element and review_element:
+            hotel_name = hotel_element[0].text
+            price = re.sub(r'[^0-9]', '', price_element[0].text)
+            review_score = review_element[0].text.split()[1]
+
+            data['Hotel'].append(hotel_name)
+            data['Price'].append(price)
+            data['Review'].append(review_score)
+
+            logger.info(f'All elements are presented.')
+            logger.debug(f'Hotel: {hotel_element}')
+            logger.debug(f'Price: {price_element}')
+            logger.debug(f'Review Score: {review_element}')
+        else:
+            logger.warning(f'Not all elements are presented.')
+            logger.debug(f'Hotel: {hotel_element}')
+            logger.debug(f'Price: {price_element}')
+            logger.debug(f'Review Score: {review_element}')
+
+
+def scrape(url, data) -> None:
+    """
+    Scrape hotel data from the website.
+    :param url: Website URL.
+    :param data: Empty Pandas DataFrame.
+    :return: None
+    """
     # Configure Chrome options to block image loading and disable automation features
     options = webdriver.ChromeOptions()
 
@@ -93,36 +184,15 @@ def scrap(url, data):
 
     click_pop_up_ad(wait, driver)
 
-    while True:
-        # Get current height
-        current_height = driver.execute_script("return window.scrollY")
-        print(current_height)
+    scroll_down_until_page_bottom(driver)
 
-        # Scroll down to the bottom
-        driver.execute_script("window.scrollBy(0, 2000);")
-
-        # Wait for some time to load more content (adjust as needed)
-        time.sleep(1)
-
-        # Get current height
-        new_height = driver.execute_script("return window.scrollY")
-        print(new_height)
-
-        # If the new height is the same as the last height, then the bottom is reached
-        if current_height == new_height:
-            break
-
-        time.sleep(2)
-
-        click_load_more_result_button(driver)
-
-    # Get the page source after the page has loaded
+    logger.info('Get the page source after the page has loaded')
     html = driver.page_source
 
-    # Close the webdriver after obtaining the HTML content
+    logger.info('Close the webdriver after obtaining the HTML content')
     driver.quit()
 
-    # Parse the HTML content with BeautifulSoup
+    logger.info('Parse the HTML content with BeautifulSoup')
     soup = BeautifulSoup(html, 'html.parser')
 
     hotel_class = 'f6431b446c.a15b38c233'
@@ -130,51 +200,16 @@ def scrap(url, data):
     review_class = 'a3b8729ab1.d86cee9b25'
     box_class = 'c066246e13'
 
-    # Find the box elements
-    box_elements = soup.select(f'.{box_class}')
-
-    for box_element in box_elements:
-        # Find the elements within the box element
-        hotel_element = box_element.select(f'.{hotel_class}')
-        price_element = box_element.select(f'.{price_class}')
-        review_element = box_element.select(f'.{review_class}')
-
-        # Check if all elements are present before extracting data
-        if hotel_element and price_element and review_element:
-            hotel_name = hotel_element[0].text
-            price = re.sub(r'[^0-9]', '', price_element[0].text)
-            review_score = review_element[0].text.split()[1]
-
-            data['Hotel'].append(hotel_name)
-            data['Price'].append(price)
-            data['Review'].append(review_score)
+    scrape_data_from_box_class(soup, box_class, hotel_class, price_class, review_class, data)
 
 
-def main():
-    city = 'Osaka'
-    check_in = '2024-05-20'
-    check_out = '2024-05-21'
-    group_adults = '1'
-    num_rooms = '1'
-    group_children = '0'
-    selected_currency = 'GBP'
-
-    url = (f'https://www.booking.com/searchresults.en-gb.html?ss={city}&checkin'
-           f'={check_in}&checkout={check_out}&group_adults={group_adults}'
-           f'&no_rooms={num_rooms}&group_children={group_children}&selected_currency={selected_currency}')
-
-    # Create a DataFrame to store the data
-    data = {'Hotel': [], 'Price': [], 'Review': []}
-
-    url = (f'https://www.booking.com/searchresults.en-gb.html?ss={city}&checkin'
-           f'={check_in}&checkout={check_out}&group_adults={group_adults}'
-           f'&no_rooms={num_rooms}&group_children={group_children}'
-           f'&selected_currency={selected_currency}')
-
-    scrap(url, data)
-
-    # Create a DataFrame from the collected data
-    df = pd.DataFrame(data)
+def transform_data(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Transform scraped hotel data.
+    :param df: Pandas dataframe.
+    :return: Pandas dataframe.
+    """
+    logger.info("Transforming data...")
 
     # Remove duplicate rows from the DataFrame based on 'Hotel' column
     df_filtered = df.drop_duplicates(subset='Hotel')
@@ -187,13 +222,65 @@ def main():
     df_filtered.loc[:, 'Price/Review'] = df_filtered['Price'] / df_filtered['Review']
 
     # Sort the DataFrame based on the 'Price/Review' column
-    df_filtered = df_filtered.sort_values(by='Price/Review')
+    return df_filtered.sort_values(by='Price/Review')
+
+
+def main(city: str,
+         check_in: str,
+         check_out: str,
+         group_adults: str,
+         num_rooms: str,
+         group_children: str,
+         selected_currency: str,
+         hotel_filter: bool) -> None:
+    """
+    Main function to start the web scraping process.
+    :param city: City name.
+    :param check_in: Check-in date.
+    :param check_out: Check-out date.
+    :param group_adults: Number of adults.
+    :param num_rooms: Number of rooms.
+    :param group_children: Number of children.
+    :param selected_currency: Currency name.
+    :param hotel_filter: Scrape only hotel property data if True.
+    :return: None
+    """
+    logger.info("Starting web-scraping...")
+
+    hotel_filter_url = '&nflt=ht_id%3D204'
+
+    # Create a DataFrame to store the data
+    data = {'Hotel': [], 'Price': [], 'Review': []}
+
+    url = (f'https://www.booking.com/searchresults.en-gb.html?ss={city}&checkin'
+           f'={check_in}&checkout={check_out}&group_adults={group_adults}'
+           f'&no_rooms={num_rooms}&group_children={group_children}'
+           f'&selected_currency={selected_currency}')
+
+    if hotel_filter:
+        url += hotel_filter_url
+
+    scrape(url, data)
+
+    # Create a DataFrame from the collected data
+    df = pd.DataFrame(data)
+
+    df_filtered = transform_data(df)
 
     # Save the DataFrame to an Excel file
     excel_filename = f'{city}_hotel_{selected_currency}_sorted.xlsx'
     df_filtered.to_excel(excel_filename, index=False, header=True)
-    print(f'Data has been saved to {excel_filename}')
+    logger.info(f'Data has been saved to {excel_filename}')
 
 
 if __name__ == '__main__':
-    main()
+    city = 'Osaka'
+    check_in = '2024-05-16'
+    check_out = '2024-05-17'
+    group_adults = '1'
+    num_rooms = '1'
+    group_children = '0'
+    selected_currency = 'GBP'
+    hotel_filter = True
+
+    main(city, check_in, check_out, group_adults, num_rooms, group_children, selected_currency, hotel_filter)
