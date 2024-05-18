@@ -28,5 +28,5 @@ A lower Price/Review Score indicates that the place isn't expensive, yet, with a
       selected_currency = 'GBP'
       hotel_filter = True
       ```
-- Scrape data from the website Booking.com.
-- Save data as Excel.
+- Run the script.
+  - Data is saved as Excel.
