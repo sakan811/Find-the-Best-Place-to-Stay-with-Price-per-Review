@@ -40,7 +40,7 @@ def test_scrape_all_property():
     df_filtered.to_excel(excel_filename, index=False, header=True)
     logger.info(f'Data has been saved to {excel_filename}')
 
-    assert df_filtered is not None
+    assert not df_filtered.empty
 
 
 def test_scrape_only_hotel_property():
@@ -78,7 +78,7 @@ def test_scrape_only_hotel_property():
     df_filtered.to_excel(excel_filename, index=False, header=True)
     logger.info(f'Data has been saved to {excel_filename}')
 
-    assert df_filtered is not None
+    assert not df_filtered.empty
 
 
 if __name__ == '__main__':
