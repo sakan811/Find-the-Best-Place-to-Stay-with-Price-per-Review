@@ -1,3 +1,5 @@
+import datetime
+import pytz
 import pandas as pd
 import pytest
 from loguru import logger
@@ -6,9 +8,11 @@ from main import scrape, transform_data
 
 
 def test_scrape_all_property():
+    sg_timezone = pytz.timezone('Asia/Singapore')
+
     city = 'Osaka'
-    check_in = '2024-05-20'
-    check_out = '2024-05-21'
+    check_in = datetime.datetime.now(sg_timezone).strftime('%Y-%m-%d')
+    check_out = (datetime.datetime.now(sg_timezone) + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
     group_adults = '1'
     num_rooms = '1'
     group_children = '0'
@@ -44,9 +48,11 @@ def test_scrape_all_property():
 
 
 def test_scrape_only_hotel_property():
+    sg_timezone = pytz.timezone('Asia/Singapore')
+
     city = 'Osaka'
-    check_in = '2024-05-20'
-    check_out = '2024-05-21'
+    check_in = datetime.datetime.now(sg_timezone).strftime('%Y-%m-%d')
+    check_out = (datetime.datetime.now(sg_timezone) + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
     group_adults = '1'
     num_rooms = '1'
     group_children = '0'
