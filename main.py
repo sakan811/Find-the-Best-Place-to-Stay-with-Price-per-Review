@@ -247,11 +247,11 @@ def transform_data(df: pd.DataFrame) -> pd.DataFrame:
     df_filtered = df.drop_duplicates(subset='Hotel')
 
     # Convert 'Price' and 'Review' columns to numeric using .loc
-    df_filtered.loc[:, 'Price'] = pd.to_numeric(df['Price'], errors='coerce')
-    df_filtered.loc[:, 'Review'] = pd.to_numeric(df['Review'], errors='coerce')
+    df_filtered['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+    df_filtered['Review'] = pd.to_numeric(df['Review'], errors='coerce')
 
-    # Add a new column for the ratio of Price to Review using .loc
-    df_filtered.loc[:, 'Price/Review'] = df_filtered['Price'] / df_filtered['Review']
+    # Add a new column for the ratio of Price to Review
+    df_filtered['Price/Review'] = df_filtered['Price'] / df_filtered['Review']
 
     # Sort the DataFrame based on the 'Price/Review' column
     return df_filtered.sort_values(by='Price/Review')
