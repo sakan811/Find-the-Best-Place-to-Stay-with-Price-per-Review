@@ -1,12 +1,11 @@
 import re
-import time
 
 import bs4
 import pandas as pd
 from bs4 import BeautifulSoup
 from loguru import logger
 from selenium import webdriver
-from selenium.common import NoSuchElementException, TimeoutException, StaleElementReferenceException
+from selenium.common import NoSuchElementException, TimeoutException, NoSuchWindowException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -26,89 +25,107 @@ def click_pop_up_ad(wait: WebDriverWait, driver: WebDriver) -> None:
     """
     logger.info("Clicking pop-up ad...")
 
-    ads_css_selector = ('#b2searchresultsPage > div.b9720ed41e.cdf0a9297c > div > div > div > div.dd5dccd82f > '
-                        'div.ffd93a9ecb.dc19f70f85.eb67815534 > div > button')
+    ads_css_selector = 'div.e93d17c51f:nth-child(1) > button:nth-child(1) > span:nth-child(1) > span:nth-child(1)'
     try:
-        time.sleep(2)
         ads = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ads_css_selector)))
         ads.click()
     except NoSuchElementException as e:
         logger.error(e)
-        logger.error(f'{ads_css_selector} not found')
+        logger.error(f'Pop-up ad not found')
     except TimeoutException as e:
         logger.error(e)
-        logger.error(f'{ads_css_selector} timed out')
-        driver.refresh()
-        logger.info('Refreshed page')
+        logger.error(f'Pop-up ad timed out')
+        logger.error(f'Moving on')
     except Exception as e:
         logger.error(e)
-        logger.error(f'{ads_css_selector} failed due to {e}')
+        logger.error(f'Unexpected error occurred')
     else:
         logger.info('Clicked the pop-up ads successfully')
 
 
-def click_load_more_result_button(driver: WebDriver) -> None:
+def click_load_more_result_button(wait: WebDriverWait, driver: WebDriver) -> None:
     """
     Click 'load more result' button to load more hotels.
+    :param wait: Selenium WebDriverWait object.
     :param driver: Selenium WebDriver.
     :return: None
     """
-    logger.info("Clicking 'load more result' button...")
+    logger.info("Click 'load more result' button.")
 
-    load_more_result_css_selector = ('#bodyconstraint-inner > div:nth-child(8) > div > div.af5895d4b2 > '
-                                     'div.df7e6ba27d > div.bcbf33c5c3 > div.dcf496a7b9.bb2746aad9 > '
-                                     'div.d4924c9e74 > div.c82435a4b8.f581fde0b8 > button')
+    load_more_result_css_selector_list = [
+        '#bodyconstraint-inner > div:nth-child(8) > div > div.c1cce822c4 > '
+        'div.b3869ababc > div.b2c588d242 > div.c1b783d372.b99ea5ed8e > '
+        'div.fb4e9b097f > div.fa298e29e2.a1b24d26fa > button > span',
+        '#bodyconstraint-inner > div:nth-child(8) > div > div.c1cce822c4 > div.b3869ababc > div.b2c588d242 > '
+        'div.c1b783d372.b99ea5ed8e > div.fb4e9b097f > div.fa298e29e2.a1b24d26fa',
+        '#bodyconstraint-inner > div:nth-child(8) > div > div.c1cce822c4 > div.b3869ababc > div.b2c588d242 > '
+        'div.c1b783d372.b99ea5ed8e > div.fb4e9b097f > div.fa298e29e2.a1b24d26fa > button',
+        '#bodyconstraint-inner > div:nth-child(8) > div > div.c1cce822c4 > div.b3869ababc > div.b2c588d242 > '
+        'div.c1b783d372.b99ea5ed8e > div.fb4e9b097f > div.fa298e29e2.a1b24d26fa > button > span'
+    ]
 
-    try:
-        load_more_button = driver.find_element(By.CSS_SELECTOR, load_more_result_css_selector)
-        load_more_button.click()
-    except NoSuchElementException as e:
-        logger.error(e)
-        logger.error(f'{load_more_result_css_selector} not found. Keep scrolling.')
-    except StaleElementReferenceException as e:
-        logger.error(e)
-        logger.error(f'{load_more_result_css_selector} is no longer valid '
-                     f'because it has been modified or removed from the DOM.')
-    except Exception as e:
-        logger.error(e)
-        logger.error(f'{load_more_result_css_selector} failed due to {e}')
-    else:
-        logger.info(f'{load_more_result_css_selector} clicked successfully')
+    for load_more_result_css_selector in load_more_result_css_selector_list:
+        try:
+            load_more_button = wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, load_more_result_css_selector)))
+            load_more_button.click()
+        except NoSuchElementException as e:
+            logger.error(e)
+            logger.error(f'The \'load more result\' button not found. Keep scrolling.')
+        except TimeoutException as e:
+            logger.error(e)
+            logger.error(f'The \'load more result\' button timed out.')
+        except Exception as e:
+            logger.error(e)
+            logger.error(f'Unexpected error occurred')
+        else:
+            logger.info('Clicked the \'load more result\' button successfully')
+            return
 
 
-def scroll_down_until_page_bottom(driver: WebDriver) -> None:
+def scroll_down_until_page_bottom(wait: WebDriverWait, driver: WebDriver) -> None:
     """
     Scroll down and click 'Load more result' button if present.
 
     Scroll down until reach the bottom of the page.
+    :param wait: Selenium WebDriverWait object.
     :param driver: Selenium WebDriver.
-    :return: None
+    :return: None.
     """
     logger.info("Scrolling down until the bottom of the page...")
-    logger.info("Click 'Load more result' button if present.")
+    current_height = 0
+    new_height = 0
+
     while True:
-        # Get current height
-        current_height = driver.execute_script("return window.scrollY")
-        logger.debug(f'{current_height = }')
+        try:
+            # Get current height
+            current_height = driver.execute_script("return window.scrollY")
+            logger.debug(f'{current_height = }')
 
-        # Scroll down to the bottom
-        driver.execute_script("window.scrollBy(0, 2000);")
+            # Scroll down to the bottom
+            driver.execute_script("window.scrollBy(0, 2000);")
 
-        # Wait for some time to load more content (adjust as needed)
-        time.sleep(1)
+            # Get current height
+            new_height = driver.execute_script("return window.scrollY")
+            logger.debug(f'{new_height = }')
+        except NoSuchWindowException as e:
+            logger.error(e)
+            logger.error('No such window: The browsing context has been discarded.')
 
-        # Get current height
-        new_height = driver.execute_script("return window.scrollY")
-        logger.debug(f'{new_height = }')
+        if new_height == 0:
+            logger.error('Failed to scroll down, refreshing the page...')
+            driver.refresh()
+        else:
+            # If the new height is the same as the last height, then the bottom is reached
+            if current_height == new_height:
+                logger.info("Reached the bottom of the page.")
+                break
 
-        # If the new height is the same as the last height, then the bottom is reached
-        if current_height == new_height:
-            logger.info("Reached the bottom of the page.")
-            break
+        # Click 'load more result' button if present
+        click_load_more_result_button(wait, driver)
 
-        time.sleep(2)
-
-        click_load_more_result_button(driver)
+        logger.info("Clicking pop-up ad in case it appears...")
+        click_pop_up_ad(wait, driver)
 
 
 def scrape_data_from_box_class(
@@ -160,6 +177,25 @@ def scrape_data_from_box_class(
             logger.debug(f'Review Score: {review_element}')
 
 
+def connect_to_webdriver() -> WebDriver:
+    """
+    Connect to the Selenium WebDriver.
+    :return: Selenium WebDriver
+    """
+    # Configure driver options
+    options = webdriver.FirefoxOptions()
+    # Block image loading
+    options.set_preference('permissions.default.stylesheet', 2)
+    options.set_preference('permissions.default.image', 2)
+    options.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
+    options.add_argument("--headless")
+    # Disable blink features related to automation control
+    options.add_argument('--disable-blink-features=AutomationControlled')
+    # Initialize the driver with the configured options
+    driver = webdriver.Firefox(options=options)
+    return driver
+
+
 def scrape(url, data) -> None:
     """
     Scrape hotel data from the website.
@@ -167,40 +203,36 @@ def scrape(url, data) -> None:
     :param data: Empty Pandas DataFrame.
     :return: None
     """
-    # Configure Chrome options to block image loading and disable automation features
-    options = webdriver.ChromeOptions()
-
-    chrome_prefs = {"profile.managed_default_content_settings.images": 2}
-    options.add_experimental_option("prefs", chrome_prefs)
-
-    # Disable blink features related to automation control
-    options.add_argument('--disable-blink-features=AutomationControlled')
-
-    # Initialize the Chrome driver with the configured options
-    driver = webdriver.Chrome(options=options)
+    driver = connect_to_webdriver()
     driver.get(url)
 
-    wait = WebDriverWait(driver, 5)
+    wait = WebDriverWait(driver, timeout=0.01)
 
-    click_pop_up_ad(wait, driver)
+    html = None
+    try:
+        click_pop_up_ad(wait, driver)
 
-    scroll_down_until_page_bottom(driver)
+        scroll_down_until_page_bottom(wait, driver)
 
-    logger.info('Get the page source after the page has loaded')
-    html = driver.page_source
+        logger.info('Get the page source after the page has loaded')
+        html = driver.page_source
+    except Exception as e:
+        logger.error(e)
+        logger.error(f'Unexpected error occurred')
+    finally:
+        logger.info('Close the webdriver after obtaining the HTML content')
+        driver.quit()
 
-    logger.info('Close the webdriver after obtaining the HTML content')
-    driver.quit()
+    if html:
+        logger.info('Parse the HTML content with BeautifulSoup')
+        soup = BeautifulSoup(html, 'html.parser')
 
-    logger.info('Parse the HTML content with BeautifulSoup')
-    soup = BeautifulSoup(html, 'html.parser')
+        hotel_class = 'fa4a3a8221.b121bc708f'
+        price_class = 'fa4a3a8221.b22052b420.f53c51ec80'
+        review_class = 'f13857cc8c.e008572b71'
+        box_class = 'fa298e29e2.b74446e476.e40c0c68b1.ea1d0cfcb7.d8991ab7ae.e8b7755ec7.ad0e783e41'
 
-    hotel_class = 'f6431b446c.a15b38c233'
-    price_class = 'f6431b446c.fbfd7c1165.e84eb96b1f'
-    review_class = 'a3b8729ab1.d86cee9b25'
-    box_class = 'c066246e13'
-
-    scrape_data_from_box_class(soup, box_class, hotel_class, price_class, review_class, data)
+        scrape_data_from_box_class(soup, box_class, hotel_class, price_class, review_class, data)
 
 
 def transform_data(df: pd.DataFrame) -> pd.DataFrame:
@@ -275,8 +307,8 @@ def main(city: str,
 
 if __name__ == '__main__':
     city = 'Osaka'
-    check_in = '2024-05-16'
-    check_out = '2024-05-17'
+    check_in = '2024-08-16'
+    check_out = '2024-08-17'
     group_adults = '1'
     num_rooms = '1'
     group_children = '0'
