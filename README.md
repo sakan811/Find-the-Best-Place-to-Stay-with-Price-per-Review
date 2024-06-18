@@ -33,4 +33,12 @@ A lower Price/Review Score indicates that the place isn't expensive, yet, with a
       hotel_filter = True
       ```
 - Run the script.
-  - Data is saved as Excel.
+  - Cannot scrape data that has passed. 
+  - Data is saved as Excel in 'scraped_hotel_data' folder.
+    - 'scraped_hotel_data' folder is automatically created if not exist.
+    - A new folder can be specified
+      - The following is an example:
+      ```
+      directory = 'new_dir'
+      save_scraped_data(dataframe=df, city=city, check_in=check_in, check_out=check_out, save_dir=directory)
+      ```

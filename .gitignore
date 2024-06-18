@@ -161,3 +161,4 @@ cython_debug/
 
 /*.xlsx
 /.idea
+/scraped_hotel_data/
