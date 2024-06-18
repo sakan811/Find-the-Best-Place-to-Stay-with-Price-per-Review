@@ -6,10 +6,10 @@ import pandas as pd
 import requests
 from loguru import logger
 
-logger.add('find_best_place_to_stay.log',
+logger.configure(handlers=[{"sink": sys.stdout, "level": "INFO"}])
+logger.add('find_best_place_to_stay.log', level='INFO',
            format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {name} | {module} | {function} | {line} | {message}",
            mode='w')
-logger.configure(handlers=[{"sink": sys.stdout, "level": "INFO"}])
 
 
 def get_header() -> dict:
