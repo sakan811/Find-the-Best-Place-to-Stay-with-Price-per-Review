@@ -26,9 +26,9 @@ def save_scraped_data_view(request):
             # Query data from the database
             room_prices = RoomPrice.objects.all().values()
 
-            city = RoomPrice.objects.values('city').first()
-            check_in = RoomPrice.objects.values('check_in').first()
-            check_out = RoomPrice.objects.values('check_out').first()
+            city: dict = RoomPrice.objects.values('city').first()
+            check_in: dict = RoomPrice.objects.values('check_in').first()
+            check_out: dict = RoomPrice.objects.values('check_out').first()
 
             if not room_prices:
                 return JsonResponse({'error_msg': 'No data found to save'}, status=404)

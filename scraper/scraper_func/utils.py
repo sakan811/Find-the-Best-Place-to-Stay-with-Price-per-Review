@@ -22,9 +22,9 @@ def concat_df_list(df_list: list[pd.DataFrame]) -> pd.DataFrame:
 
 def save_scraped_data(
         dataframe: pd.DataFrame,
-        city: str = None,
-        check_in: datetime = None,
-        check_out: datetime = None,
+        city: dict = None,
+        check_in: dict = None,
+        check_out: dict = None,
         save_dir='scraped_hotel_data') -> None:
     """
     Save scraped data to CSV files in the given directory.
@@ -50,8 +50,9 @@ def save_scraped_data(
             logger.error(f'FileExistsError: {save_dir} directory already exists')
 
         if city and check_in and check_out:
-            check_in = check_in.strftime('%Y-%m-%d')
-            check_out = check_out.strftime('%Y-%m-%d')
+            city = city['city']
+            check_in = check_in['check_in'].strftime('%Y-%m-%d')
+            check_out = check_out['check_out'].strftime('%Y-%m-%d')
             file_path = os.path.join(save_dir, f'{city}_hotel_data_{check_in}_to_{check_out}.xlsx')
             dataframe.to_excel(file_path, index=False)
             logger.info("Data saved to Excel")
