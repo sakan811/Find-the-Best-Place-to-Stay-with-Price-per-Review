@@ -34,3 +34,5 @@ def truncate_db() -> None:
     RoomPrice.objects.all().delete()
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM sqlite_sequence")
+
+

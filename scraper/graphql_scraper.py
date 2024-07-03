@@ -38,7 +38,7 @@ def scrape_graphql(
     logger.info(f"Adults: {group_adults} | Children: {group_children} | Rooms: {num_rooms}")
     logger.info(f"Only hotel properties: {hotel_filter}")
 
-    if check_in and check_out and selected_currency:
+    if city and check_in and check_out and selected_currency:
         # GraphQL endpoint URL
         url = f'https://www.booking.com/dml/graphql?selected_currency={selected_currency}'
         headers = get_header()
@@ -80,4 +80,4 @@ def scrape_graphql(
         df = concat_df_list(df_list)
         return transform_data_in_df(check_in, check_out, city, df)
     else:
-        logger.warning("Error: check_in, check_out and selected_currency are required")
+        logger.warning("Error: city, check_in, check_out and selected_currency are required")
