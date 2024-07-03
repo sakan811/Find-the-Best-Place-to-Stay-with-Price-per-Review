@@ -14,7 +14,7 @@ def test_returns_correct_total_page_number_and_data_mapping():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City'}],
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -124,7 +124,7 @@ def test_data_mapping_dictionary_keys():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City'}],
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -181,7 +181,7 @@ def test_data_mapping_extraction():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City'}],
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],

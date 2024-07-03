@@ -14,10 +14,11 @@ def test_transform_data_in_df_basic():
 
     # Define parameters
     check_in = '2024-06-17'
+    check_out = '2024-06-18'
     city = 'Tokyo'
 
     # Transform data
-    result_df = transform_data_in_df(check_in, city, df)
+    result_df = transform_data_in_df(check_in, check_out, city, df)
 
     # Assertions
     assert 'City' in result_df.columns
@@ -25,7 +26,8 @@ def test_transform_data_in_df_basic():
     assert 'AsOf' in result_df.columns
     assert 'Price/Review' in result_df.columns
     assert result_df['City'].iloc[0] == city
-    assert result_df['Date'].iloc[0] == check_in
+    assert result_df['CheckIn'].iloc[0] == check_in
+    assert result_df['CheckOut'].iloc[0] == check_out
     assert (result_df['AsOf'].notna()).all()
     assert len(result_df) == 3  # Since one duplicate 'Hotel A' should be removed
 
@@ -41,10 +43,11 @@ def test_transform_data_in_df_dropna():
 
     # Define parameters
     check_in = '2024-06-17'
+    check_out = '2024-06-18'
     city = 'Tokyo'
 
     # Transform data
-    result_df = transform_data_in_df(check_in, city, df)
+    result_df = transform_data_in_df(check_in, check_out, city, df)
 
     # Assertions
     assert len(result_df) == 1  # Only 'Hotel A'
@@ -59,8 +62,13 @@ def test_drop_rows_with_zero_price_or_review():
     }
     df = pd.DataFrame(data)
 
-    # When
-    result_df = transform_data_in_df('2024-06-17', 'Tokyo', df)
+    # Define parameters
+    check_in = '2024-06-17'
+    check_out = '2024-06-18'
+    city = 'Tokyo'
+
+    # Transform data
+    result_df = transform_data_in_df(check_in, check_out, city, df)
 
     # Then
     assert len(result_df) == 2  # Only 'Hotel A' and 'Hotel C' should remain
@@ -78,11 +86,11 @@ def test_transform_data_in_df_calculation():
 
     # Define parameters
     check_in = '2024-06-17'
+    check_out = '2024-06-18'
     city = 'Tokyo'
 
     # Transform data
-    result_df = transform_data_in_df(check_in, city, df)
-
+    result_df = transform_data_in_df(check_in, check_out, city, df)
     # Assertions
     assert 'Price/Review' in result_df.columns
     assert result_df['Price/Review'].iloc[0] == 200 / 4.0
@@ -95,10 +103,11 @@ def test_transform_data_in_df_empty():
 
     # Define parameters
     check_in = '2024-06-17'
+    check_out = '2024-06-18'
     city = 'Tokyo'
 
     # Transform data
-    result_df = transform_data_in_df(check_in, city, df)
+    result_df = transform_data_in_df(check_in, check_out, city, df)
 
     # Assertions
     assert result_df.empty
