@@ -22,7 +22,8 @@ def test_transform_data_in_df_basic():
 
     # Assertions
     assert 'City' in result_df.columns
-    assert 'Date' in result_df.columns
+    assert 'CheckIn' in result_df.columns
+    assert 'CheckOut' in result_df.columns
     assert 'AsOf' in result_df.columns
     assert 'Price/Review' in result_df.columns
     assert result_df['City'].iloc[0] == city

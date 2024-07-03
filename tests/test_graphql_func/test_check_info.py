@@ -172,6 +172,329 @@ def test_data_mapping_dictionary_keys():
     })
 
 
+def test_data_mapping_check_in_not_match():
+    # Given
+    response_mock = Mock()
+    response_mock.status_code = 200
+    response_mock.json.return_value = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'pagination': {'nbResultsTotal': 1},
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-02-01'],
+                            'checkout': ['2023-01-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 2,
+                        'nbChildren': 1,
+                        'nbRooms': 1
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'USD'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+
+    with pytest.raises(SystemExit):
+        check_info(
+            response_mock, entered_city, entered_check_in, entered_check_out,
+            entered_selected_currency, entered_num_adult, entered_num_children,
+            entered_num_room
+        )
+
+
+def test_data_mapping_check_out_not_match():
+    # Given
+    response_mock = Mock()
+    response_mock.status_code = 200
+    response_mock.json.return_value = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'pagination': {'nbResultsTotal': 1},
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-01-01'],
+                            'checkout': ['2023-02-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 2,
+                        'nbChildren': 1,
+                        'nbRooms': 1
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'USD'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+
+    with pytest.raises(SystemExit):
+        check_info(
+            response_mock, entered_city, entered_check_in, entered_check_out,
+            entered_selected_currency, entered_num_adult, entered_num_children,
+            entered_num_room
+        )
+
+
+def test_data_mapping_adult_not_match():
+    # Given
+    response_mock = Mock()
+    response_mock.status_code = 200
+    response_mock.json.return_value = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'pagination': {'nbResultsTotal': 1},
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-01-01'],
+                            'checkout': ['2023-02-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 10,
+                        'nbChildren': 1,
+                        'nbRooms': 1
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'USD'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+
+    with pytest.raises(SystemExit):
+        check_info(
+            response_mock, entered_city, entered_check_in, entered_check_out,
+            entered_selected_currency, entered_num_adult, entered_num_children,
+            entered_num_room
+        )
+
+
+def test_data_mapping_room_not_match():
+    # Given
+    response_mock = Mock()
+    response_mock.status_code = 200
+    response_mock.json.return_value = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'pagination': {'nbResultsTotal': 1},
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-01-01'],
+                            'checkout': ['2023-02-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 2,
+                        'nbChildren': 1,
+                        'nbRooms': 10
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'USD'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+
+    with pytest.raises(SystemExit):
+        check_info(
+            response_mock, entered_city, entered_check_in, entered_check_out,
+            entered_selected_currency, entered_num_adult, entered_num_children,
+            entered_num_room
+        )
+
+def test_data_mapping_children_not_match():
+    # Given
+    response_mock = Mock()
+    response_mock.status_code = 200
+    response_mock.json.return_value = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'pagination': {'nbResultsTotal': 1},
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-01-01'],
+                            'checkout': ['2023-02-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 2,
+                        'nbChildren': 10,
+                        'nbRooms': 1
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'USD'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+
+    with pytest.raises(SystemExit):
+        check_info(
+            response_mock, entered_city, entered_check_in, entered_check_out,
+            entered_selected_currency, entered_num_adult, entered_num_children,
+            entered_num_room
+        )
+
+
+def test_data_mapping_currency_not_match():
+    # Given
+    response_mock = Mock()
+    response_mock.status_code = 200
+    response_mock.json.return_value = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'pagination': {'nbResultsTotal': 1},
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-01-01'],
+                            'checkout': ['2023-02-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 2,
+                        'nbChildren': 1,
+                        'nbRooms': 1
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'GBP'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+
+    with pytest.raises(SystemExit):
+        check_info(
+            response_mock, entered_city, entered_check_in, entered_check_out,
+            entered_selected_currency, entered_num_adult, entered_num_children,
+            entered_num_room
+        )
+
+
+def test_data_mapping_city_not_match():
+    # Given
+    response_mock = Mock()
+    response_mock.status_code = 200
+    response_mock.json.return_value = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'pagination': {'nbResultsTotal': 1},
+                    'breadcrumbs': [{}, {}, {'name': 'Tokyo', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-01-01'],
+                            'checkout': ['2023-02-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 2,
+                        'nbChildren': 1,
+                        'nbRooms': 1
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'USD'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+
+    with pytest.raises(SystemExit):
+        check_info(
+            response_mock, entered_city, entered_check_in, entered_check_out,
+            entered_selected_currency, entered_num_adult, entered_num_children,
+            entered_num_room
+        )
+
+
+
+
 def test_data_mapping_extraction():
     # Given
     response_mock = Mock()
