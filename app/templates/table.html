@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotels' Room Price/Review Data</title>
+</head>
+<body>
+    <button type="button" onclick="goToFormPage()">Back to Form</button>
+    
+    <h2>Hotels' Room Price/Review Data</h2>
+    <p>A lower Price/Review Score indicates that the place isn't expensive, yet, with a great review score</p>
+    <button type="button" onclick="saveData()">Save Data to Excel</button>
+    
+    <div id="success-msg" style="display: none;" class="alert alert-success">
+        <strong>Success!</strong> Saved data to Excel successfully at 'scraped_hotel_data' folder.
+    </div>
+
+    <div id="error-msg" style="display: none;" class="alert alert-danger">
+        <strong>Error!</strong> Failed to save data.
+    </div>
+
+    {% if html_table %}
+        {{ html_table|safe }}
+    {% endif %}
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function saveData() {
+        var csrfToken = getCookie('csrftoken');
+    
+        $.ajax({
+            url: "{% url 'save_scraped_data_view' %}",
+            type: "POST",
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success_msg) {
+                    $('#success-msg').show();
+                    $('#error-msg').hide();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error: ' + status + ': ' + error);
+                $('#success-msg').hide();
+                $('#error-msg').show();
+            }
+        });
+    }
+
+    
+    // Function to retrieve CSRF token from cookies
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function goToFormPage() {
+        var csrfToken = getCookie('csrftoken');
+        $.ajax({
+            url: "{% url 'hotel_booking_form' %}",
+            type: "POST",
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            success: function(response) {
+                // Handle success response if needed
+                console.log('Successfully sent POST request to hotel booking form.');
+                // Redirect to form.html (assuming it's at the root level)
+                window.location.href = '/';
+            },
+            error: function(xhr, status, error) {
+                console.error('Error sending POST request to hotel booking form:', status, error);
+            }
+        });
+    }
+</script>
+</html>

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from main import extract_hotel_data
+from scraper.scraper_func.data_extractor import extract_hotel_data
 
 
 def test_extract_hotel_data_multiple_appends():

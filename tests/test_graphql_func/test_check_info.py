@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from main import check_info
+from scraper.scraper_func.graphql_func import check_info
 
 
 def test_returns_correct_total_page_number_and_data_mapping():

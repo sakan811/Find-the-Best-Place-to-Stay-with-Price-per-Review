@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find the Best Place to Stay with Room Price/Review from Booking.com</title>
+</head>
+<body>
+    <h1>Booking Details</h1>
+    <form method="post" action="{% url 'start_web_scraping' %}" onsubmit="showScrapingMessage()">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Start Scraping</button>
+    </form>
+    <div id="scraping-message"></div>
+</body>
+<script>
+    function showScrapingMessage() {
+        document.getElementById('scraping-message').innerText = 'Scraping data...';
+    }
+</script>
+</html>

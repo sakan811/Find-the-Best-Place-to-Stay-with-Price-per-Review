@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from main import concat_df_list
+from scraper.scraper_func.utils import concat_df_list
 
 
 def test_concatenate_multiple_non_empty_dataframes():
