@@ -1,14 +1,15 @@
+import json
 import sys
-from datetime import date
 
 import pandas as pd
+from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from loguru import logger
 
 from app.app_func.db_func import truncate_db, save_data_to_db
 from app.app_func.utils_func import get_form_data
-from app.forms import ScrapingForm
 from app.models import RoomPrice
 from scraper.graphql_scraper import scrape_graphql
 from scraper.scraper_func.utils import save_scraped_data
@@ -19,6 +20,7 @@ logger.add('find_best_place_to_stay.log', level='INFO',
            mode='w')
 
 
+@csrf_exempt
 def save_scraped_data_view(request):
     logger.info('Saving HTML table as Excel...')
     if request.method == 'POST':
@@ -55,66 +57,68 @@ def save_scraped_data_view(request):
         return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
 
 
+@csrf_exempt
 def hotel_booking_form(request):
-    logger.info('Showing hotel booking form...')
-
-    form = ScrapingForm()
-
-    return render(request, 'form.html', {'form': form})
+    logger.info('Rendering hotel booking form...')
+    return render(request, 'form.html')
 
 
+@csrf_exempt
+def get_hotel_data_from_db(request):
+    if request.method == 'GET':
+        logger.info('Fetching hotel data from database...')
+
+        with connection.cursor() as cursor:
+            cursor.execute('''
+            SELECT hotel, room_price, review_score, price_per_review, check_in, check_out, city 
+            FROM app_roomprice
+            order by price_per_review
+            ''')
+            data = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            results = [dict(zip(columns, row)) for row in data]
+            return JsonResponse({'hotel_data': results})
+    else:
+        logger.error('Invalid request method')
+        return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
+def hotel_data_table_page(request):
+    if request.method == 'GET':
+        logger.info('Rendering hotel table page...')
+        return render(request, 'table.html')
+    else:
+        logger.error('Invalid request method')
+        return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
 def start_web_scraping(request):
     logger.info('Starting web-scraping...')
     if request.method == 'POST':
-        form = ScrapingForm(request.POST)
-        if form.is_valid():
-            try:
-                cleaned_data = form.cleaned_data
+        try:
+            data = json.loads(request.body)
 
-                check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency = get_form_data(cleaned_data)
+            check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency = get_form_data(data)
 
-                if isinstance(check_in, date):
-                    check_in = check_in.strftime('%Y-%m-%d')
-                if isinstance(check_out, date):
-                    check_out = check_out.strftime('%Y-%m-%d')
+            df = scrape_graphql(city=city, check_in=check_in, check_out=check_out,
+                                group_adults=group_adults, group_children=group_children,
+                                num_rooms=num_rooms, hotel_filter=hotel_filter,
+                                selected_currency=selected_currency)
 
-                if not isinstance(group_adults, int):
-                    logger.warning('group_adults is not an integer. set it to 1')
-                    group_adults = 1
-                if not isinstance(group_children, int):
-                    logger.warning('group_children is not an integer. set it to 0')
-                    group_children = 0
-                if not isinstance(num_rooms, int):
-                    logger.warning('num_rooms is not an integer. set it to 1')
-                    num_rooms = 1
+            truncate_db()
+            save_data_to_db(df)
 
-                df = scrape_graphql(city=city, check_in=check_in, check_out=check_out,
-                                    group_adults=group_adults, group_children=group_children,
-                                    num_rooms=num_rooms, hotel_filter=hotel_filter,
-                                    selected_currency=selected_currency)
+            return JsonResponse({'success_msg': 'success_msg'})
+        except IndexError as e:
+            logger.error(e)
+            logger.error('IndexError')
+            return JsonResponse({"IndexError": str(e)}, status=500)
 
-                truncate_db()
-                save_data_to_db(df)
-
-                selected_cols = ['City', 'Hotel', 'Review', 'Price', 'Price/Review', 'CheckIn', 'CheckOut']
-                df = df[selected_cols]
-
-                df = df.sort_values(by='Price/Review')
-
-                # Convert DataFrame to HTML table
-                html_table = df.to_html(index=False)
-
-                return render(request,'table.html', {'html_table': html_table})
-            except IndexError as e:
-                logger.error(e)
-                logger.error('IndexError')
-                return JsonResponse({"IndexError": str(e)}, status=500)
-
-            except Exception as e:
-                logger.error(e)
-                logger.error('Unexpected error occurred')
-                return JsonResponse({"Unexpected error occurred": str(e)}, status=500)
+        except Exception as e:
+            logger.error(e)
+            logger.error('Unexpected error occurred')
+            return JsonResponse({"Unexpected error occurred": str(e)}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
-
-

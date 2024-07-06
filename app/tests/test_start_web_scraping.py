@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import pytz
 from django.test import TestCase, RequestFactory
@@ -7,7 +8,7 @@ from django.urls import reverse
 from app.views import start_web_scraping
 
 
-class TestUrls(TestCase):
+class TestStartWebScrape(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
@@ -29,9 +30,11 @@ class TestUrls(TestCase):
             'hotel_filter': 'on',
         }
 
+        json_data = json.dumps(mock_form)
+
         # Mock the form submission in a POST request
         url = reverse('start_web_scraping')  # Replace with your actual URL name
-        request = self.factory.post(url, data=mock_form)
+        request = self.factory.post(url, data=json_data, content_type='application/json')
 
         # Pass the request to your view
         response = start_web_scraping(request)

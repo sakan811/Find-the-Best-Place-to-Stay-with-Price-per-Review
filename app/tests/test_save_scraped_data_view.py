@@ -4,7 +4,7 @@ from django.urls import reverse
 from app.models import RoomPrice
 
 
-class TestUrls(TestCase):
+class TestSaveScrapedData(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 

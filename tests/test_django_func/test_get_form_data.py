@@ -25,7 +25,7 @@ def test_get_form_data_missing_optional_fields():
         'check_out': '2024-08-10',
         'group_adults': '3'
     }
-    expected = ('2024-08-01', '2024-08-10', 'Paris', '3', None, None, None, None)
+    expected = ('2024-08-01', '2024-08-10', 'Paris', 3, 0, None, 1, None)
     assert get_form_data(cleaned_data) == expected
 
 
@@ -40,14 +40,7 @@ def test_get_form_data_invalid_numeric_values():
         'selected_currency': 'EUR',
         'hotel_filter': True
     }
-    expected = ('2024-09-01',
-                '2024-09-10',
-                'Berlin',
-                'not_a_number',
-                'not_a_number',
-                True,
-                'not_a_number',
-                'EUR')
+    expected = ('2024-09-01', '2024-09-10', 'Berlin', 1, 0, True, 1, 'EUR')
     assert get_form_data(cleaned_data) == expected
 
 
@@ -60,7 +53,7 @@ def test_get_form_data_some_fields_missing():
         'group_children': 1,
         'selected_currency': 'JPY'
     }
-    expected = ('2024-10-01', '2024-10-10', 'Tokyo', 2, 1, None, None, 'JPY')
+    expected = ('2024-10-01', '2024-10-10', 'Tokyo', 2, 1, None, 1, 'JPY')
     assert get_form_data(cleaned_data) == expected
 
 
