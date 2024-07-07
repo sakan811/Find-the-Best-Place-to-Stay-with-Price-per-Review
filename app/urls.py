@@ -7,5 +7,6 @@ urlpatterns = [
     path('scraping/', views.start_web_scraping, name='start_web_scraping'),
     path('hotel_data_table_page/', views.hotel_data_table_page, name='hotel_data_table_page'),
     path('get_hotel_data_from_db/', views.get_hotel_data_from_db, name='get_hotel_data_from_db'),
+    path('get_booking_details_from_db/', views.get_booking_details_from_db, name='get_booking_details_from_db'),
     path('save/', views.save_scraped_data_view, name='save_scraped_data_view')
 ]

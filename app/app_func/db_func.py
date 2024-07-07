@@ -1,7 +1,9 @@
+import datetime
+
 from django.db import connection
 from loguru import logger
 
-from app.models import RoomPrice
+from app.models import RoomPrice, BookingDetails
 
 
 def save_data_to_db(df) -> None:
@@ -25,9 +27,46 @@ def save_data_to_db(df) -> None:
         room_price.save()
 
 
-def truncate_db() -> None:
+def save_booking_details_to_db(
+        check_in: str,
+        check_out: str,
+        city: str,
+        num_adults: int,
+        num_children: int,
+        num_rooms: int,
+        only_hotel: bool) -> None:
     """
-    Truncate the database.
+    Save the booking details into a database.
+    :param check_in: Check-In date.
+    :param check_out: Check-Out date.
+    :param city: City where the hotels are located.
+    :param num_adults: Number of adults.
+    :param num_children: Number of children.
+    :param num_rooms: Number of rooms.
+    :param only_hotel: Whether the scraped data consists of hotel properties.
+    :return: None.
+    """
+    logger.info("Saving booking details to database...")
+    # Convert string dates to date objects
+    check_in_date = datetime.datetime.strptime(check_in, "%Y-%m-%d").date()
+    check_out_date = datetime.datetime.strptime(check_out, "%Y-%m-%d").date()
+
+    # Create and save the booking detail
+    booking_detail = BookingDetails(
+        check_in=check_in_date,
+        check_out=check_out_date,
+        city=city,
+        num_adults=num_adults,
+        num_children=num_children,
+        num_rooms=num_rooms,
+        only_hotel=only_hotel
+    )
+    booking_detail.save()
+
+
+def truncate_roomprice_table() -> None:
+    """
+    Truncate the app_roomprice table.
     :return: None.
     """
     logger.info("Truncating app_roomprice table...")
@@ -35,4 +74,14 @@ def truncate_db() -> None:
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM sqlite_sequence")
 
+
+def truncate_booking_details_table() -> None:
+    """
+    Truncate the app_bookingdetails table.
+    :return: None.
+    """
+    logger.info("Truncating app_bookingdetails table...")
+    BookingDetails.objects.all().delete()
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM sqlite_sequence")
 

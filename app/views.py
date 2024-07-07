@@ -8,7 +8,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from loguru import logger
 
-from app.app_func.db_func import truncate_db, save_data_to_db
+from app.app_func.db_func import truncate_roomprice_table, save_data_to_db, save_booking_details_to_db, \
+    truncate_booking_details_table
 from app.app_func.utils_func import get_form_data
 from app.models import RoomPrice
 from scraper.graphql_scraper import scrape_graphql
@@ -59,8 +60,12 @@ def save_scraped_data_view(request):
 
 @csrf_exempt
 def hotel_booking_form(request):
-    logger.info('Rendering hotel booking form...')
-    return render(request, 'form.html')
+    if request.method == 'GET':
+        logger.info('Rendering hotel booking form...')
+        return render(request, 'form.html')
+    else:
+        logger.error('Invalid request method')
+        return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
 
 
 @csrf_exempt
@@ -78,6 +83,25 @@ def get_hotel_data_from_db(request):
             columns = [col[0] for col in cursor.description]
             results = [dict(zip(columns, row)) for row in data]
             return JsonResponse({'hotel_data': results})
+    else:
+        logger.error('Invalid request method')
+        return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
+def get_booking_details_from_db(request):
+    if request.method == 'GET':
+        logger.info('Fetching hotel booking details from database...')
+
+        with connection.cursor() as cursor:
+            cursor.execute('''
+            SELECT *
+            FROM app_bookingdetails
+            ''')
+            data = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            results = [dict(zip(columns, row)) for row in data]
+            return JsonResponse({'booking_data': results})
     else:
         logger.error('Invalid request method')
         return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
@@ -102,12 +126,17 @@ def start_web_scraping(request):
 
             check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency = get_form_data(data)
 
+            truncate_booking_details_table()
+            save_booking_details_to_db(check_in=check_in, check_out=check_out, city=city,
+                                       num_adults=group_adults, num_children=group_children, num_rooms=num_rooms,
+                                       only_hotel=hotel_filter)
+
             df = scrape_graphql(city=city, check_in=check_in, check_out=check_out,
                                 group_adults=group_adults, group_children=group_children,
                                 num_rooms=num_rooms, hotel_filter=hotel_filter,
                                 selected_currency=selected_currency)
 
-            truncate_db()
+            truncate_roomprice_table()
             save_data_to_db(df)
 
             return JsonResponse({'success_msg': 'success_msg'})
@@ -115,7 +144,6 @@ def start_web_scraping(request):
             logger.error(e)
             logger.error('IndexError')
             return JsonResponse({"IndexError": str(e)}, status=500)
-
         except Exception as e:
             logger.error(e)
             logger.error('Unexpected error occurred')

@@ -15,6 +15,7 @@ const ScrapingForm = () => {
     });
 
     const [submitMessage, setSubmitMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [scrapingMessage, setScrapingMessage] = useState('');
 
     const handleChange = (e) => {
@@ -30,31 +31,23 @@ const ScrapingForm = () => {
         setScrapingMessage('Scraping data...'); // Display scraping message
 
         try {
-            const postResponse = await axios.post('/scraping/', formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (postResponse.status === 200){
+            await axios.post('/scraping/', formData);
             setSubmitMessage('Form submitted successfully');
-
             window.location.href = '/hotel_data_table_page/';
-
-            } else {
-            setSubmitMessage('Form submission error');
-            }
-            } catch (error) {
-              console.error('Error submitting form:', error);
-              setSubmitMessage('Error submitting form: ' + error.message);
-            } finally {
-              setScrapingMessage(''); // Clear scraping message after submission
-            }
-        };
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            setErrorMessage('There are no places that can satisfy this booking. Please re-enter the form.');
+        } finally {
+            setScrapingMessage(''); // Clear scraping message after submission
+        }
+    };
 
     return (
         <>
             <h1 style={{textAlign: 'center'}}>Finding the Best Place to Stay with Price/Review from Booking.com</h1>
-            <p style={{textAlign: 'center'}}>Enter the hotel booking details below to scrape the hotel data</p>
+            <p style={{textAlign: 'center', fontSize: '16px'}}>
+                Enter the hotel booking details below to scrape the hotel data
+            </p>
             <form onSubmit={handleSubmit} className="form">
               <div className="formGroup">
                   <label htmlFor="city">City:</label>
@@ -97,8 +90,9 @@ const ScrapingForm = () => {
                          onChange={handleChange} className="checkbox"/>
               </div>
               <button type="submit" className="submitButton">Submit</button>
-              {scrapingMessage && <p className="message">{scrapingMessage}</p>}
-              {submitMessage && <p className="message">{submitMessage}</p>}
+                {scrapingMessage && <p className="message">{scrapingMessage}</p>}
+                {submitMessage && <p className="message">{submitMessage}</p>}
+                {errorMessage && <p className="errorMessage">{errorMessage}</p>}
             </form>
         </>
     );

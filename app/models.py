@@ -11,3 +11,12 @@ class RoomPrice(models.Model):
     as_of_date = models.DateField()
     city = models.CharField(max_length=100)
 
+
+class BookingDetails(models.Model):
+    check_in = models.DateField()
+    check_out = models.DateField()
+    city = models.CharField(max_length=100)
+    num_adults = models.IntegerField()
+    num_children = models.IntegerField()
+    num_rooms = models.IntegerField()
+    only_hotel = models.BooleanField()

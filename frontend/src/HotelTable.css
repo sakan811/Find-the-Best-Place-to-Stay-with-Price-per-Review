@@ -1,5 +1,5 @@
 .backToFormButton {
-  background-color: #007bff; /* Blue submit button */
+  background-color: #36C2CE;
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -9,8 +9,7 @@
 }
 
 .saveDataButton {
-  background-color: #007bff; /* Blue submit button */
-  color: #fff;
+  background-color: #77E4C8;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -41,7 +40,7 @@
 }
 
 .hotelTable th {
-    background-color: #f2f2f2; /* Light gray background for headers */
+    background-color: #CAF4FF; /* Light gray background for headers */
 }
 
 .hotelTable tbody tr:nth-child(even) {
@@ -51,4 +50,24 @@
 .hotelTable tbody tr:hover {
     background-color: #e0e0e0; /* Hover effect for rows */
 }
+
+.booking-details {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.booking-details .detail-item {
+    margin-right: 20px;
+    font-size: 16px;
+}
+
+.errorMessage {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #FF6969;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  color: #FCF8F3;
+}
+
 
