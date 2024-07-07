@@ -27,7 +27,7 @@ class TestStartWebScrape(TestCase):
             'num_rooms': 1,
             'group_children': 0,
             'selected_currency': 'USD',
-            'hotel_filter': 'on',
+            'hotel_filter': True,
         }
 
         json_data = json.dumps(mock_form)
