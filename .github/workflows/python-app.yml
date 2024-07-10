@@ -42,11 +42,9 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         if (Test-Path requirements.txt) { python -m pip install -r requirements.txt }
-        cd..
 
     - name: Test with pytest
       run: |
-        cd backend
         pytest tests
 
     - name: Test Django
