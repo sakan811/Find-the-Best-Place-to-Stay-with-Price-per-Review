@@ -46,9 +46,9 @@ jobs:
 
     - name: Test with pytest
       run: |
-        python -m pytest backend/tests
+        cd backend
+        pytest tests
 
     - name: Test Django
       run: |
-        cd backend
         python manage.py test
