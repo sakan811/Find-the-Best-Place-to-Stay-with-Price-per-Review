@@ -1,6 +1,6 @@
 import pandas as pd
 
-from scraper.scraper_func.data_transformer import transform_data_in_df
+from backend.scraper.scraper_func.data_transformer import transform_data_in_df
 
 
 def test_transform_data_in_df_basic():

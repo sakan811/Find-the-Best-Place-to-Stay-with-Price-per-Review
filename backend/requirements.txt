@@ -8,4 +8,6 @@ requests~=2.31.0
 pytz~=2023.3.post1
 Django~=5.0.6
 numpy~=1.26.4
+gunicorn~=22.0.0
+django-cors-headers~=4.4.0
 

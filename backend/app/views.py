@@ -8,10 +8,10 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from loguru import logger
 
-from app.app_func.db_func import truncate_roomprice_table, save_data_to_db, save_booking_details_to_db, \
+from .app_func.db_func import truncate_roomprice_table, save_data_to_db, save_booking_details_to_db, \
     truncate_booking_details_table
-from app.app_func.utils_func import get_form_data
-from app.models import RoomPrice
+from .app_func.utils_func import get_form_data
+from .models import RoomPrice
 from scraper.graphql_scraper import scrape_graphql
 from scraper.scraper_func.utils import save_scraped_data
 
@@ -129,7 +129,7 @@ def start_web_scraping(request):
             truncate_booking_details_table()
             save_booking_details_to_db(check_in=check_in, check_out=check_out, city=city,
                                        num_adults=group_adults, num_children=group_children, num_rooms=num_rooms,
-                                       only_hotel=hotel_filter)
+                                       currency=selected_currency, only_hotel=hotel_filter)
 
             df = scrape_graphql(city=city, check_in=check_in, check_out=check_out,
                                 group_adults=group_adults, group_children=group_children,

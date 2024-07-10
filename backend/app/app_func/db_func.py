@@ -3,7 +3,7 @@ import datetime
 from django.db import connection
 from loguru import logger
 
-from app.models import RoomPrice, BookingDetails
+from app.models import BookingDetails, RoomPrice
 
 
 def save_data_to_db(df) -> None:
@@ -34,6 +34,7 @@ def save_booking_details_to_db(
         num_adults: int,
         num_children: int,
         num_rooms: int,
+        currency: str,
         only_hotel: bool) -> None:
     """
     Save the booking details into a database.
@@ -43,6 +44,7 @@ def save_booking_details_to_db(
     :param num_adults: Number of adults.
     :param num_children: Number of children.
     :param num_rooms: Number of rooms.
+    :param currency: Currency.
     :param only_hotel: Whether the scraped data consists of hotel properties.
     :return: None.
     """
@@ -59,6 +61,7 @@ def save_booking_details_to_db(
         num_adults=num_adults,
         num_children=num_children,
         num_rooms=num_rooms,
+        currency=currency,
         only_hotel=only_hotel
     )
     booking_detail.save()

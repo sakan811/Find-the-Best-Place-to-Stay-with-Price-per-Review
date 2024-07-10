@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "directories": {
-    "test": "../app/tests"
+    "test": "../backend/app/tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production",
-    "start": "../app/node_modules/.bin/webpack serve --mode development --open"
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production"
   },
   "keywords": [],
   "author": "",
@@ -22,13 +21,14 @@
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
-    "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "react-router-dom": "^6.24.1"
   },
   "devDependencies": {
     "css-loader": "^7.1.2",
-    "style-loader": "^4.0.0"
+    "style-loader": "^4.0.0",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   },
   "description": ""
 }

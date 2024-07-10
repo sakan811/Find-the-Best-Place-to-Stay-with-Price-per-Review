@@ -25,7 +25,7 @@ def save_scraped_data(
         city: dict = None,
         check_in: dict = None,
         check_out: dict = None,
-        save_dir='scraped_hotel_data') -> None:
+        save_dir='../scraped_hotel_data') -> None:
     """
     Save scraped data to CSV files in the given directory.
     The CSV files directory is created automatically if it doesn't exist.

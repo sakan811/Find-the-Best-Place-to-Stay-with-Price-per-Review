@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ScrapingForm from './ScrapingForm';
-import HotelTable from "./HotelTable";
+import App from './App';
 
-document.getElementById('root') && ReactDOM.render(<ScrapingForm />, document.getElementById('root'));
-document.getElementById('hotelTable') && ReactDOM.render(<HotelTable />, document.getElementById('hotelTable'));
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);

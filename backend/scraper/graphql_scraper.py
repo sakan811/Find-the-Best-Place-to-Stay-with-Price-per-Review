@@ -2,10 +2,10 @@ import pandas as pd
 import requests
 from loguru import logger
 
-from scraper.scraper_func.data_extractor import extract_hotel_data
-from scraper.scraper_func.data_transformer import transform_data_in_df
-from scraper.scraper_func.graphql_func import get_header, get_graphql_query, check_info
-from scraper.scraper_func.utils import concat_df_list
+from .scraper_func.data_extractor import extract_hotel_data
+from .scraper_func.data_transformer import transform_data_in_df
+from .scraper_func.graphql_func import get_header, get_graphql_query, check_info
+from .scraper_func.utils import concat_df_list
 
 
 def scrape_graphql(

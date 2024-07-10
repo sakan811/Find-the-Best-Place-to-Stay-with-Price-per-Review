@@ -19,4 +19,5 @@ class BookingDetails(models.Model):
     num_adults = models.IntegerField()
     num_children = models.IntegerField()
     num_rooms = models.IntegerField()
+    currency = models.CharField(max_length=100)
     only_hotel = models.BooleanField()

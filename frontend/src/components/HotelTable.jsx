@@ -95,6 +95,7 @@ const HotelTable = () => {
                         <p className="detail-item"><strong>Adults</strong>: {bookingDetails[0].num_adults}</p>
                         <p className="detail-item"><strong>Children</strong>: {bookingDetails[0].num_children}</p>
                         <p className="detail-item"><strong>Rooms</strong>: {bookingDetails[0].num_rooms}</p>
+                        <p className="detail-item"><strong>Currency</strong>: {bookingDetails[0].currency}</p>
                         <p className="detail-item"><strong>Only Hotel Properties</strong>: {bookingDetails[0].only_hotel.toString()}</p>
                     </div>
                 )
