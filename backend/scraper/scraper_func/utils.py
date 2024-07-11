@@ -25,7 +25,7 @@ def save_scraped_data(
         city: dict = None,
         check_in: dict = None,
         check_out: dict = None,
-        save_dir='../scraped_hotel_data') -> None:
+        save_dir='../scraped_hotel_data') -> str:
     """
     Save scraped data to CSV files in the given directory.
     The CSV files directory is created automatically if it doesn't exist.
@@ -36,7 +36,7 @@ def save_scraped_data(
     :param check_out: Check-out date.
     :param save_dir: Directory to save the scraped data as CSV.
                     Default is 'scraped_hotel_data_csv' folder.
-    :return: None
+    :return: Excel file path
     """
     logger.info("Saving scraped data...")
     if not dataframe.empty:
@@ -53,9 +53,7 @@ def save_scraped_data(
             city = city['city']
             check_in = check_in['check_in'].strftime('%Y-%m-%d')
             check_out = check_out['check_out'].strftime('%Y-%m-%d')
-            file_path = os.path.join(save_dir, f'{city}_hotel_data_{check_in}_to_{check_out}.xlsx')
-            dataframe.to_excel(file_path, index=False)
-            logger.info("Data saved to Excel")
+            return f'{city}_hotel_data_{check_in}_to_{check_out}.xlsx'
         else:
             logger.warning("Cannot save data to Excel. "
                            "please enter city, check-in or check-out date. ")

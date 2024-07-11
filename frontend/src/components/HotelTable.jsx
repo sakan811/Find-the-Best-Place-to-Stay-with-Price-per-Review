@@ -38,7 +38,31 @@ const HotelTable = () => {
 
     const saveData = async () => {
         try {
-            await axios.post('/save/', {});
+            const response = await axios.post('/save/', {}, { responseType: 'blob' });
+
+            // Extract filename from response headers
+            const contentDisposition = response.headers['content-disposition'];
+            let filename = 'room_prices.xlsx';  // Default filename
+            if (contentDisposition) {
+                const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                const matches = filenameRegex.exec(contentDisposition);
+                if (matches != null && matches[1]) {
+                    filename = matches[1].replace(/['"]/g, '');
+                }
+            }
+
+            // Create blob object and URL for download
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = window.URL.createObjectURL(blob);
+
+            // Create an <a> element to trigger the download
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
             setSuccessMsg(true);
             setErrorMsg(false);
         } catch (error) {
@@ -47,7 +71,6 @@ const HotelTable = () => {
             setErrorMsg(true);
         }
     };
-
     const goToFormPage = () => {
         try {
             window.location.href = '/';
@@ -76,7 +99,7 @@ const HotelTable = () => {
 
             {successMsg && (
                 <Alert variant="success" className="message">
-                    <strong>Success!</strong> Saved data to Excel successfully at <strong>scraped_hotel_data</strong> folder.
+                    <strong>Success!</strong> Saved data to Excel successfully.
                 </Alert>
             )}
             {errorMsg && (

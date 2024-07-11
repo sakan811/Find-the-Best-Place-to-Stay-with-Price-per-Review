@@ -1,9 +1,10 @@
+import io
 import json
 import sys
 
 import pandas as pd
 from django.db import connection
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from loguru import logger
@@ -36,13 +37,28 @@ def save_scraped_data_view(request):
             if not room_prices:
                 return JsonResponse({'error_msg': 'No data found to save'}, status=404)
 
+            city = city['city']
+            check_in = check_in['check_in'].strftime('%Y-%m-%d')
+            check_out = check_out['check_out'].strftime('%Y-%m-%d')
+
+            excel_file_path = f'{city}_hotel_data_{check_in}_to_{check_out}.xlsx'
+
             # Create a Pandas DataFrame from the data
             df = pd.DataFrame(room_prices)
 
-            save_scraped_data(dataframe=df, city=city, check_in=check_in, check_out=check_out)
+            # Create an in-memory Excel file
+            excel_file = io.BytesIO()
+            df.to_excel(excel_file, index=False)
+            excel_file.seek(0)
 
-            # Return success response as JSON
-            return JsonResponse({'success_msg': 'success_msg'})
+            # Set the filename for download
+            filename = excel_file_path
+
+            # Create an HttpResponse object to stream the file
+            response = HttpResponse(excel_file.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+            return response
 
         except ValueError:
             logger.error('ValueError: Invalid JSON data received')

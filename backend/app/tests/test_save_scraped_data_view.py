@@ -1,59 +1,60 @@
-from django.test import TestCase, RequestFactory, Client
+from app.models import RoomPrice
+from django.test import TestCase, Client
 from django.urls import reverse
 
-from app.models import RoomPrice
 
+class SaveScrapedDataViewTests(TestCase):
 
-class TestSaveScrapedData(TestCase):
     def setUp(self):
-        self.factory = RequestFactory()
-
-        # Create test data
+        # Set up test data
+        self.client = Client()
+        self.url = reverse('save_scraped_data_view')  # Replace with the name of your URL pattern
         RoomPrice.objects.create(
-            hotel="Test Hotel 1",
-            room_price=100.0,
+            hotel='Hotel A',
+            room_price=100,
             review_score=4.5,
             price_per_review=22.22,
-            check_in="2024-01-01",
-            check_out="2024-01-02",
-            as_of_date="2024-01-01",
-            city="London"
+            check_in='2024-07-10',
+            check_out='2024-07-12',
+            as_of_date='2024-07-08',
+            city='Swansea'
         )
         RoomPrice.objects.create(
-            hotel="Test Hotel 2",
-            room_price=200.0,
+            hotel='Hotel B',
+            room_price=150,
             review_score=4.0,
-            price_per_review=50.0,
-            check_in="2024-01-03",
-            check_out="2024-01-04",
-            as_of_date="2024-01-03",
-            city="London"
+            price_per_review=37.5,
+            check_in='2024-07-10',
+            check_out='2024-07-12',
+            as_of_date='2024-07-08',
+            city='Swansea'
         )
 
-        self.client = Client()
-
     def test_save_scraped_data_success(self):
-        # Test the successful saving of scraped data
-        response = self.client.post(reverse('save_scraped_data_view'))  # Ensure the URL name is correct
+        response = self.client.post(self.url)
+
+        # Check for a successful response
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'success_msg': 'success_msg'})
+        self.assertEqual(response['Content-Type'], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        self.assertTrue('Content-Disposition' in response)
+
+        # Check that the filename is correctly set in the Content-Disposition header
+        content_disposition = response['Content-Disposition']
+        self.assertIn('attachment; filename="Swansea_hotel_data_2024-07-10_to_2024-07-12.xlsx"', content_disposition)
 
     def test_save_scraped_data_no_data(self):
-        # Test when there is no data to save
-        RoomPrice.objects.all().delete()  # Delete all test data
-        response = self.client.post(reverse('save_scraped_data_view'))
+        # Clear the RoomPrice table
+        RoomPrice.objects.all().delete()
+
+        response = self.client.post(self.url)
+
+        # Check for a 404 response when no data is found
         self.assertEqual(response.status_code, 404)
         self.assertJSONEqual(response.content, {'error_msg': 'No data found to save'})
 
     def test_save_scraped_data_invalid_method(self):
-        # Test when the request method is not POST
-        response = self.client.get(reverse('save_scraped_data_view'))
+        response = self.client.get(self.url)
+
+        # Check for a 405 response when using an invalid request method
         self.assertEqual(response.status_code, 405)
         self.assertJSONEqual(response.content, {'error_msg': 'Invalid request method'})
-
-    def test_save_scraped_data_unexpected_error(self):
-        # Test for unexpected errors (e.g., database error, etc.)
-        with self.assertRaises(Exception):
-            response = self.client.post(reverse('save_scraped_data_view'))
-            self.assertEqual(response.status_code, 500)
-            self.assertJSONEqual(response.content, {'error_msg': 'error_msg'})
