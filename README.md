@@ -13,7 +13,10 @@ Latest Update: 11 July 2024
 [![Python application](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/python-app.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/python-app.yml)
 
 ## To scrape data from Booking.com
-- Pull this Docker image: docker pull sakanbeer88/myapp:latest
+- Pull this Docker image: ```docker pull sakanbeer88/myapp:latest```
 - Run a Docker container
-- Navigate to localhost:8000
+- Navigate to [localhost:8000](http://localhost:8000)
 
+## Disclaimer
+When filling the form, please use an abbreviation for currency
+- For example, If the wanted currency is US Dollar, then enter USD in the currency tab.
