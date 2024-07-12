@@ -15,7 +15,7 @@ Latest Update: 11 July 2024
 [![Docker Deploy](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-deploy.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-deploy.yml)
 
 ## To scrape data from Booking.com
-- Pull this Docker image: ```docker pull sakanbeer88/myapp:latest```
+- Pull this Docker image: ```docker pull sakanbeer88/besthotelwebapp:latest```
 - Run a Docker container
 - Navigate to [localhost:8000](http://localhost:8000)
 
