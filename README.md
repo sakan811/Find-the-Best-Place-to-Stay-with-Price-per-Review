@@ -6,7 +6,7 @@ Aim to provide places with Price/Review Score when finding a place to stay durin
 A lower Price/Review Score indicates that the place isn't expensive, yet, with a great review score.   
 
 ## Status
-Latest Update: 11 July 2024
+Latest Update: 12 July 2024
 
 [![CodeQL](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml)  
 
