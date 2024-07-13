@@ -2,18 +2,13 @@ version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: sakanbeer88/best-hotel-web-app-backend:latest
     ports:
       - "8000:8000"
     depends_on:
       - frontend
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: sakanbeer88/best-hotel-web-app-frontend:latest
     ports:
       - "3000:3000"
-
