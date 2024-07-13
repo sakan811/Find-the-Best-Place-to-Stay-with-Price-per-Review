@@ -1,3 +1,4 @@
+import base64
 import io
 import json
 import sys
@@ -28,7 +29,7 @@ def save_scraped_data_view(request):
     if request.method == 'POST':
         try:
             # Query data from the database
-            room_prices = RoomPrice.objects.all().values()
+            room_prices = RoomPrice.objects.all().values().order_by('price_per_review')
 
             city: dict = RoomPrice.objects.values('city').first()
             check_in: dict = RoomPrice.objects.values('check_in').first()
@@ -54,11 +55,10 @@ def save_scraped_data_view(request):
             # Set the filename for download
             filename = excel_file_path
 
-            # Create an HttpResponse object to stream the file
-            response = HttpResponse(excel_file.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = f'attachment; filename="{filename}"'
-
-            return response
+            return JsonResponse({
+                'filename': filename,
+                'file_content': base64.b64encode(excel_file.getvalue()).decode('utf-8')
+            })
 
         except ValueError:
             logger.error('ValueError: Invalid JSON data received')
@@ -71,16 +71,6 @@ def save_scraped_data_view(request):
             # Return error response as JSON
             return JsonResponse({'error_msg': 'error_msg'}, status=500)
     else:
-        return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
-
-
-@csrf_exempt
-def hotel_booking_form(request):
-    if request.method == 'GET':
-        logger.info('Rendering hotel booking form...')
-        return render(request, 'form.html')
-    else:
-        logger.error('Invalid request method')
         return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
 
 
@@ -124,16 +114,6 @@ def get_booking_details_from_db(request):
 
 
 @csrf_exempt
-def hotel_data_table_page(request):
-    if request.method == 'GET':
-        logger.info('Rendering hotel table page...')
-        return render(request, 'table.html')
-    else:
-        logger.error('Invalid request method')
-        return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
-
-
-@csrf_exempt
 def start_web_scraping(request):
     logger.info('Starting web-scraping...')
     if request.method == 'POST':
@@ -156,6 +136,9 @@ def start_web_scraping(request):
             save_data_to_db(df)
 
             return JsonResponse({'success_msg': 'success_msg'})
+        except SystemExit as e:
+            logger.error(e)
+            return JsonResponse({'SystemExit': str(e)}, status=500)
         except IndexError as e:
             logger.error(e)
             logger.error('IndexError')

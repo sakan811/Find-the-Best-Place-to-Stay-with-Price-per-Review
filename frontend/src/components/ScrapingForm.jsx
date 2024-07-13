@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './ScrapingForm.css';
 import axios from "axios";
+import { Helmet } from 'react-helmet-async';
 
 const ScrapingForm = () => {
     const [formData, setFormData] = useState({
@@ -31,12 +32,31 @@ const ScrapingForm = () => {
         setScrapingMessage('Scraping data...'); // Display scraping message
 
         try {
-            await axios.post('/scraping/', formData);
+            await axios.post('http://localhost:8000/scraping/', formData);
             setSubmitMessage('Form submitted successfully');
             window.location.href = '/hotel_data_table_page/';
         } catch (error) {
-            console.error('Error submitting form:', error);
-            setErrorMessage('There are no places that can satisfy this booking. Please re-enter the form.');
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                console.error('Error response:', error.response.data);
+                console.error('Status code:', error.response.status);
+                // Handle specific status codes or error responses
+                if (error.response.data.SystemExit) {
+                    setErrorMessage('No places found that can satisfy this booking. Please re-enter the form.');
+                } else if (error.response.status === 500) {
+                    setErrorMessage('Internal server error. Please try again later.');
+                } else {
+                    setErrorMessage('An error occurred while submitting the form.');
+                }
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('No response received:', error.request);
+                setErrorMessage('No response received from the server. Please check your internet connection.');
+            } else {
+                // Something else happened while setting up the request
+                console.error('Error setting up the request:', error.message);
+                setErrorMessage('An unexpected error occurred. Please try again later.');
+            }
         } finally {
             setScrapingMessage(''); // Clear scraping message after submission
         }
@@ -44,6 +64,9 @@ const ScrapingForm = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Find the Best Place to Stay with Price/Review - Form</title>
+            </Helmet>
             <h1 style={{textAlign: 'center'}}>Finding the Best Place to Stay with Price/Review from Booking.com</h1>
             <p style={{textAlign: 'center', fontSize: '16px'}}>
                 Enter the hotel booking details below to scrape the hotel data

@@ -1,60 +1,95 @@
+from datetime import datetime
+from unittest.mock import patch
+
 from app.models import RoomPrice
 from django.test import TestCase, Client
 from django.urls import reverse
 
 
-class SaveScrapedDataViewTests(TestCase):
+class SaveScrapedDataViewTestCase(TestCase):
 
     def setUp(self):
-        # Set up test data
-        self.client = Client()
-        self.url = reverse('save_scraped_data_view')  # Replace with the name of your URL pattern
-        RoomPrice.objects.create(
-            hotel='Hotel A',
-            room_price=100,
-            review_score=4.5,
-            price_per_review=22.22,
-            check_in='2024-07-10',
-            check_out='2024-07-12',
-            as_of_date='2024-07-08',
-            city='Swansea'
-        )
-        RoomPrice.objects.create(
-            hotel='Hotel B',
-            room_price=150,
-            review_score=4.0,
-            price_per_review=37.5,
-            check_in='2024-07-10',
-            check_out='2024-07-12',
-            as_of_date='2024-07-08',
-            city='Swansea'
-        )
+        # Set up mock data for RoomPrice objects
+        self.room_prices = [
+            {
+                'hotel': 'Hotel A',
+                'room_price': 100,
+                'review_score': 4.5,
+                'price_per_review': 22.22,
+                'check_in': datetime(2024, 7, 10),
+                'check_out': datetime(2024, 7, 12),
+                'as_of_date': datetime(2024, 7, 8),
+                'city': 'Swansea'
+            },
+            {
+                'hotel': 'Hotel B',
+                'room_price': 150,
+                'review_score': 4.0,
+                'price_per_review': 37.5,
+                'check_in': datetime(2024, 7, 10),
+                'check_out': datetime(2024, 7, 12),
+                'as_of_date': datetime(2024, 7, 8),
+                'city': 'Swansea'
+            }
+        ]
+        for room_price_data in self.room_prices:
+            RoomPrice.objects.create(**room_price_data)
 
-    def test_save_scraped_data_success(self):
-        response = self.client.post(self.url)
+    def test_save_scraped_data_view_post_success(self):
+        client = Client()
+        url = reverse('save_scraped_data_view')
 
-        # Check for a successful response
+        with patch('app.views.RoomPrice.objects.all') as mock_all:
+            mock_all.return_value.values.return_value.order_by.return_value = self.room_prices
+
+            response = client.post(url, {})
+
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response['Content-Type'], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        self.assertTrue('Content-Disposition' in response)
+        self.assertIn('filename', response.json())
+        self.assertIn('file_content', response.json())
 
-        # Check that the filename is correctly set in the Content-Disposition header
-        content_disposition = response['Content-Disposition']
-        self.assertIn('attachment; filename="Swansea_hotel_data_2024-07-10_to_2024-07-12.xlsx"', content_disposition)
+    def test_save_scraped_data_view_post_no_data(self):
+        client = Client()
+        url = reverse('save_scraped_data_view')
 
-    def test_save_scraped_data_no_data(self):
-        # Clear the RoomPrice table
-        RoomPrice.objects.all().delete()
+        with patch('app.views.RoomPrice.objects.all') as mock_all:
+            mock_all.return_value.values.return_value.order_by.return_value = []
 
-        response = self.client.post(self.url)
+            response = client.post(url, {})
 
-        # Check for a 404 response when no data is found
         self.assertEqual(response.status_code, 404)
-        self.assertJSONEqual(response.content, {'error_msg': 'No data found to save'})
+        self.assertEqual(response.json()['error_msg'], 'No data found to save')
 
-    def test_save_scraped_data_invalid_method(self):
-        response = self.client.get(self.url)
+    def test_save_scraped_data_view_post_value_error(self):
+        client = Client()
+        url = reverse('save_scraped_data_view')
 
-        # Check for a 405 response when using an invalid request method
+        with patch('app.views.RoomPrice.objects.all') as mock_all:
+            mock_all.return_value.values.side_effect = ValueError('Invalid JSON data received')
+
+            response = client.post(url, {})
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()['error_msg'], 'error_msg')
+
+    def test_save_scraped_data_view_post_unexpected_error(self):
+        client = Client()
+        url = reverse('save_scraped_data_view')
+
+        with patch('app.views.RoomPrice.objects.all') as mock_all:
+            mock_all.return_value.values.side_effect = Exception('Unexpected error occurred')
+
+            response = client.post(url, {})
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.json()['error_msg'], 'error_msg')
+
+    def test_save_scraped_data_view_invalid_method(self):
+        client = Client()
+        url = reverse('save_scraped_data_view')
+
+        response = client.get(url)
+
         self.assertEqual(response.status_code, 405)
-        self.assertJSONEqual(response.content, {'error_msg': 'Invalid request method'})
+        self.assertEqual(response.json()['error_msg'], 'Invalid request method')
+

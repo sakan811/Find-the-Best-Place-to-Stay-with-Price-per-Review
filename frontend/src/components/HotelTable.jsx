@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import './HotelTable.css';
+import {Helmet} from "react-helmet-async";
 
 const HotelTable = () => {
     const [data, setData] = useState([]);
@@ -16,7 +17,7 @@ const HotelTable = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('/get_hotel_data_from_db/');
+            const response = await axios.get('http://localhost:8000/get_hotel_data_from_db/');
             const responseData = response.data.hotel_data;
             console.log('Fetched data:', responseData);  // Debugging statement
             setData(responseData);
@@ -27,7 +28,7 @@ const HotelTable = () => {
 
     const fetchBookingDetails = async () => {
         try {
-            const response = await axios.get('/get_booking_details_from_db/');
+            const response = await axios.get('http://localhost:8000/get_booking_details_from_db/');
             const responseData = response.data.booking_data;
             console.log('Fetched data:', responseData);  // Debugging statement
             setBookingDetails(responseData);
@@ -38,21 +39,25 @@ const HotelTable = () => {
 
     const saveData = async () => {
         try {
-            const response = await axios.post('/save/', {}, { responseType: 'blob' });
+            const response = await axios.post('http://localhost:8000/save/', {}, {
+                responseType: 'json'
+            });
+            console.log('Response:', response.data);
 
-            // Extract filename from response headers
-            const contentDisposition = response.headers['content-disposition'];
-            let filename = 'room_prices.xlsx';  // Default filename
-            if (contentDisposition) {
-                const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                const matches = filenameRegex.exec(contentDisposition);
-                if (matches != null && matches[1]) {
-                    filename = matches[1].replace(/['"]/g, '');
-                }
+            // Extract filename and file content from response data
+            const { filename, file_content } = response.data;
+
+            // Decode the base64 encoded file content
+            const binaryString = atob(file_content);
+
+            // Convert binary string to Uint8Array
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
             }
 
-            // Create blob object and URL for download
-            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            // Create blob object from the Uint8Array
+            const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             const url = window.URL.createObjectURL(blob);
 
             // Create an <a> element to trigger the download
@@ -63,6 +68,9 @@ const HotelTable = () => {
             link.click();
             link.remove();
 
+            // Clean up the URL object
+            window.URL.revokeObjectURL(url);
+
             setSuccessMsg(true);
             setErrorMsg(false);
         } catch (error) {
@@ -71,6 +79,7 @@ const HotelTable = () => {
             setErrorMsg(true);
         }
     };
+
     const goToFormPage = () => {
         try {
             window.location.href = '/';
@@ -90,6 +99,9 @@ const HotelTable = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Find the Best Place to Stay with Price/Review - Table</title>
+            </Helmet>
             <Button variant="primary" className="backToFormButton" onClick={goToFormPage}>Back to Form</Button>
             <h2 style={{textAlign: 'center'}}>Hotels' Room Price/Review Data</h2>
             <p style={{textAlign: 'center', fontSize: '16px'}}>

@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -25,9 +26,14 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html', // Assuming your index.html is in the src directory
+    }),
+  ],
   devServer: {
     static: {
-      directory: path.join(__dirname, 'static/frontend'),
+      directory: path.resolve(__dirname, 'static/frontend'),
     },
     compress: true,
     port: 3000,
