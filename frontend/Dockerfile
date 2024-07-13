@@ -5,13 +5,13 @@ FROM node:21
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+COPY package*.json /app/
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code into the container
-COPY . .
+COPY . /app/
 
 # Build the React app for production
 RUN npm run build

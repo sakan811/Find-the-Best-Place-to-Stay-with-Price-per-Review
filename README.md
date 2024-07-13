@@ -17,8 +17,8 @@ Latest Update: 12 July 2024
 ## To scrape data from Booking.com
 - Pull this Docker image: ```docker pull sakanbeer88/best-hotel-web-app-backend:latest```
 - Pull this Docker image: ```docker pull sakanbeer88/best-hotel-web-app-frontend:latest```
-- Run a Docker container
-- Navigate to [localhost:8000](http://localhost:8000)
+- Run ```docker-compose up --build```
+- Navigate to [localhost:3000](http://localhost:3000)
 
 ## Disclaimer
 When filling the form, please use an abbreviation for currency
