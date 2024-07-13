@@ -9,11 +9,11 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /backend
 
 # Install dependencies
-COPY requirements.txt ./
+COPY requirements.txt /backend
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the container
-COPY . ./
+COPY . /backend
 
 # Expose the port on which Django runs (typically 8000)
 EXPOSE 8000
