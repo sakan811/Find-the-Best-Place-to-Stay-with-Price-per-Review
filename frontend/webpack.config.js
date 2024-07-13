@@ -8,6 +8,9 @@ module.exports = {
     filename: 'main.js',
     publicPath: '/',
   },
+  stats: {
+    children: true,
+  },
   module: {
     rules: [
       {
