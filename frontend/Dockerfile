@@ -5,13 +5,13 @@ FROM node:21
 WORKDIR /frontend
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json /frontend/
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code into the container
-COPY . /frontend/
+COPY . ./
 
 # Build the React app for production
 RUN npm run build
