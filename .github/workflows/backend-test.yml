@@ -1,4 +1,4 @@
-name: Python application
+name: Backend Test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '0 0 * * *'
-    
+
 permissions:
   contents: read
 
@@ -42,11 +42,6 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest
         if (Test-Path requirements.txt) { python -m pip install -r requirements.txt }
-
-    - name: Test with pytest
-      working-directory: ./backend
-      run: |
-        python -m pytest tests
 
     - name: Test Django
       working-directory: ./backend

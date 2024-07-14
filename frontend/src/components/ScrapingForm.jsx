@@ -29,7 +29,8 @@ const ScrapingForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setScrapingMessage('Scraping data...'); // Display scraping message
+        setScrapingMessage('Scraping data...');
+        setErrorMessage(''); // Clear any previous error messages
 
         try {
             await axios.post('http://localhost:8000/scraping/', formData);
@@ -37,11 +38,10 @@ const ScrapingForm = () => {
             window.location.href = '/hotel_data_table_page/';
         } catch (error) {
             if (error.response) {
-                // The request was made and the server responded with a status code
                 console.error('Error response:', error.response.data);
                 console.error('Status code:', error.response.status);
-                // Handle specific status codes or error responses
-                if (error.response.data.SystemExit) {
+
+                if (error.response.data && error.response.data.SystemExit) {
                     setErrorMessage('No places found that can satisfy this booking. Please re-enter the form.');
                 } else if (error.response.status === 500) {
                     setErrorMessage('Internal server error. Please try again later.');
@@ -49,16 +49,14 @@ const ScrapingForm = () => {
                     setErrorMessage('An error occurred while submitting the form.');
                 }
             } else if (error.request) {
-                // The request was made but no response was received
                 console.error('No response received:', error.request);
                 setErrorMessage('No response received from the server. Please check your internet connection.');
             } else {
-                // Something else happened while setting up the request
                 console.error('Error setting up the request:', error.message);
                 setErrorMessage('An unexpected error occurred. Please try again later.');
             }
         } finally {
-            setScrapingMessage(''); // Clear scraping message after submission
+            setScrapingMessage('');
         }
     };
 
