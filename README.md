@@ -6,7 +6,7 @@ Aim to provide places with Price/Review Score when finding a place to stay durin
 A lower Price/Review Score indicates that the place isn't expensive, yet, with a great review score.   
 
 ## Status
-Latest Update: 15 July 2024
+Latest Update: 17 July 2024
 
 [![CodeQL](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml)  
 
@@ -19,6 +19,7 @@ Latest Update: 15 July 2024
 [![Docker Build](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml)
 
 ## To scrape data from Booking.com
+- Download this file: [docker-compose.yml](docker-compose.yml) or clone this repo.
 - Pull this Docker image: ```docker pull sakanbeer88/best-hotel-web-app-backend:latest```
 - Pull this Docker image: ```docker pull sakanbeer88/best-hotel-web-app-frontend:latest```
 - Run ```docker-compose up```
