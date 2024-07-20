@@ -1,5 +1,10 @@
+import os
+
 import requests
 from loguru import logger
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def get_header() -> dict:
@@ -11,21 +16,21 @@ def get_header() -> dict:
     return {
         "Content-Type": "application/json",
         "Accept": "*/*",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-        "X-Booking-Csrf-Token": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJjb250ZXh0LWVucmljaG1lbnQtYXBpIiwic3ViIjoiY3NyZi10b2tlbiIsImlhdCI6MTcxODYyNTQ2NywiZXhwIjoxNzE4NzExODY3fQ.CAooc42_J_78rrJe-e2kgLUyRvd_JBzuo2G8MP2V6veKwH5-TfikWdjTK2yBOfEe_Xl_IxDMFZOl-Q3qgvWp5A",
-        "X-Booking-Context-Action-Name": "searchresults_irene",
-        "X-Booking-Context-Aid": "304142",
-        'X-Booking-Et-Serialized-State': 'EjwSq9PIMG0Wo3kB1frx34bv9-QpErp-BGeatPFobVv6jCzqqAw4Gg8OdLtw5fMdx',
-        'X-Booking-Pageview-Id': 'cd7f472c35d2008c',
-        'X-Booking-Site-Type-Id': '1',
-        'X-Booking-Topic': 'capla_browser_b-search-web-searchresults',
-        "Sec-Ch-Ua-Platform": "Windows",
-        "Origin": "https://www.booking.com",
-        "Priority": "u=1, i",
-        "Sec-Ch-Ua": '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin"
+        "User-Agent": os.getenv("USER_AGENT"),
+        "X-Booking-Csrf-Token": os.getenv("CSRF_TOKEN"),
+        "X-Booking-Context-Action-Name": os.getenv("CONTEXT_ACTION_NAME"),
+        "X-Booking-Context-Aid": os.getenv("CONTEXT_AID"),
+        'X-Booking-Et-Serialized-State': os.getenv("ET_SERIALIZED_STATE"),
+        'X-Booking-Pageview-Id': os.getenv("PAGEVIEW_ID"),
+        'X-Booking-Site-Type-Id': os.getenv("SITE_TYPE_ID"),
+        'X-Booking-Topic': os.getenv("TOPIC"),
+        "Sec-Ch-Ua-Platform": os.getenv("UA_PLATFORM"),
+        "Origin": os.getenv("ORIGIN"),
+        "Priority": os.getenv("PRIORITY"),
+        "Sec-Ch-Ua": os.getenv("SEC_CH_UA"),
+        "Sec-Fetch-Dest": os.getenv("FETCH_DEST"),
+        "Sec-Fetch-Mode": os.getenv("FETCH_MODE"),
+        "Sec-Fetch-Site": os.getenv("FETCH_SITE")
     }
 
 
@@ -460,8 +465,10 @@ def check_info(
 
         data_mapping = {
             "city": city_data,
-            "check_in": data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkin'][0],
-            "check_out": data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkout'][0],
+            "check_in": data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkin'][
+                0],
+            "check_out":
+                data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkout'][0],
             "num_adult": data['data']['searchQueries']['search']['searchMeta']['nbAdults'],
             "num_children": data['data']['searchQueries']['search']['searchMeta']['nbChildren'],
             "num_room": data['data']['searchQueries']['search']['searchMeta']['nbRooms'],
@@ -521,4 +528,3 @@ def check_city_data(data) -> str:
     except IndexError:
         logger.error('IndexError: City not found')
     return city_data
-

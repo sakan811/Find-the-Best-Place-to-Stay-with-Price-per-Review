@@ -45,6 +45,22 @@ jobs:
 
     - name: Test with pytest
       working-directory: ./backend
+      env:
+        USER_AGENT: ${{ secrets.USER_AGENT }}
+        CSRF_TOKEN: ${{ secrets.CSRF_TOKEN }}
+        CONTEXT_ACTION_NAME: ${{ secrets.CONTEXT_ACTION_NAME }}
+        CONTEXT_AID: ${{ secrets.CONTEXT_AID }}
+        ET_SERIALIZED_STATE: ${{ secrets.ET_SERIALIZED_STATE }}
+        PAGEVIEW_ID: ${{ secrets.PAGEVIEW_ID }}
+        SITE_TYPE_ID: ${{ secrets.SITE_TYPE_ID }}
+        TOPIC: ${{ secrets.TOPIC }}
+        UA_PLATFORM: "Windows"
+        ORIGIN: "https://www.booking.com"
+        PRIORITY: "u=1, i"
+        SEC_CH_UA: '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"'
+        FETCH_DEST: "empty"
+        FETCH_MODE: "cors"
+        FETCH_SITE: "same-origin"
       run: |
         python -m pytest tests
 
