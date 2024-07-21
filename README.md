@@ -19,12 +19,13 @@ Latest Update: 22 July 2024
 
 ## To scrape data from Booking.com via a Local Web-App
 - Clone this repo: https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review.git
-- In the Git Bash terminal, run ```chmod +x setup.sh``` and ```./setup.sh``` respectively.
+- Open **Git Bash** terminal and navigate to the root of the project.
+- In the **Git Bash** terminal, run ```chmod +x setup.sh``` and ```./setup.sh``` respectively.
 - Get the values from Booking.com:
   - Go to Booking.com, and perform a search for any location with any booking details.
   - Right-click anywhere on the webpage and select **Inspect** to open the developer tools.
   - Navigate to the **Network** tab.
-  - Scroll through the network requests until you find one with a name starting with **graphql?ss=**.
+  - Down scroll the webpage until you find an **url** with a name starting with **graphql?ss=** in the **Network** tab
   - Click on this request and navigate to the **Headers** tab.
   - Find the values for the following headers and enter them into your **.env** file in the **backend** folder:
     - User-Agent ➡ USER_AGENT
