@@ -19,20 +19,7 @@ Latest Update: 21 July 2024
 
 ## To scrape data from Booking.com via a Local Web-App
 - Clone this repo: https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review.git
-- Navigate to the **backend** directory.
-- Create a new virtual environment and activate it.
-- Install all dependencies listed in [requirements.txt](backend%2Frequirements.txt)
-- Create a **.env** file inside the **backend** directory with the following variables:
-  ```
-  USER_AGENT=
-  X_BOOKING_CSRF_TOKEN=
-  X_BOOKING_CONTEXT_ACTION_NAME=
-  X_BOOKING_CONTEXT_AID=
-  X_BOOKING_ET_SERIALIZED_STATE=
-  X_BOOKING_PAGEVIEW_ID=
-  X_BOOKING_SITE_TYPE_ID=
-  X_BOOKING_TOPIC=
-  ```
+- In the command line terminal, run ```chmod +x setup.sh``` and ```./setup.sh``` respectively.
 - Get the values from Booking.com:
   - Go to Booking.com, and perform a search for any location with any booking details.
   - Right-click anywhere on the webpage and select **Inspect** to open the developer tools.
@@ -48,8 +35,6 @@ Latest Update: 21 July 2024
     - X-Booking-Pageview-Id ➡ X_BOOKING_PAGEVIEW_ID
     - X-Booking-Site-Type-Id ➡ X_BOOKING_SITE_TYPE_ID
     - X-Booking-Topic ➡ X_BOOKING_TOPIC
-- Navigate to the **frontend** directory
-  - Run ```npm install```
 - Navigate to the **backend** directory
   - Run ```python manage.py runserver```
 - Navigate to the **frontend** directory
