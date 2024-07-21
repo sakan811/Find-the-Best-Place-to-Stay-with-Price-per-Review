@@ -26,7 +26,7 @@ Latest Update: 22 July 2024
   - Navigate to the **Network** tab.
   - Scroll through the network requests until you find one with a name starting with **graphql?ss=**.
   - Click on this request and navigate to the **Headers** tab.
-  - Find the values for the following headers and enter them into your **.env** file:
+  - Find the values for the following headers and enter them into your **.env** file in the **backend** folder:
     - User-Agent ➡ USER_AGENT
     - X-Booking-Csrf-Token ➡ X_BOOKING_CSRF_TOKEN
     - X-Booking-Context-Action-Name ➡ X_BOOKING_CONTEXT_ACTION_NAME
