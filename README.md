@@ -22,7 +22,7 @@ Latest Update: 21 July 2024
 - Navigate to the **backend** directory.
 - Create a new virtual environment and activate it.
 - Install all dependencies listed in [requirements.txt](backend%2Frequirements.txt)
-- Create a **.env** file with the following variables:
+- Create a **.env** file inside the **backend** directory with the following variables:
   ```
   USER_AGENT=
   X_BOOKING_CSRF_TOKEN=
@@ -35,11 +35,11 @@ Latest Update: 21 July 2024
   ```
 - Get the values from Booking.com:
   - Go to Booking.com, and perform a search for any location with any booking details.
-  - Right-click anywhere on the webpage and select Inspect to open the developer tools.
-  - Navigate to the Network tab.
-  - Scroll through the network requests until you find one with a name starting with graphql?ss=.
-  - Click on this request and navigate to the Headers tab.
-  - Find the values for the following headers and enter them into your .env file:
+  - Right-click anywhere on the webpage and select **Inspect** to open the developer tools.
+  - Navigate to the **Network** tab.
+  - Scroll through the network requests until you find one with a name starting with **graphql?ss=**.
+  - Click on this request and navigate to the **Headers** tab.
+  - Find the values for the following headers and enter them into your **.env** file:
     - User-Agent ➡ USER_AGENT
     - X-Booking-Csrf-Token ➡ X_BOOKING_CSRF_TOKEN
     - X-Booking-Context-Action-Name ➡ X_BOOKING_CONTEXT_ACTION_NAME
