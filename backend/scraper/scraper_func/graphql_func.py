@@ -17,22 +17,14 @@ def get_header() -> dict:
         "Content-Type": "application/json",
         "Accept": "*/*",
         "User-Agent": os.getenv("USER_AGENT"),
-        "X-Booking-Csrf-Token": os.getenv("CSRF_TOKEN"),
-        "X-Booking-Context-Action-Name": os.getenv("CONTEXT_ACTION_NAME"),
-        "X-Booking-Context-Aid": os.getenv("CONTEXT_AID"),
-        'X-Booking-Et-Serialized-State': os.getenv("ET_SERIALIZED_STATE"),
-        'X-Booking-Pageview-Id': os.getenv("PAGEVIEW_ID"),
-        'X-Booking-Site-Type-Id': os.getenv("SITE_TYPE_ID"),
-        'X-Booking-Topic': os.getenv("TOPIC"),
-        "Sec-Ch-Ua-Platform": os.getenv("UA_PLATFORM"),
-        "Origin": os.getenv("ORIGIN"),
-        "Priority": os.getenv("PRIORITY"),
-        "Sec-Ch-Ua": os.getenv("SEC_CH_UA"),
-        "Sec-Fetch-Dest": os.getenv("FETCH_DEST"),
-        "Sec-Fetch-Mode": os.getenv("FETCH_MODE"),
-        "Sec-Fetch-Site": os.getenv("FETCH_SITE")
+        "X-Booking-Csrf-Token": os.getenv("X_BOOKING_CSRF_TOKEN"),
+        "X-Booking-Context-Action-Name": os.getenv("X_BOOKING_CONTEXT_ACTION_NAME"),
+        "X-Booking-Context-Aid": os.getenv("X_BOOKING_CONTEXT_AID"),
+        "X-Booking-Et-Serialized-State": os.getenv("X_BOOKING_ET_SERIALIZED_STATE"),
+        "X-Booking-Pageview-Id": os.getenv("X_BOOKING_PAGEVIEW_ID"),
+        "X-Booking-Site-Type-Id": os.getenv("X_BOOKING_SITE_TYPE_ID"),
+        "X-Booking-Topic": os.getenv("X_BOOKING_TOPIC")
     }
-
 
 def get_graphql_query(
         city: str,

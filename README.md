@@ -19,32 +19,40 @@ Latest Update: 21 July 2024
 
 ## To scrape data from Booking.com via a Local Web-App
 - Clone this repo: https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review.git
-- Adjust a project path to the **backend** directory
+- Navigate to the **backend** directory.
+- Create a new virtual environment and activate it.
 - Install all dependencies listed in [requirements.txt](backend%2Frequirements.txt)
-  - Create a **.env** file with the following variables:
-    ```
-    USER_AGENT=
-    CSRF_TOKEN=
-    CONTEXT_ACTION_NAME=
-    CONTEXT_AID=
-    ET_SERIALIZED_STATE=
-    PAGEVIEW_ID=
-    SITE_TYPE_ID=
-    TOPIC=
-    UA_PLATFORM=
-    ORIGIN=
-    PRIORITY=
-    SEC_CH_UA=
-    FETCH_DEST=
-    FETCH_MODE=
-    FETCH_SITE=
-    ```
-  - Check the network console of Booking.com and enter these variables as appear on the console.
-- Adjust a project path to the **frontend** directory
+- Create a **.env** file with the following variables:
+  ```
+  USER_AGENT=
+  X_BOOKING_CSRF_TOKEN=
+  X_BOOKING_CONTEXT_ACTION_NAME=
+  X_BOOKING_CONTEXT_AID=
+  X_BOOKING_ET_SERIALIZED_STATE=
+  X_BOOKING_PAGEVIEW_ID=
+  X_BOOKING_SITE_TYPE_ID=
+  X_BOOKING_TOPIC=
+  ```
+- Get the values from Booking.com:
+  - Go to Booking.com, and perform a search for any location with any booking details.
+  - Right-click anywhere on the webpage and select Inspect to open the developer tools.
+  - Navigate to the Network tab.
+  - Scroll through the network requests until you find one with a name starting with graphql?ss=.
+  - Click on this request and navigate to the Headers tab.
+  - Find the values for the following headers and enter them into your .env file:
+    - User-Agent ➡ USER_AGENT
+    - X-Booking-Csrf-Token ➡ X_BOOKING_CSRF_TOKEN
+    - X-Booking-Context-Action-Name ➡ X_BOOKING_CONTEXT_ACTION_NAME
+    - X-Booking-Context-Aid ➡ X_BOOKING_CONTEXT_AID
+    - X-Booking-Et-Serialized-State ➡ X_BOOKING_ET_SERIALIZED_STATE
+    - X-Booking-Pageview-Id ➡ X_BOOKING_PAGEVIEW_ID
+    - X-Booking-Site-Type-Id ➡ X_BOOKING_SITE_TYPE_ID
+    - X-Booking-Topic ➡ X_BOOKING_TOPIC
+- Navigate to the **frontend** directory
   - Run ```npm install```
-- Adjust a project path to the **backend** directory
+- Navigate to the **backend** directory
   - Run ```python manage.py runserver```
-- Adjust a project path to the **frontend** directory
+- Navigate to the **frontend** directory
   - Run ```npm start```
 - Navigate to [localhost:3000](http://localhost:3000)
 
