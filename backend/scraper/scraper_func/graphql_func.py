@@ -14,17 +14,9 @@ def get_header() -> dict:
     """
     logger.info("Getting header...")
     return {
-        "Content-Type": "application/json",
-        "Accept": "*/*",
-        "User-Agent": os.getenv("USER_AGENT"),
-        "X-Booking-Csrf-Token": os.getenv("X_BOOKING_CSRF_TOKEN"),
-        "X-Booking-Context-Action-Name": os.getenv("X_BOOKING_CONTEXT_ACTION_NAME"),
-        "X-Booking-Context-Aid": os.getenv("X_BOOKING_CONTEXT_AID"),
-        "X-Booking-Et-Serialized-State": os.getenv("X_BOOKING_ET_SERIALIZED_STATE"),
-        "X-Booking-Pageview-Id": os.getenv("X_BOOKING_PAGEVIEW_ID"),
-        "X-Booking-Site-Type-Id": os.getenv("X_BOOKING_SITE_TYPE_ID"),
-        "X-Booking-Topic": os.getenv("X_BOOKING_TOPIC")
+        "User-Agent": os.getenv("USER_AGENT")
     }
+
 
 def get_graphql_query(
         city: str,

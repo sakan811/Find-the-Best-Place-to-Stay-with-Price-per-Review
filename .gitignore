@@ -162,7 +162,8 @@ cython_debug/
 /*.xlsx
 /.idea
 /scraped_hotel_data/
-/prototype.py
-/prototype_view.py
+/prototypes/prototype.py
+/prototypes/prototype_view.py
 /backend/scraped_hotel_data/
 /backend/.idea/
+/prototypes/

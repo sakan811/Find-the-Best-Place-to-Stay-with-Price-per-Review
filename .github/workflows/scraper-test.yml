@@ -47,14 +47,6 @@ jobs:
       working-directory: ./backend
       env:
         USER_AGENT: ${{ secrets.USER_AGENT }}
-        CSRF_TOKEN: ${{ secrets.CSRF_TOKEN }}
-        X_BOOKING_CSRF_TOKEN: ${{ secrets.X_BOOKING_CSRF_TOKEN }}
-        X_BOOKING_CONTEXT_ACTION_NAME: ${{ secrets.X_BOOKING_CONTEXT_ACTION_NAME }}
-        X_BOOKING_CONTEXT_AID: ${{ secrets.X_BOOKING_CONTEXT_AID }}
-        X_BOOKING_ET_SERIALIZED_STATE: ${{ secrets.X_BOOKING_ET_SERIALIZED_STATE }}
-        X_BOOKING_PAGEVIEW_ID: ${{ secrets.X_BOOKING_PAGEVIEW_ID }}
-        X_BOOKING_SITE_TYPE_ID: ${{ secrets.X_BOOKING_SITE_TYPE_ID }}
-        X_BOOKING_TOPIC: ${{ secrets.X_BOOKING_TOPIC }}
       run: |
         python -m pytest tests
 
