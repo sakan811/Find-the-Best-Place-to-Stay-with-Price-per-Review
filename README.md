@@ -21,15 +21,24 @@ Latest Update: 28 July 2024
 ### Setup the Web App
 - Clone this repo: https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review.git
 - Open **Git Bash** terminal and navigate to the root of the project.
-- In the **Git Bash** terminal, run ```chmod +x setup-web-app.sh``` and ```./setup-web-app.sh``` respectively.
-- Find your User Agent:
+- In the **Git Bash** terminal, run:
+  ```
+  chmod +x setup-web-app.sh
+  ./setup-web-app.sh
+  ``` 
+- Find your **User Agent**:
   - Go to https://www.whatismybrowser.com/detect/what-is-my-user-agent/
   - Enter your User Agent into your **.env** file in the **backend** folder:
     - User-Agent ➡ USER_AGENT
 
 ## Run the Web App
 - Open **Git Bash** terminal and navigate to the root of the project.
-- In the **Git Bash** terminal, run ```chmod +x start-app.sh``` and ```./start-app.sh``` respectively.
+- In the **Git Bash** terminal, run: 
+  ```
+  chmod +x start-app.sh
+  ./start-app.sh
+  ``` 
+- Press **Ctrl + C** to stop the web app.
 
 ## Disclaimer
 When filling the form, please use an abbreviation for **currency**
