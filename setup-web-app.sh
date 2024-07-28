@@ -1,28 +1,29 @@
 #!/bin/bash
 
-# Navigate to the backend directory
-cd backend
+# Function to create a virtual environment and install Python dependencies
+setup_backend() {
+    cd backend || exit
 
-# Create a new virtual environment
-python -m venv venv
+    # Create a new virtual environment
+    python -m venv venv
 
-# Activate the virtual environment
-if [ -f "venv/Scripts/activate" ]; then
-    # For Windows
-    source venv/Scripts/activate
-elif [ -f "venv/bin/activate" ]; then
-    # For Unix-based systems
-    source venv/bin/activate
-else
-    echo "Failed to create virtual environment"
-    exit 1
-fi
+    # Activate the virtual environment based on the operating system
+    if [[ "$OSTYPE" == "msys" ]]; then
+        # For Windows
+        source venv/Scripts/activate
+    elif [[ "$OSTYPE" == "linux-gnu"* || "$OSTYPE" == "darwin"* ]]; then
+        # For Unix-based systems (Linux and macOS)
+        source venv/bin/activate
+    else
+        echo "Unsupported operating system"
+        exit 1
+    fi
 
-# Install all dependencies listed in requirements.txt
-pip install -r requirements.txt
+    # Install all dependencies listed in requirements.txt
+    pip install -r requirements.txt
 
-# Create a .env file inside the backend directory with the specified variables
-cat <<EOL > .env
+    # Create a .env file inside the backend directory with the specified variables
+    cat <<EOL > .env
 USER_AGENT=
 X_BOOKING_CSRF_TOKEN=
 X_BOOKING_CONTEXT_ACTION_NAME=
@@ -33,10 +34,33 @@ X_BOOKING_SITE_TYPE_ID=
 X_BOOKING_TOPIC=
 EOL
 
-# Navigate to the frontend directory
-cd ../frontend
+    # Navigate back to the root directory
+    cd .. || exit
+}
 
-# Run npm install
-npm install
+# Function to install Node.js dependencies for the frontend
+setup_frontend() {
+    cd frontend || exit
+
+    # Run npm install
+    npm install
+
+    # Navigate back to the root directory
+    cd .. || exit
+}
+
+# Check the operating system and run the appropriate setup steps
+if [[ "$OSTYPE" == "msys" ]]; then
+    echo "Detected Windows OS"
+    setup_backend
+    setup_frontend
+elif [[ "$OSTYPE" == "linux-gnu"* || "$OSTYPE" == "darwin"* ]]; then
+    echo "Detected Unix-based OS (Linux or macOS)"
+    setup_backend
+    setup_frontend
+else
+    echo "Unsupported operating system"
+    exit 1
+fi
 
 echo "Setup complete!"

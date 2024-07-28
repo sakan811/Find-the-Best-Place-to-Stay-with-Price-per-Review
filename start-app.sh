@@ -3,8 +3,15 @@
 # Function to stop the servers
 cleanup() {
   echo "Stopping servers..."
-  kill $DJANGO_PID
-  kill $REACT_PID
+  if [[ "$OSTYPE" == "msys" ]]; then
+    # Windows
+    taskkill //PID $DJANGO_PID //F
+    taskkill //PID $REACT_PID //F
+  else
+    # Unix-based systems
+    kill $DJANGO_PID
+    kill $REACT_PID
+  fi
   exit 0
 }
 
