@@ -30,7 +30,7 @@ describe('ScrapingForm Component', () => {
     axios.post.mockRejectedValue({
       response: {
         status: 500,
-        data: {} // Ensure data is defined
+        data: {}
       }
     });
 
@@ -51,7 +51,7 @@ describe('ScrapingForm Component', () => {
     axios.post.mockRejectedValue({
       response: {
         status: 400,
-        data: { SystemExit: true }
+        data: { error: 'SystemExit' }
       }
     });
 
@@ -72,7 +72,7 @@ describe('ScrapingForm Component', () => {
     axios.post.mockRejectedValue({
       response: {
         status: 400,
-        data: {} // Ensure data is defined
+        data: {}
       }
     });
 
@@ -89,7 +89,6 @@ describe('ScrapingForm Component', () => {
         return element.classList.contains('errorMessage');
       });
       expect(errorElement).toBeInTheDocument();
-      console.log('Error message content:', errorElement.textContent);
     });
   });
 });
