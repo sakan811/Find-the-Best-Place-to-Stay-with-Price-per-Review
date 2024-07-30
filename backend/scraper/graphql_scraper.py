@@ -82,6 +82,7 @@ class Scraper:
                     return transform_data_in_df(self.check_in, self.check_out, self.city, df)
                 else:
                     logger.error(f"Total page number is zero and hotel data is empty")
+                    raise SystemExit
             else:
                 logger.error(f"Error: {response.status_code}")
         else:

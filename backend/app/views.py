@@ -134,14 +134,14 @@ def start_web_scraping(request):
             return JsonResponse({'success_msg': 'success_msg'})
         except SystemExit as e:
             logger.error(e)
-            return JsonResponse({'SystemExit': str(e)}, status=500)
+            return JsonResponse({'error': 'SystemExit'}, status=500)
         except IndexError as e:
             logger.error(e)
             logger.error('IndexError')
-            return JsonResponse({"IndexError": str(e)}, status=500)
+            return JsonResponse({"error": "IndexError"}, status=500)
         except Exception as e:
             logger.error(e)
             logger.error('Unexpected error occurred')
-            return JsonResponse({"Unexpected error occurred": str(e)}, status=500)
+            return JsonResponse({"error": "Unexpected error occurred"}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)

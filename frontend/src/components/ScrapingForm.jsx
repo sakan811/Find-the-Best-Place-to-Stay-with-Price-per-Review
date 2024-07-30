@@ -41,7 +41,7 @@ const ScrapingForm = () => {
                 console.error('Error response:', error.response.data);
                 console.error('Status code:', error.response.status);
 
-                if (error.response.data && error.response.data.SystemExit) {
+                if (error.response.data.error === 'SystemExit') {
                     setErrorMessage('No places found that can satisfy this booking. Please re-enter the form.');
                 } else if (error.response.status === 500) {
                     setErrorMessage('Internal server error. Please try again later.');
