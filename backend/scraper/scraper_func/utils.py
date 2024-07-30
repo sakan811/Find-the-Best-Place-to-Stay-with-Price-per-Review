@@ -1,8 +1,10 @@
-import datetime
 import os
 
 import pandas as pd
-from loguru import logger
+
+from logging_config import configure_logging_with_file
+
+logger = configure_logging_with_file(log_dir='logs', log_file='utils.log', logger_name='utils')
 
 
 def concat_df_list(df_list: list[pd.DataFrame]) -> pd.DataFrame:

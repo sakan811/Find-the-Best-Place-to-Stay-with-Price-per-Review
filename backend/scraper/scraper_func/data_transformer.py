@@ -1,7 +1,10 @@
 import datetime
 
 import pandas as pd
-from loguru import logger
+
+from logging_config import configure_logging_with_file
+
+logger = configure_logging_with_file(log_dir='logs', log_file='data_transformer.log', logger_name='data_transformer')
 
 
 def transform_data_in_df(check_in: str, check_out: str, city: str, dataframe: pd.DataFrame) -> pd.DataFrame:

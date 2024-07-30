@@ -1,26 +1,20 @@
 import base64
 import io
 import json
-import sys
 
 import pandas as pd
 from django.db import connection
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from loguru import logger
 
+from logging_config import configure_logging_with_file
+from scraper.graphql_scraper import Scraper
 from .app_func.db_func import truncate_roomprice_table, save_data_to_db, save_booking_details_to_db, \
     truncate_booking_details_table
 from .app_func.utils_func import get_form_data
 from .models import RoomPrice
-from scraper.graphql_scraper import scrape_graphql
-from scraper.scraper_func.utils import save_scraped_data
 
-logger.configure(handlers=[{"sink": sys.stdout, "level": "INFO"}])
-logger.add('find_best_place_to_stay.log', level='INFO',
-           format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {name} | {module} | {function} | {line} | {message}",
-           mode='w')
+logger = configure_logging_with_file(log_dir='logs', log_file='django_views.log', logger_name='django_views')
 
 
 @csrf_exempt
@@ -120,17 +114,19 @@ def start_web_scraping(request):
         try:
             data = json.loads(request.body)
 
-            check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency = get_form_data(data)
+            check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency = get_form_data(
+                data)
 
             truncate_booking_details_table()
             save_booking_details_to_db(check_in=check_in, check_out=check_out, city=city,
                                        num_adults=group_adults, num_children=group_children, num_rooms=num_rooms,
                                        currency=selected_currency, only_hotel=hotel_filter)
 
-            df = scrape_graphql(city=city, check_in=check_in, check_out=check_out,
-                                group_adults=group_adults, group_children=group_children,
-                                num_rooms=num_rooms, hotel_filter=hotel_filter,
-                                selected_currency=selected_currency)
+            scraper = Scraper(city=city, check_in=check_in, check_out=check_out,
+                              group_adults=group_adults, group_children=group_children,
+                              num_rooms=num_rooms, hotel_filter=hotel_filter,
+                              selected_currency=selected_currency)
+            df = scraper.scrape_graphql()
 
             truncate_roomprice_table()
             save_data_to_db(df)

@@ -1,5 +1,8 @@
 import pandas as pd
-from loguru import logger
+
+from logging_config import configure_logging_with_file
+
+logger = configure_logging_with_file(log_dir='logs', log_file='data_extractor.log', logger_name='data_extractor')
 
 
 def extract_hotel_data(df_list: list, hotel_data_list: list) -> None:
@@ -43,4 +46,3 @@ def extract_hotel_data(df_list: list, hotel_data_list: list) -> None:
 
         logger.debug("Append dataframe to a df_list")
         df_list.append(df)
-

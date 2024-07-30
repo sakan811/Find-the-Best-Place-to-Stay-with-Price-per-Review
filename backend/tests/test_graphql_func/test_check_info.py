@@ -1,18 +1,15 @@
-from unittest.mock import Mock
-
 import pytest
 
-from scraper.scraper_func.graphql_func import check_info
+from scraper.graphql_scraper import Scraper
 
 
 def test_returns_correct_total_page_number_and_data_mapping():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
+                    'appliedFilterOptions': [],
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
                     'flexibleDatesConfig': {
@@ -42,36 +39,36 @@ def test_returns_correct_total_page_number_and_data_mapping():
     entered_num_adult = 2
     entered_num_children = 1
     entered_num_room = 1
+    entered_hotel_filter = False
 
     # When
-    result = check_info(
-        response_mock, entered_city, entered_check_in, entered_check_out,
-        entered_selected_currency, entered_num_adult, entered_num_children,
-        entered_num_room
-    )
+    scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                      selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                      group_children=entered_num_children, num_rooms=entered_num_room,
+                      hotel_filter=entered_hotel_filter)
+    result = scraper.check_info(data)
 
     # Then
-    assert result == (1, {
-        "city": "Test City",
-        "check_in": "2023-01-01",
-        "check_out": "2023-01-02",
-        "num_adult": 2,
-        "num_children": 1,
-        "num_room": 1,
-        "selected_currency": "USD"
-    })
+    assert result == (1,
+     {'check_in': '2023-01-01',
+      'check_out': '2023-01-02',
+      'city': 'Test City',
+      'group_adults': 2,
+      'group_children': 1,
+      'hotel_filter': False,
+      'num_rooms': 1,
+      'selected_currency': 'USD'}
+    )
 
 
 def test_handles_response_with_missing_or_null_fields_gracefully():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': None}],
+                    'breadcrumbs': [{}, {}, {'name': None, 'destType': 'CITY'}],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': [None],
@@ -103,11 +100,11 @@ def test_handles_response_with_missing_or_null_fields_gracefully():
     # When
     error_message = ''
     try:
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
+
     except SystemExit as e:
         error_message = str(e)
 
@@ -115,11 +112,9 @@ def test_handles_response_with_missing_or_null_fields_gracefully():
     assert error_message == "Error City not match: Test City != None"
 
 
-def test_data_mapping_dictionary_keys():
+def test_handles_response_with_currency_is_none():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -127,8 +122,8 @@ def test_data_mapping_dictionary_keys():
                     'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
-                            'checkin': ['2023-01-01'],
-                            'checkout': ['2023-01-02']
+                            'checkin': ["2023-01-01"],
+                            'checkout': ["2023-01-02"]
                         }
                     },
                     'searchMeta': {
@@ -138,7 +133,7 @@ def test_data_mapping_dictionary_keys():
                     },
                     'results': [{
                         'blocks': [{
-                            'finalPrice': {'currency': 'USD'}
+                            'finalPrice': {'currency': None}
                         }]
                     }]
                 }
@@ -154,29 +149,22 @@ def test_data_mapping_dictionary_keys():
     entered_num_room = 1
 
     # When
-    result = check_info(
-        response_mock, entered_city, entered_check_in, entered_check_out,
-        entered_selected_currency, entered_num_adult, entered_num_children,
-        entered_num_room
-    )
+    error_message = ''
+    try:
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
+    except SystemExit as e:
+        error_message = str(e)
 
     # Then
-    assert result == (1, {
-        "city": "Test City",
-        "check_in": "2023-01-01",
-        "check_out": "2023-01-02",
-        "num_adult": 2,
-        "num_children": 1,
-        "num_room": 1,
-        "selected_currency": "USD"
-    })
+    assert error_message == "Error Selected Currency not match: USD != None"
 
 
 def test_data_mapping_check_in_not_match():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -211,18 +199,15 @@ def test_data_mapping_check_in_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
 
 
 def test_data_mapping_check_out_not_match():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -257,18 +242,15 @@ def test_data_mapping_check_out_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
 
 
 def test_data_mapping_adult_not_match():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -303,18 +285,15 @@ def test_data_mapping_adult_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
 
 
 def test_data_mapping_room_not_match():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -349,17 +328,14 @@ def test_data_mapping_room_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
+
 
 def test_data_mapping_children_not_match():
-    # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -394,18 +370,15 @@ def test_data_mapping_children_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
 
 
 def test_data_mapping_currency_not_match():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -440,18 +413,15 @@ def test_data_mapping_currency_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
 
 
 def test_data_mapping_city_not_match():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
@@ -486,23 +456,66 @@ def test_data_mapping_city_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        check_info(
-            response_mock, entered_city, entered_check_in, entered_check_out,
-            entered_selected_currency, entered_num_adult, entered_num_children,
-            entered_num_room
-        )
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room)
+        result = scraper.check_info(data)
 
 
-
-
-def test_data_mapping_extraction():
+def test_total_page_num_is_zero():
     # Given
-    response_mock = Mock()
-    response_mock.status_code = 200
-    response_mock.json.return_value = {
+    data = {
         'data': {
             'searchQueries': {
                 'search': {
+                    'pagination': {'nbResultsTotal': 0},
+                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'flexibleDatesConfig': {
+                        'dateRangeCalendar': {
+                            'checkin': ['2023-01-01'],
+                            'checkout': ['2023-01-02']
+                        }
+                    },
+                    'searchMeta': {
+                        'nbAdults': 2,
+                        'nbChildren': 1,
+                        'nbRooms': 1
+                    },
+                    'results': [{
+                        'blocks': [{
+                            'finalPrice': {'currency': 'USD'}
+                        }]
+                    }]
+                }
+            }
+        }
+    }
+    entered_city = "Test City"
+    entered_check_in = "2023-01-01"
+    entered_check_out = "2023-01-02"
+    entered_selected_currency = "USD"
+    entered_num_adult = 2
+    entered_num_children = 1
+    entered_num_room = 1
+    entered_hotel_filter = False
+
+    # When
+    scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                      selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                      group_children=entered_num_children, num_rooms=entered_num_room, hotel_filter=entered_hotel_filter)
+    result = scraper.check_info(data)
+
+    # Then
+    assert result == (0, {})
+
+
+def test_data_mapping_hotel_filter_not_match():
+    # Given
+    data = {
+        'data': {
+            'searchQueries': {
+                'search': {
+                    'appliedFilterOptions': [{'urlId': "ht_id=204"}],
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
                     'flexibleDatesConfig': {
@@ -532,24 +545,14 @@ def test_data_mapping_extraction():
     entered_num_adult = 2
     entered_num_children = 1
     entered_num_room = 1
+    entered_hotel_filter = False
 
-    # When
-    result = check_info(
-        response_mock, entered_city, entered_check_in, entered_check_out,
-        entered_selected_currency, entered_num_adult, entered_num_children,
-        entered_num_room
-    )
-
-    # Then
-    assert result == (1, {
-        "city": "Test City",
-        "check_in": "2023-01-01",
-        "check_out": "2023-01-02",
-        "num_adult": 2,
-        "num_children": 1,
-        "num_room": 1,
-        "selected_currency": "USD"
-    })
+    with pytest.raises(SystemExit):
+        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                          group_children=entered_num_children, num_rooms=entered_num_room,
+                          hotel_filter=entered_hotel_filter)
+        result = scraper.check_info(data)
 
 
 if __name__ == '__main__':
