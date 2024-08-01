@@ -1,9 +1,9 @@
 import datetime
 
 from django.db import connection
-from loguru import logger
 
 from app.models import BookingDetails, RoomPrice
+from logging_config import main_logger
 
 
 def save_data_to_db(df) -> None:
@@ -12,7 +12,7 @@ def save_data_to_db(df) -> None:
     :param df: DataFrame.
     :return: None.
     """
-    logger.info("Saving data to database...")
+    main_logger.info("Saving data to database...")
     for index, row in df.iterrows():
         room_price = RoomPrice(
             hotel=row['Hotel'],
@@ -48,7 +48,7 @@ def save_booking_details_to_db(
     :param only_hotel: Whether the scraped data consists of hotel properties.
     :return: None.
     """
-    logger.info("Saving booking details to database...")
+    main_logger.info("Saving booking details to database...")
     # Convert string dates to date objects
     check_in_date = datetime.datetime.strptime(check_in, "%Y-%m-%d").date()
     check_out_date = datetime.datetime.strptime(check_out, "%Y-%m-%d").date()
@@ -72,7 +72,7 @@ def truncate_roomprice_table() -> None:
     Truncate the app_roomprice table.
     :return: None.
     """
-    logger.info("Truncating app_roomprice table...")
+    main_logger.info("Truncating app_roomprice table...")
     RoomPrice.objects.all().delete()
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM sqlite_sequence")
@@ -83,7 +83,7 @@ def truncate_booking_details_table() -> None:
     Truncate the app_bookingdetails table.
     :return: None.
     """
-    logger.info("Truncating app_bookingdetails table...")
+    main_logger.info("Truncating app_bookingdetails table...")
     BookingDetails.objects.all().delete()
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM sqlite_sequence")

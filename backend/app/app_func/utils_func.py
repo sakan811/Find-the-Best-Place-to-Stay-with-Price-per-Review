@@ -1,6 +1,6 @@
 from datetime import date
 
-from loguru import logger
+from logging_config import main_logger
 
 
 def get_form_data(form_data: dict) -> tuple:
@@ -9,7 +9,8 @@ def get_form_data(form_data: dict) -> tuple:
     :param form_data: Form data.
     :return: Tuple of form data.
     """
-    logger.info(f'Getting form data...')
+    main_logger.info(f'Getting form data...')
+
     city = form_data.get('city')
     check_in = form_data.get('check_in')
     check_out = form_data.get('check_out')
@@ -28,19 +29,19 @@ def get_form_data(form_data: dict) -> tuple:
         try:
             group_adults = int(group_adults)
         except (ValueError, TypeError):
-            logger.warning('group_adults is not an integer. set it to 1')
+            main_logger.warning('group_adults is not an integer. set it to 1')
             group_adults = 1
     if not isinstance(group_children, int):
         try:
             group_children = int(group_children)
         except (ValueError, TypeError):
-            logger.warning('group_children is not an integer. set it to 0')
+            main_logger.warning('group_children is not an integer. set it to 0')
             group_children = 0
     if not isinstance(num_rooms, int):
         try:
             num_rooms = int(num_rooms)
         except (ValueError, TypeError):
-            logger.warning('num_rooms is not an integer. set it to 1')
+            main_logger.warning('num_rooms is not an integer. set it to 1')
             num_rooms = 1
 
     return check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency

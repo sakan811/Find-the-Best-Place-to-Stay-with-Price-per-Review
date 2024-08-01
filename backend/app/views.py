@@ -7,19 +7,19 @@ from django.db import connection
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from logging_config import configure_logging_with_file
+from logging_config import configure_logging_with_file, main_logger
 from scraper.graphql_scraper import Scraper
 from .app_func.db_func import truncate_roomprice_table, save_data_to_db, save_booking_details_to_db, \
     truncate_booking_details_table
 from .app_func.utils_func import get_form_data
 from .models import RoomPrice
 
-logger = configure_logging_with_file(log_dir='logs', log_file='django_views.log', logger_name='django_views')
+script_logger = configure_logging_with_file(log_dir='logs', log_file='django_views.log', logger_name='django_views')
 
 
 @csrf_exempt
 def save_scraped_data_view(request):
-    logger.info('Saving HTML table as Excel...')
+    main_logger.info('Saving HTML table as Excel...')
     if request.method == 'POST':
         try:
             # Query data from the database
@@ -55,12 +55,12 @@ def save_scraped_data_view(request):
             })
 
         except ValueError:
-            logger.error('ValueError: Invalid JSON data received')
+            main_logger.error('ValueError: Invalid JSON data received')
             return JsonResponse({'error_msg': 'error_msg'}, status=400)
 
         except Exception as e:
-            logger.error(e)
-            logger.error('Unexpected error occurred')
+            main_logger.error(e)
+            main_logger.error('Unexpected error occurred')
 
             # Return error response as JSON
             return JsonResponse({'error_msg': 'error_msg'}, status=500)
@@ -71,7 +71,7 @@ def save_scraped_data_view(request):
 @csrf_exempt
 def get_hotel_data_from_db(request):
     if request.method == 'GET':
-        logger.info('Fetching hotel data from database...')
+        main_logger.info('Fetching hotel data from database...')
 
         with connection.cursor() as cursor:
             cursor.execute('''
@@ -84,14 +84,14 @@ def get_hotel_data_from_db(request):
             results = [dict(zip(columns, row)) for row in data]
             return JsonResponse({'hotel_data': results})
     else:
-        logger.error('Invalid request method')
+        main_logger.error('Invalid request method')
         return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
 
 
 @csrf_exempt
 def get_booking_details_from_db(request):
     if request.method == 'GET':
-        logger.info('Fetching hotel booking details from database...')
+        main_logger.info('Fetching hotel booking details from database...')
 
         with connection.cursor() as cursor:
             cursor.execute('''
@@ -103,13 +103,13 @@ def get_booking_details_from_db(request):
             results = [dict(zip(columns, row)) for row in data]
             return JsonResponse({'booking_data': results})
     else:
-        logger.error('Invalid request method')
+        main_logger.error('Invalid request method')
         return JsonResponse({'error_msg': 'Invalid request method'}, status=405)
 
 
 @csrf_exempt
 def start_web_scraping(request):
-    logger.info('Starting web-scraping...')
+    main_logger.info('Starting web-scraping...')
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -133,15 +133,15 @@ def start_web_scraping(request):
 
             return JsonResponse({'success_msg': 'success_msg'})
         except SystemExit as e:
-            logger.error(e)
+            main_logger.error(e)
             return JsonResponse({'error': 'SystemExit'}, status=500)
         except IndexError as e:
-            logger.error(e)
-            logger.error('IndexError')
+            main_logger.error(e)
+            main_logger.error('IndexError')
             return JsonResponse({"error": "IndexError"}, status=500)
         except Exception as e:
-            logger.error(e)
-            logger.error('Unexpected error occurred')
+            main_logger.error(e)
+            main_logger.error('Unexpected error occurred')
             return JsonResponse({"error": "Unexpected error occurred"}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)

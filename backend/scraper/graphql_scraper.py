@@ -3,13 +3,13 @@ from dataclasses import dataclass
 import pandas as pd
 import requests
 
-from logging_config import configure_logging_with_file
+from logging_config import configure_logging_with_file, main_logger
 from scraper.scraper_func.data_extractor import extract_hotel_data
 from scraper.scraper_func.data_transformer import transform_data_in_df
 from scraper.scraper_func.graphql_func import get_header, check_city_data, check_currency_data, check_hotel_filter_data
 from scraper.scraper_func.utils import concat_df_list
 
-logger = configure_logging_with_file(log_dir='logs', log_file='graphql_scraper.log', logger_name='graphql_scraper')
+script_logger = configure_logging_with_file(log_dir='logs', log_file='graphql_scraper.log', logger_name='graphql_scraper')
 
 
 @dataclass
@@ -44,11 +44,12 @@ class Scraper:
         Scrape hotel data from GraphQL endpoint.
         :return: Pandas DataFrame with hotel data.
         """
-        logger.info("Start scraping data from GraphQL endpoint")
-        logger.info(
+        main_logger.info("Start scraping data from GraphQL endpoint...")
+
+        script_logger.debug(
             f"City: {self.city} | Check-in: {self.check_in} | Check-out: {self.check_out} | Currency: {self.selected_currency}")
-        logger.info(f"Adults: {self.group_adults} | Children: {self.group_children} | Rooms: {self.num_rooms}")
-        logger.info(f"Only hotel properties: {self.hotel_filter}")
+        script_logger.debug(f"Adults: {self.group_adults} | Children: {self.group_children} | Rooms: {self.num_rooms}")
+        script_logger.debug(f"Only hotel properties: {self.hotel_filter}")
 
         if self.city and self.check_in and self.check_out and self.selected_currency:
             # GraphQL endpoint URL
@@ -61,11 +62,11 @@ class Scraper:
                 data = response.json()
 
                 total_page_num, hotel_data_dict = self.check_info(data)
-                logger.debug(f"Total page number: {total_page_num}")
+                script_logger.debug(f"Total page number: {total_page_num}")
 
                 if total_page_num > 0 and hotel_data_dict != {}:
                     df_list = []
-                    logger.info("Scraping data from GraphQL endpoint...")
+                    main_logger.info("Scraping data from GraphQL endpoint...")
                     for offset in range(0, total_page_num, 100):
                         graphql_query = self.get_graphql_query(page_offset=offset)
                         response = requests.post(url, headers=headers, json=graphql_query)
@@ -76,17 +77,17 @@ class Scraper:
 
                             extract_hotel_data(df_list, hotel_data_list)
                         else:
-                            logger.error(f"Error: {response.status_code}")
+                            main_logger.error(f"Error: {response.status_code}")
 
                     df = concat_df_list(df_list)
                     return transform_data_in_df(self.check_in, self.check_out, self.city, df)
                 else:
-                    logger.error(f"Total page number is zero and hotel data is empty")
+                    main_logger.error(f"Total page number is zero and hotel data is empty")
                     raise SystemExit
             else:
-                logger.error(f"Error: {response.status_code}")
+                main_logger.error(f"Error: {response.status_code}")
         else:
-            logger.warning("Error: city, check_in, check_out and selected_currency are required")
+            main_logger.warning("Error: city, check_in, check_out and selected_currency are required")
 
     def get_graphql_query(self, page_offset: int = 0) -> dict:
         """
@@ -95,7 +96,7 @@ class Scraper:
                             Default is 0.
         :return: Graphql query as a dictionary.
         """
-        logger.debug("Getting graphql query...")
+        script_logger.debug("Getting graphql query...")
         if self.hotel_filter:
             selected_filter = {"selectedFilters": "ht_id=204"}
         else:
@@ -476,7 +477,7 @@ class Scraper:
         :param data: Requests response as a dictionary.
         :return: Tuple of total page number and hotel data as a dictionary.
         """
-        logger.info("Checking whether the entered data match the data from the GraphQL response...")
+        main_logger.info("Checking whether the entered data match the data from the GraphQL response...")
         total_page_num = data['data']['searchQueries']['search']['pagination']['nbResultsTotal']
 
         if total_page_num > 0:
@@ -499,11 +500,11 @@ class Scraper:
 
             for key, value in data_mapping.items():
                 entered_value = getattr(self, key, None)
-                logger.debug(f'Entered Value {key}: {entered_value}')
-                logger.debug(f'Response Value {key}: {value}')
+                script_logger.debug(f'Entered Value {key}: {entered_value}')
+                script_logger.debug(f'Response Value {key}: {value}')
                 if entered_value != value:
                     error_message = f"Error {key.replace('_', ' ').title()} not match: {entered_value} != {value}"
-                    logger.error(error_message)
+                    main_logger.error(error_message)
                     raise SystemExit(error_message)
         else:
             total_page_num = 0

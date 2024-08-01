@@ -2,9 +2,10 @@ import os
 
 import pandas as pd
 
-from logging_config import configure_logging_with_file
 
-logger = configure_logging_with_file(log_dir='logs', log_file='utils.log', logger_name='utils')
+from logging_config import configure_logging_with_file, main_logger
+
+script_logger = configure_logging_with_file(log_dir='logs', log_file='utils.log', logger_name='utils')
 
 
 def concat_df_list(df_list: list[pd.DataFrame]) -> pd.DataFrame:
@@ -13,12 +14,12 @@ def concat_df_list(df_list: list[pd.DataFrame]) -> pd.DataFrame:
     :param df_list: A list of Pandas Dataframes.
     :return: Pandas DataFrame.
     """
-    logger.info("Concatenate a list of Pandas Dataframes")
+    main_logger.info("Concatenate a list of Pandas Dataframes")
     if df_list:
         df_main = pd.concat(df_list)
         return df_main
     else:
-        logger.warning("No data was scraped.")
+        main_logger.warning("No data was scraped.")
         return pd.DataFrame()
 
 
@@ -40,16 +41,16 @@ def save_scraped_data(
                     Default is 'scraped_hotel_data_csv' folder.
     :return: Excel file path
     """
-    logger.info("Saving scraped data...")
+    main_logger.info("Saving scraped data...")
     if not dataframe.empty:
-        logger.info('Save data to Excel')
+        main_logger.info('Save data to Excel')
         try:
             # Attempt to create the directory
             os.makedirs(save_dir)
-            logger.info(f'Created {save_dir} directory')
+            main_logger.info(f'Created {save_dir} directory')
         except FileExistsError:
             # If the directory already exists, log a message and continue
-            logger.error(f'FileExistsError: {save_dir} directory already exists')
+            main_logger.error(f'FileExistsError: {save_dir} directory already exists')
 
         if city and check_in and check_out:
             city = city['city']
@@ -57,9 +58,9 @@ def save_scraped_data(
             check_out = check_out['check_out'].strftime('%Y-%m-%d')
             return f'{city}_hotel_data_{check_in}_to_{check_out}.xlsx'
         else:
-            logger.warning("Cannot save data to Excel. "
+            main_logger.warning("Cannot save data to Excel. "
                            "please enter city, check-in or check-out date. ")
     else:
-        logger.warning('The dataframe is empty. No data to save')
+        main_logger.warning('The dataframe is empty. No data to save')
 
 
