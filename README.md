@@ -7,7 +7,7 @@ when finding a place to stay in that city during a trip.
 A **lower Price/Review Score** indicates that the place is **not expensive**, yet, with a **great review score**.   
 
 ## Status
-Latest Update: 28 July 2024
+Latest Update: 3 August 2024
 
 [![CodeQL](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml)  
 
@@ -19,26 +19,18 @@ Latest Update: 28 July 2024
 
 ## To Use the Web-App
 ### Setup the Web App
-- Clone this repo: https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review.git
-- Open **Git Bash** terminal and navigate to the root of the project.
-- In the **Git Bash** terminal, run:
-  ```
-  chmod +x setup-web-app.sh
-  ./setup-web-app.sh
-  ``` 
+- Download [docker-compose.yml](docker-compose.yml) file and place it in any directory of your choice.
 - Find your **User Agent**:
   - Go to https://www.whatismybrowser.com/detect/what-is-my-user-agent/
-  - Enter your User Agent into your **.env** file in the **backend** folder:
-    - User-Agent ➡ USER_AGENT
-
-## Run the Web App
-- Open **Git Bash** terminal and navigate to the root of the project.
-- In the **Git Bash** terminal, run: 
+  - Enter your User Agent into **USER_AGENT** environment variable inside [docker-compose.yml](docker-compose.yml)
+- Execute:
   ```
-  chmod +x start-app.sh
-  ./start-app.sh
-  ``` 
-- Press **Ctrl + C** to stop the web app.
+  docker-compose up
+  ```
+  
+## Access the Web App
+- Navigate to 
+- Press **Ctrl + C** in the terminal to stop the web app.
 
 ## Disclaimer
 When filling the form, please use an abbreviation for **currency**

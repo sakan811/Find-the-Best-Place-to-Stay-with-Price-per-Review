@@ -24,8 +24,6 @@ describe('ScrapingForm Component', () => {
     );
   });
 
-  // ... (previous tests remain the same)
-
   test('handles form submission error', async () => {
     axios.post.mockRejectedValue({
       response: {
