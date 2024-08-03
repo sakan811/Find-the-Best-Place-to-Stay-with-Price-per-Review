@@ -1,4 +1,4 @@
-# Finding-the-Best-Place-to-Stay-with-Price-per-Review-from-Booking.com-using-Web-Scraping
+# Finding the Best Place to Stay with Price per Review from Booking.com using Web-Scraping
 **Finding** the **best place** to stay with **Price/Review** from Booking.com using **web-scraping** via a local **web-app**.
 
 Aim to provide **Price/Review Score** of the places located in the specified city,
@@ -17,6 +17,8 @@ Latest Update: 3 August 2024
 
 [![Scraper Test](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/scraper-test.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/scraper-test.yml)
 
+[![Docker Build](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml)
+
 ## To Use the Web-App
 ### Setup the Web App
 - Download [docker-compose.yml](docker-compose.yml) file and place it in any directory of your choice.
@@ -29,8 +31,8 @@ Latest Update: 3 August 2024
   ```
   
 ## Access the Web App
-- Navigate to 
-- Press **Ctrl + C** in the terminal to stop the web app.
+- Navigate to [http://localhost:5000/](http://localhost:5000/)
+- Press **Ctrl + C** in the terminal or **stop** the Docker container to stop the web app.
 
 ## Disclaimer
 When filling the form, please use an abbreviation for **currency**
