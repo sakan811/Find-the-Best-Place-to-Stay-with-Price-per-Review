@@ -1,6 +1,10 @@
+import os
+from dotenv import load_dotenv
 from logging_config import configure_logging_with_file, main_logger
 
 script_logger = configure_logging_with_file(log_dir='logs', log_file='graphql_func.log', logger_name='graphql_func')
+
+load_dotenv()
 
 
 def get_header() -> dict:
@@ -10,7 +14,7 @@ def get_header() -> dict:
     """
     main_logger.info("Getting header...")
     return {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36"
+        "User-Agent": os.getenv("USER_AGENT")
     }
 
 

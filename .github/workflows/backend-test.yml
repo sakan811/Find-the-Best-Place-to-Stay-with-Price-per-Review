@@ -44,5 +44,7 @@ jobs:
 
     - name: Test Django
       working-directory: ./backend
+      env:
+        USER_AGENT: ${{ secrets.USER_AGENT }}
       run: |
         python manage.py test
