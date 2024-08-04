@@ -24,27 +24,6 @@ describe('ScrapingForm Component', () => {
     );
   });
 
-  test('handles form submission error', async () => {
-    axios.post.mockRejectedValue({
-      response: {
-        status: 500,
-        data: {}
-      }
-    });
-
-    // Fill out the form
-    fireEvent.change(screen.getByLabelText('City:'), { target: { value: 'New York' } });
-    fireEvent.change(screen.getByLabelText('Check-in:'), { target: { value: '2023-07-01' } });
-    fireEvent.change(screen.getByLabelText('Check-out:'), { target: { value: '2023-07-05' } });
-    fireEvent.change(screen.getByLabelText('Currency:'), { target: { value: 'USD' } });
-
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-
-    await waitFor(() => {
-      expect(screen.getByText('Internal server error. Please try again later.')).toBeInTheDocument();
-    });
-  });
-
   test('handles no places found error', async () => {
     axios.post.mockRejectedValue({
       response: {

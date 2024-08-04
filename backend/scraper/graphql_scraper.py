@@ -30,13 +30,13 @@ class Scraper:
         hotel_filter: If True, scrape only hotel properties, else scrape all properties.
                             Default is True.
     """
-    city: str = None,
-    check_in: str = None,
-    check_out: str = None,
-    selected_currency: str = None,
-    group_adults: int = 1,
-    num_rooms: int = 1,
-    group_children: int = 0,
+    city: str = None
+    check_in: str = None
+    check_out: str = None
+    selected_currency: str = None
+    group_adults: int = 1
+    num_rooms: int = 1
+    group_children: int = 0
     hotel_filter: bool = True
 
     def scrape_graphql(self) -> pd.DataFrame:
@@ -46,8 +46,7 @@ class Scraper:
         """
         main_logger.info("Start scraping data from GraphQL endpoint...")
 
-        script_logger.debug(
-            f"City: {self.city} | Check-in: {self.check_in} | Check-out: {self.check_out} | Currency: {self.selected_currency}")
+        script_logger.debug(f"City: {self.city} | Check-in: {self.check_in} | Check-out: {self.check_out} | Currency: {self.selected_currency}")
         script_logger.debug(f"Adults: {self.group_adults} | Children: {self.group_children} | Rooms: {self.num_rooms}")
         script_logger.debug(f"Only hotel properties: {self.hotel_filter}")
 
