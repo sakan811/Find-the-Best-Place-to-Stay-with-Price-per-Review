@@ -7,7 +7,7 @@ when finding a place to stay in that city during a trip.
 A **lower Price/Review Score** indicates that the place is **not expensive**, yet, with a **great review score**.   
 
 ## Status
-Latest Update: 4 August 2024
+Latest Update: 6 August 2024
 
 [![CodeQL](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml)  
 
@@ -40,3 +40,6 @@ When filling the form, please use an abbreviation for **currency**
 
 Ticking **Scrape Hotel Properties Only** box in the form means that the scraper will scrape only places that are hotels.
 If not ticked, the scraper will scrape all places available through Booking.com in the specified city.
+
+# Codebase Detail
+[Click here](docs/DOCS.md) to read a brief docs of this codebase.

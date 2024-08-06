@@ -3,13 +3,11 @@ from dataclasses import dataclass
 import pandas as pd
 import requests
 
-from logging_config import configure_logging_with_file, main_logger
+from logging_config import main_logger
 from scraper.scraper_func.data_extractor import extract_hotel_data
 from scraper.scraper_func.data_transformer import transform_data_in_df
 from scraper.scraper_func.graphql_func import get_header, check_city_data, check_currency_data, check_hotel_filter_data
 from scraper.scraper_func.utils import concat_df_list
-
-script_logger = configure_logging_with_file(log_dir='logs', log_file='graphql_scraper.log', logger_name='graphql_scraper')
 
 
 @dataclass
@@ -46,9 +44,9 @@ class Scraper:
         """
         main_logger.info("Start scraping data from GraphQL endpoint...")
 
-        script_logger.debug(f"City: {self.city} | Check-in: {self.check_in} | Check-out: {self.check_out} | Currency: {self.selected_currency}")
-        script_logger.debug(f"Adults: {self.group_adults} | Children: {self.group_children} | Rooms: {self.num_rooms}")
-        script_logger.debug(f"Only hotel properties: {self.hotel_filter}")
+        main_logger.debug(f"City: {self.city} | Check-in: {self.check_in} | Check-out: {self.check_out} | Currency: {self.selected_currency}")
+        main_logger.debug(f"Adults: {self.group_adults} | Children: {self.group_children} | Rooms: {self.num_rooms}")
+        main_logger.debug(f"Only hotel properties: {self.hotel_filter}")
 
         if self.city and self.check_in and self.check_out and self.selected_currency:
             # GraphQL endpoint URL
@@ -61,7 +59,7 @@ class Scraper:
                 data = response.json()
 
                 total_page_num, hotel_data_dict = self.check_info(data)
-                script_logger.debug(f"Total page number: {total_page_num}")
+                main_logger.debug(f"Total page number: {total_page_num}")
 
                 if total_page_num > 0 and hotel_data_dict != {}:
                     df_list = []
@@ -95,7 +93,7 @@ class Scraper:
                             Default is 0.
         :return: Graphql query as a dictionary.
         """
-        script_logger.debug("Getting graphql query...")
+        main_logger.debug("Getting graphql query...")
         if self.hotel_filter:
             selected_filter = {"selectedFilters": "ht_id=204"}
         else:
@@ -499,8 +497,8 @@ class Scraper:
 
             for key, value in data_mapping.items():
                 entered_value = getattr(self, key, None)
-                script_logger.debug(f'Entered Value {key}: {entered_value}')
-                script_logger.debug(f'Response Value {key}: {value}')
+                main_logger.debug(f'Entered Value {key}: {entered_value}')
+                main_logger.debug(f'Response Value {key}: {value}')
                 if entered_value != value:
                     error_message = f"Error {key.replace('_', ' ').title()} not match: {entered_value} != {value}"
                     main_logger.error(error_message)

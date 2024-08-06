@@ -2,9 +2,7 @@ import datetime
 
 import pandas as pd
 
-from logging_config import configure_logging_with_file, main_logger
-
-script_logger = configure_logging_with_file(log_dir='logs', log_file='data_transformer.log', logger_name='data_transformer')
+from logging_config import main_logger
 
 
 def transform_data_in_df(check_in: str, check_out: str, city: str, dataframe: pd.DataFrame) -> pd.DataFrame:

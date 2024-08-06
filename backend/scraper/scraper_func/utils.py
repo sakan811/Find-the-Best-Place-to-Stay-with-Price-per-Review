@@ -2,10 +2,7 @@ import os
 
 import pandas as pd
 
-
-from logging_config import configure_logging_with_file, main_logger
-
-script_logger = configure_logging_with_file(log_dir='logs', log_file='utils.log', logger_name='utils')
+from logging_config import main_logger
 
 
 def concat_df_list(df_list: list[pd.DataFrame]) -> pd.DataFrame:

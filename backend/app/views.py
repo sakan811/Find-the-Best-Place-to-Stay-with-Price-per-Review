@@ -7,14 +7,12 @@ from django.db import connection
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from logging_config import configure_logging_with_file, main_logger
+from logging_config import main_logger
 from scraper.graphql_scraper import Scraper
 from .app_func.db_func import truncate_roomprice_table, save_data_to_db, save_booking_details_to_db, \
     truncate_booking_details_table
 from .app_func.utils_func import get_form_data
 from .models import RoomPrice
-
-script_logger = configure_logging_with_file(log_dir='logs', log_file='django_views.log', logger_name='django_views')
 
 
 @csrf_exempt

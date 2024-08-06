@@ -1,8 +1,8 @@
 import os
-from dotenv import load_dotenv
-from logging_config import configure_logging_with_file, main_logger
 
-script_logger = configure_logging_with_file(log_dir='logs', log_file='graphql_func.log', logger_name='graphql_func')
+from dotenv import load_dotenv
+
+from logging_config import main_logger
 
 load_dotenv()
 
