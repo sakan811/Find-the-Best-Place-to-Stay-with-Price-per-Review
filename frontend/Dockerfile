@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Build the React application
-RUN npm run build
+RUN npx vite build
 
 # Step 2: Serve the React app with Nginx
 FROM nginx:alpine
