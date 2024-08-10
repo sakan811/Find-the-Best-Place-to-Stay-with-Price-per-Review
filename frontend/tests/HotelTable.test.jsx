@@ -3,10 +3,10 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import axios from 'axios';
 import HotelTable from "../src/components/HotelTable";
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 
-
-jest.mock('axios');
-jest.mock('react-helmet-async', () => ({
+vi.mock('axios');
+vi.mock('react-helmet-async', () => ({
   Helmet: ({ children }) => <div data-testid="helmet-mock">{children}</div>,
 }));
 
@@ -21,28 +21,28 @@ const mockBookingDetails = [
 
 describe('HotelTable Component', () => {
   beforeEach(() => {
-    axios.get.mockImplementation((url) => {
+    vi.mocked(axios.get).mockImplementation((url) => {
       if (url.includes('get_hotel_data_from_db')) {
         return Promise.resolve({ data: { hotel_data: mockHotelData } });
       } else if (url.includes('get_booking_details_from_db')) {
         return Promise.resolve({ data: { booking_data: mockBookingDetails } });
       }
     });
-    axios.post.mockResolvedValue({ data: { filename: 'test.xlsx', file_content: 'base64encodedcontent' } });
+    vi.mocked(axios.post).mockResolvedValue({ data: { filename: 'test.xlsx', file_content: 'base64encodedcontent' } });
 
     // Mock window.URL.createObjectURL
-    window.URL.createObjectURL = jest.fn();
-    window.URL.revokeObjectURL = jest.fn();
+    window.URL.createObjectURL = vi.fn();
+    window.URL.revokeObjectURL = vi.fn();
   });
 
-  test('renders HotelTable component', async () => {
+  it('renders HotelTable component', async () => {
     await act(async () => {
       render(<HotelTable />);
     });
     expect(screen.getByText('Hotels\' Room Price/Review Data')).toBeInTheDocument();
   });
 
-  test('displays hotel data correctly', async () => {
+  it('displays hotel data correctly', async () => {
     await act(async () => {
       render(<HotelTable />);
     });
@@ -50,7 +50,7 @@ describe('HotelTable Component', () => {
     expect(screen.getByText('Hotel B')).toBeInTheDocument();
   });
 
-  test('displays booking details correctly', async () => {
+  it('displays booking details correctly', async () => {
     await act(async () => {
       render(<HotelTable />);
     });
@@ -70,7 +70,7 @@ describe('HotelTable Component', () => {
     expect(screen.getByText(': USD')).toBeInTheDocument();
   });
 
-  test('handles save data button click', async () => {
+  it('handles save data button click', async () => {
     await act(async () => {
       render(<HotelTable />);
     });
@@ -87,8 +87,8 @@ describe('HotelTable Component', () => {
     expect(window.URL.revokeObjectURL).toHaveBeenCalled();
   });
 
-  test('handles error when saving data', async () => {
-    axios.post.mockRejectedValueOnce(new Error('Network error'));
+  it('handles error when saving data', async () => {
+    vi.mocked(axios.post).mockRejectedValueOnce(new Error('Network error'));
 
     await act(async () => {
       render(<HotelTable />);
@@ -102,9 +102,9 @@ describe('HotelTable Component', () => {
     expect(screen.getByText('Error!')).toBeInTheDocument();
   });
 
-  test('handles back to form button click', async () => {
+  it('handles back to form button click', async () => {
     delete window.location;
-    window.location = { href: jest.fn() };
+    window.location = { href: vi.fn() };
 
     await act(async () => {
       render(<HotelTable />);
@@ -116,7 +116,7 @@ describe('HotelTable Component', () => {
     expect(window.location.href).toBe('/');
   });
 
-  test('formats numbers correctly', async () => {
+  it('formats numbers correctly', async () => {
     await act(async () => {
       render(<HotelTable />);
     });

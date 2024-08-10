@@ -4,7 +4,7 @@ import ScrapingForm from "../src/components/ScrapingForm";
 import {HelmetProvider} from "react-helmet-async";
 
 // Mock react-helmet-async
-jest.mock('react-helmet-async', () => ({
+vi.mock('react-helmet-async', () => ({
   Helmet: ({ children }) => <div data-testid="helmet-mock">{children}</div>,
   HelmetProvider: ({ children }) => <div data-testid="helmet-provider-mock">{children}</div>,
 }));
