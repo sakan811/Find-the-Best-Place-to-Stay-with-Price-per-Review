@@ -59,4 +59,4 @@ def configure_logging_with_file(log_dir: str, log_file: str, logger_name: str = 
     return logger
 
 
-main_logger = configure_logging_with_file(log_dir='logs', log_file='main.log', logger_name='main', level="INFO")
+main_logger = configure_logging_with_file(log_dir='logs', log_file='main.log', logger_name='main', level="WARNING")
