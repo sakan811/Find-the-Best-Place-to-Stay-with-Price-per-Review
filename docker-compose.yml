@@ -12,3 +12,4 @@ services:
     image: sakanbeer88/find-stay-place-frontend:latest
     ports:
       - "5000:80"
+
