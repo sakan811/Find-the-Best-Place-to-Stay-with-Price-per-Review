@@ -2,7 +2,7 @@
 FROM node:20-alpine AS build
 
 # Create a non-root user and group
-RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -S appuser
+RUN addgroup -g 1010 appgroup && adduser -u 1010 -G appgroup -S appuser
 
 # Set the working directory and ensure it's owned by the non-root user
 WORKDIR /app
