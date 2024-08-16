@@ -7,8 +7,6 @@ when finding a place to stay in that city during a trip.
 A **lower Price/Review Score** indicates that the place is **not expensive**, yet, with a **great review score**.   
 
 ## Status
-Latest Update: 6 August 2024
-
 [![CodeQL](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/codeql.yml)  
 
 [![Backend Test](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/backend-test.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/backend-test.yml)

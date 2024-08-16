@@ -7,9 +7,10 @@ services:
       - "8000:8000"
     environment:
       - USER_AGENT=your_user_agent
+    user: "1000:1000"
 
   frontend:
     image: sakanbeer88/find-stay-place-frontend:latest
     ports:
       - "5000:80"
-
+    user: "1001:1001"
