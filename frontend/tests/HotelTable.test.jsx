@@ -15,19 +15,21 @@ const mockHotelData = [
   { city: 'Paris', hotel: 'Hotel B', review_score: 9.0, room_price: 250, price_per_review: 27.78, check_in: '2023-07-02', check_out: '2023-07-06' },
 ];
 
-const mockBookingDetails = [
+const mockBookingDetailsOnlyHotel = [
   { city: 'New York', check_in: '2023-07-01', check_out: '2023-07-05', num_adults: 2, num_children: 1, num_rooms: 1, currency: 'USD', only_hotel: true },
+];
+
+const mockBookingDetailsIncludingOthers = [
+  { city: 'Paris', check_in: '2023-07-02', check_out: '2023-07-06', num_adults: 3, num_children: 2, num_rooms: 2, currency: 'EUR', only_hotel: false },
 ];
 
 describe('HotelTable Component', () => {
   beforeEach(() => {
     vi.mocked(axios.get).mockImplementation((url) => {
       if (url.includes('get_hotel_data_from_db')) {
-        return Promise.resolve({ data: { hotel_data: mockHotelData } });
-      } else if (url.includes('get_booking_details_from_db')) {
-        return Promise.resolve({ data: { booking_data: mockBookingDetails } });
-      }
-    });
+          return Promise.resolve({ data: { hotel_data: mockHotelData } });
+        }
+      });
     vi.mocked(axios.post).mockResolvedValue({ data: { filename: 'test.xlsx', file_content: 'base64encodedcontent' } });
 
     // Mock window.URL.createObjectURL
@@ -50,7 +52,13 @@ describe('HotelTable Component', () => {
     expect(screen.getByText('Hotel B')).toBeInTheDocument();
   });
 
-  it('displays booking details correctly', async () => {
+  it('displays booking details correctly for only_hotel = true', async () => {
+    vi.mocked(axios.get).mockImplementation((url) => {
+    if (url.includes('get_booking_details_from_db')) {
+        return Promise.resolve({ data: { booking_data: mockBookingDetailsOnlyHotel } });
+      }
+    });
+
     await act(async () => {
       render(<HotelTable />);
     });
@@ -68,6 +76,36 @@ describe('HotelTable Component', () => {
     expect(screen.getAllByText(': 1')[1]).toBeInTheDocument();
     expect(screen.getByText('Currency', { selector: 'strong' })).toBeInTheDocument();
     expect(screen.getByText(': USD')).toBeInTheDocument();
+    expect(screen.getByText('Only Hotel Properties', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getByText(': true')).toBeInTheDocument();
+  });
+
+  it('displays booking details correctly for only_hotel = false', async () => {
+    vi.mocked(axios.get).mockImplementation((url) => {
+    if (url.includes('get_booking_details_from_db')) {
+        return Promise.resolve({ data: { booking_data: mockBookingDetailsIncludingOthers } });
+      }
+    });
+
+    await act(async () => {
+      render(<HotelTable />);
+    });
+    expect(screen.getByText('City', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getByText(': Paris')).toBeInTheDocument();
+    expect(screen.getByText('Check In', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getByText(': 2023-07-02')).toBeInTheDocument();
+    expect(screen.getByText('Check Out', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getByText(': 2023-07-06')).toBeInTheDocument();
+    expect(screen.getByText('Adults', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getByText(': 3')).toBeInTheDocument();
+    expect(screen.getByText('Children', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getAllByText(': 2')[0]).toBeInTheDocument();
+    expect(screen.getByText('Rooms', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getAllByText(': 2')[1]).toBeInTheDocument();
+    expect(screen.getByText('Currency', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getByText(': EUR')).toBeInTheDocument();
+    expect(screen.getByText('Only Hotel Properties', { selector: 'strong' })).toBeInTheDocument();
+    expect(screen.getByText(': false')).toBeInTheDocument();
   });
 
   it('handles save data button click', async () => {
