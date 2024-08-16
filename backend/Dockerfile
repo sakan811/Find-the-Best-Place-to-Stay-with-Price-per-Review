@@ -10,9 +10,12 @@ RUN chown appuser:appgroup /app
 # Switch to the non-root user for the rest of the build stage
 USER appuser
 
+# Set PATH to include user-specific bin directory
+ENV PATH="/home/appuser/.local/bin:${PATH}"
+
 # Copy the requirements file and install dependencies
 COPY --chown=appuser:appgroup requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --user --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY --chown=appuser:appgroup . .
