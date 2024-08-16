@@ -29,6 +29,10 @@ FROM nginx:alpine
 # Create a non-root user and group for Nginx
 RUN addgroup -g 1001 nginxgroup && adduser -u 1001 -S nginxuser -G nginxgroup
 
+# Create required Nginx cache directories and set ownership
+RUN mkdir -p /var/cache/nginx /var/run/nginx && \
+    chown -R nginxuser:nginxgroup /var/cache/nginx /var/run/nginx
+
 # Copy the build output to Nginx's html directory, with proper ownership
 COPY --from=build /app/dist /usr/share/nginx/html
 RUN chown -R nginxuser:nginxgroup /usr/share/nginx/html
