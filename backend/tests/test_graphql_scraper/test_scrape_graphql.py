@@ -8,6 +8,7 @@ from scraper.graphql_scraper import Scraper
 
 def test_graphql_scraper():
     city = 'Tokyo'
+    country = 'Japan'
 
     timezone = pytz.timezone('Asia/Tokyo')
     today = datetime.datetime.now(timezone)
@@ -21,7 +22,7 @@ def test_graphql_scraper():
     selected_currency = 'USD'
     hotel_filter = True
 
-    scraper = Scraper(city=city, check_in=check_in, check_out=check_out,
+    scraper = Scraper(city=city, country=country, check_in=check_in, check_out=check_out,
                       group_adults=group_adults, group_children=group_children,
                       num_rooms=num_rooms, hotel_filter=hotel_filter,
                       selected_currency=selected_currency)
@@ -34,6 +35,7 @@ def test_graphql_scraper():
 
 def test_graphql_scraper_all_properties():
     city = 'Tokyo'
+    country = 'Japan'
 
     timezone = pytz.timezone('Asia/Tokyo')
     today = datetime.datetime.now(timezone)
@@ -47,7 +49,7 @@ def test_graphql_scraper_all_properties():
     selected_currency = 'USD'
     hotel_filter = False
 
-    scraper = Scraper(city=city, check_in=check_in, check_out=check_out,
+    scraper = Scraper(city=city, country=country, check_in=check_in, check_out=check_out,
                       group_adults=group_adults, group_children=group_children,
                       num_rooms=num_rooms, hotel_filter=hotel_filter,
                       selected_currency=selected_currency)

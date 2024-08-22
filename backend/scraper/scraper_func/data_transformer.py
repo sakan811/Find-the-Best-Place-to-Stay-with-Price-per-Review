@@ -46,10 +46,3 @@ def transform_data_in_df(check_in: str, check_out: str, city: str, dataframe: pd
         return dataframe
 
 
-def clean_city_name(city_name: str) -> str:
-    """
-    Clean city name.
-    :param city_name: City name to be cleaned.
-    :return: Cleaned city name.
-    """
-    return city_name.split(',')[0].strip()

@@ -24,25 +24,26 @@ describe('ScrapingForm Component', () => {
 
   test('handles form submission error', async () => {
     // Mock the axios POST request to simulate a server error
-    axios.post.mockRejectedValue({
-      response: {
-        status: 500,
-        data: {}
-      }
-    });
+    axios.post.mockRejectedValue({ response: { status: 500, data: { error: 'Internal Server Error' } } });
 
-    // Fill out the form
-    fireEvent.change(screen.getByLabelText('City:'), { target: { value: 'New York' } });
-    fireEvent.change(screen.getByLabelText('Check-in:'), { target: { value: '2023-07-01' } });
-    fireEvent.change(screen.getByLabelText('Check-out:'), { target: { value: '2023-07-05' } });
-    fireEvent.change(screen.getByLabelText('Currency:'), { target: { value: 'USD' } });
+    // Simulate user input
+    fireEvent.change(screen.getByLabelText(/City:/i), { target: { value: 'Tokyo' } });
+    fireEvent.change(screen.getByLabelText(/Country:/i), { target: { value: 'Japan' } });
+    fireEvent.change(screen.getByLabelText(/Check-in:/i), { target: { value: '2024-09-01' } });
+    fireEvent.change(screen.getByLabelText(/Check-out:/i), { target: { value: '2024-09-05' } });
+    fireEvent.change(screen.getByLabelText(/Adults:/i), { target: { value: 2 } });
+    fireEvent.change(screen.getByLabelText(/Rooms:/i), { target: { value: 1 } });
+    fireEvent.change(screen.getByLabelText(/Children:/i), { target: { value: 0 } });
+    fireEvent.change(screen.getByLabelText(/Currency:/i), { target: { value: 'USD' } });
+    fireEvent.click(screen.getByLabelText(/Scrape Hotel Properties Only:/i));
 
     // Submit the form
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
-    const errorMessage = await screen.findByText('Internal server error. Please try again later.');
+    // Wait for error message to appear
+    await screen.findByText(/Internal server error/i);
 
-    // Ensure the error message is in the document
-    expect(errorMessage).toBeInTheDocument();
+    // Check if the error message appears
+    expect(screen.getByText(/Internal server error/i)).toBeInTheDocument();
   });
 });

@@ -5,7 +5,7 @@ import requests
 
 from logging_config import main_logger
 from scraper.scraper_func.data_extractor import extract_hotel_data
-from scraper.scraper_func.data_transformer import transform_data_in_df, clean_city_name
+from scraper.scraper_func.data_transformer import transform_data_in_df
 from scraper.scraper_func.graphql_func import get_header, check_city_data, check_currency_data, check_hotel_filter_data
 from scraper.scraper_func.utils import concat_df_list
 
@@ -16,6 +16,7 @@ class Scraper:
     Scraper class, which holds hotel booking data required for web-scraping.
     Attributes:
         city (str): City where the hotels are located.
+        country (str): Country where the hotels are located.
         check_in (str): Check-in date.
         check_out (str): Check-out date.
         selected_currency (str): Currency of the room price.
@@ -29,6 +30,7 @@ class Scraper:
                             Default is True.
     """
     city: str = None
+    country: str = None
     check_in: str = None
     check_out: str = None
     selected_currency: str = None
@@ -60,7 +62,9 @@ class Scraper:
             main_logger.warning("Error: city, check_in, check_out and selected_currency are required")
 
         # GraphQL endpoint URL
-        url = f'https://www.booking.com/dml/graphql?selected_currency={self.selected_currency}'
+        url = f'https://www.booking.com/dml/graphql?ss={self.city}%2C+{self.country}&selected_currency={self.selected_currency}'
+        main_logger.debug(f'Url: {url}')
+
         headers = get_header()
         graphql_query = self.get_graphql_query()
 
@@ -142,7 +146,7 @@ class Scraper:
                     },
                     "forcedBlocks": None,
                     "location": {
-                        "searchString": self.city,
+                        "searchString": f'{self.city}, {self.country}',
                         "destType": "CITY"
                     },
                     "metaContext": {
@@ -487,9 +491,6 @@ class Scraper:
         total_page_num = data['data']['searchQueries']['search']['pagination']['nbResultsTotal']
 
         if total_page_num > 0:
-            # Extract city name by splitting the entered city at commas
-            self.city = clean_city_name(self.city)
-
             city_data = check_city_data(data, self.city)
             selected_currency_data = check_currency_data(data)
             hotel_filter = check_hotel_filter_data(data)

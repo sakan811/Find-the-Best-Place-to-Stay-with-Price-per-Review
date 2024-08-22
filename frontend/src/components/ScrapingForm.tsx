@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet-async';
 // Define the shape of form data
 interface FormData {
   city: string;
+  country: string;
   check_in: string;
   check_out: string;
   group_adults: number;
@@ -18,6 +19,7 @@ interface FormData {
 const ScrapingForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     city: '',
+    country: '',
     check_in: '',
     check_out: '',
     group_adults: 1,
@@ -85,98 +87,111 @@ const ScrapingForm: React.FC = () => {
         <div className="formGroup">
           <label htmlFor="city">City:</label>
           <input
-            type="text"
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            maxLength={100}
-            className="input"
-            required
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              maxLength={100}
+              className="input"
+              required
+          />
+        </div>
+        <div className="formGroup">
+          <label htmlFor="country">Country:</label>
+          <input
+              type="text"
+              id="country"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              maxLength={100}
+              className="input"
+              required
           />
         </div>
         <div className="formGroup">
           <label htmlFor="check_in">Check-in:</label>
           <input
-            type="date"
-            id="check_in"
-            name="check_in"
-            value={formData.check_in}
-            onChange={handleChange}
-            className="input"
-            required
+              type="date"
+              id="check_in"
+              name="check_in"
+              value={formData.check_in}
+              onChange={handleChange}
+              className="input"
+              required
           />
         </div>
         <div className="formGroup">
           <label htmlFor="check_out">Check-out:</label>
           <input
-            type="date"
-            id="check_out"
-            name="check_out"
-            value={formData.check_out}
-            onChange={handleChange}
-            className="input"
-            required
+              type="date"
+              id="check_out"
+              name="check_out"
+              value={formData.check_out}
+              onChange={handleChange}
+              className="input"
+              required
           />
         </div>
         <div className="formGroup">
           <label htmlFor="group_adults">Adults:</label>
           <input
-            type="number"
-            id="group_adults"
-            name="group_adults"
-            value={formData.group_adults}
-            onChange={handleChange}
-            min={1}
-            className="input"
+              type="number"
+              id="group_adults"
+              name="group_adults"
+              value={formData.group_adults}
+              onChange={handleChange}
+              min={1}
+              className="input"
           />
         </div>
         <div className="formGroup">
           <label htmlFor="num_rooms">Rooms:</label>
           <input
-            type="number"
-            id="num_rooms"
-            name="num_rooms"
-            value={formData.num_rooms}
-            onChange={handleChange}
-            min={1}
-            className="input"
+              type="number"
+              id="num_rooms"
+              name="num_rooms"
+              value={formData.num_rooms}
+              onChange={handleChange}
+              min={1}
+              className="input"
           />
         </div>
         <div className="formGroup">
           <label htmlFor="group_children">Children:</label>
           <input
-            type="number"
-            id="group_children"
-            name="group_children"
-            value={formData.group_children}
-            onChange={handleChange}
-            min={0}
-            className="input"
+              type="number"
+              id="group_children"
+              name="group_children"
+              value={formData.group_children}
+              onChange={handleChange}
+              min={0}
+              className="input"
           />
         </div>
         <div className="formGroup">
           <label htmlFor="selected_currency">Currency:</label>
           <input
-            type="text"
-            id="selected_currency"
-            name="selected_currency"
-            value={formData.selected_currency}
-            onChange={handleChange}
-            maxLength={10}
-            className="input"
-            required
+              type="text"
+              id="selected_currency"
+              name="selected_currency"
+              value={formData.selected_currency}
+              onChange={handleChange}
+              maxLength={10}
+              className="input"
+              required
           />
         </div>
         <div className="formGroup">
           <label htmlFor="hotel_filter">Scrape Hotel Properties Only:</label>
           <input
-            type="checkbox"
-            id="hotel_filter"
-            name="hotel_filter"
-            checked={formData.hotel_filter}
-            onChange={handleChange}
-            className="checkbox"
+              type="checkbox"
+              id="hotel_filter"
+              name="hotel_filter"
+              checked={formData.hotel_filter}
+              onChange={handleChange}
+              className="checkbox"
           />
         </div>
         <button type="submit" className="submitButton">Submit</button>

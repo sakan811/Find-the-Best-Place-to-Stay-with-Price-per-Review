@@ -12,6 +12,7 @@ def get_form_data(form_data: dict) -> tuple:
     main_logger.info(f'Getting form data...')
 
     city = form_data.get('city')
+    country = form_data.get('country')
     check_in = form_data.get('check_in')
     check_out = form_data.get('check_out')
     group_adults = form_data.get('group_adults')
@@ -44,4 +45,4 @@ def get_form_data(form_data: dict) -> tuple:
             main_logger.warning('num_rooms is not an integer. set it to 1')
             num_rooms = 1
 
-    return check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency
+    return check_in, check_out, city, country, group_adults, group_children, hotel_filter, num_rooms, selected_currency

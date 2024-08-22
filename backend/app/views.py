@@ -112,15 +112,14 @@ def start_web_scraping(request):
         try:
             data = json.loads(request.body)
 
-            check_in, check_out, city, group_adults, group_children, hotel_filter, num_rooms, selected_currency = get_form_data(
-                data)
+            check_in, check_out, city, country, group_adults, group_children, hotel_filter, num_rooms, selected_currency = get_form_data(data)
 
             truncate_booking_details_table()
             save_booking_details_to_db(check_in=check_in, check_out=check_out, city=city,
                                        num_adults=group_adults, num_children=group_children, num_rooms=num_rooms,
                                        currency=selected_currency, only_hotel=hotel_filter)
 
-            scraper = Scraper(city=city, check_in=check_in, check_out=check_out,
+            scraper = Scraper(city=city, country=country,check_in=check_in, check_out=check_out,
                               group_adults=group_adults, group_children=group_children,
                               num_rooms=num_rooms, hotel_filter=hotel_filter,
                               selected_currency=selected_currency)
