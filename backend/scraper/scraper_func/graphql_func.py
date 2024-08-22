@@ -51,13 +51,23 @@ def check_city_data(data) -> str:
     try:
         for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
             if 'destType' in breadcrumb:
-                if breadcrumb['destType'] == 'CITY' or breadcrumb['destType'] == 'REGION':
+                if breadcrumb['destType'] == 'CITY':
                     city_data = breadcrumb['name']
                     break
+
+        # In case city name is not found where destType = CITY
+        if city_data is None:
+            for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
+                if 'destType' in breadcrumb:
+                    if breadcrumb['destType'] == 'REGION':
+                        city_data = breadcrumb['name']
+                        break
     except KeyError:
         main_logger.error('KeyError: City not found')
+        raise KeyError
     except IndexError:
         main_logger.error('IndexError: City not found')
+        raise IndexError
     return city_data
 
 
