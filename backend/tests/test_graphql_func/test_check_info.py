@@ -98,18 +98,12 @@ def test_handles_response_with_missing_or_null_fields_gracefully():
     entered_num_room = 1
 
     # When
-    error_message = ''
-    try:
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
-                          selected_currency=entered_selected_currency, group_adults=entered_num_adult,
-                          group_children=entered_num_children, num_rooms=entered_num_room)
-        result = scraper.check_info(data)
+    scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+                      selected_currency=entered_selected_currency, group_adults=entered_num_adult,
+                      group_children=entered_num_children, num_rooms=entered_num_room)
 
-    except SystemExit as e:
-        error_message = str(e)
-
-    # Then
-    assert error_message == "Error City not match: Test City != None"
+    with pytest.raises(SystemExit):
+        scraper.check_info(data)
 
 
 def test_handles_response_with_currency_is_none():

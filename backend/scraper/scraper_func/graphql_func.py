@@ -40,35 +40,37 @@ def check_currency_data(data) -> str:
     return selected_currency_data
 
 
-def check_city_data(data) -> str:
+def check_city_data(data: dict, entered_city: str) -> str:
     """
     Check city data from the GraphQL response.
     :param data: GraphQL response as JSON.
+    :param entered_city: City name entered by the user.
     :return: City name.
     """
     main_logger.info("Checking city data from the GraphQL response...")
-    city_data = None
-    try:
-        for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
-            if 'destType' in breadcrumb:
-                if breadcrumb['destType'] == 'CITY':
-                    city_data = breadcrumb['name']
-                    break
+    city_data = ''
 
-        # In case city name is not found where destType = CITY
+    try:
+        # Loop through each breadcrumb in the GraphQL response
+        for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
+            # Search each key-value pair in the breadcrumb dictionary
+            for key, value in breadcrumb.items():
+                # Check if the value matches the entered city
+                if str(value).lower() == entered_city.lower():
+                    city_data = breadcrumb.get('name', value)  # Return city name or the matched value
+                    return city_data
+
+        # In case no match is found for the entered city
         if city_data is None:
-            for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
-                if 'destType' in breadcrumb:
-                    if breadcrumb['destType'] == 'REGION':
-                        city_data = breadcrumb['name']
-                        break
+            main_logger.warning(f"City '{entered_city}' not found in GraphQL breadcrumbs.")
     except KeyError:
-        main_logger.error('KeyError: City not found')
+        main_logger.error('KeyError: Issue while parsing city data')
         raise KeyError
     except IndexError:
-        main_logger.error('IndexError: City not found')
+        main_logger.error('IndexError: Issue while parsing city data')
         raise IndexError
-    return city_data
+
+    return city_data  # Returns None if no match is found
 
 
 def check_hotel_filter_data(data) -> bool:

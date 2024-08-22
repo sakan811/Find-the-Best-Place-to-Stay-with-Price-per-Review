@@ -478,14 +478,13 @@ class Scraper:
         total_page_num = data['data']['searchQueries']['search']['pagination']['nbResultsTotal']
 
         if total_page_num > 0:
-            city_data = check_city_data(data)
+            city_data = check_city_data(data, self.city)
             selected_currency_data = check_currency_data(data)
             hotel_filter = check_hotel_filter_data(data)
 
             data_mapping = {
                 "city": city_data,
-                "check_in": data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkin'][
-                    0],
+                "check_in": data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkin'][0],
                 "check_out":
                     data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkout'][0],
                 "group_adults": data['data']['searchQueries']['search']['searchMeta']['nbAdults'],
