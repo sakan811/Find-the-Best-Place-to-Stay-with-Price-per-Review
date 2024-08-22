@@ -51,7 +51,7 @@ def check_city_data(data) -> str:
     try:
         for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
             if 'destType' in breadcrumb:
-                if breadcrumb['destType'] == 'CITY':
+                if breadcrumb['destType'] == 'CITY' or breadcrumb['destType'] == 'REGION':
                     city_data = breadcrumb['name']
                     break
     except KeyError:
