@@ -39,5 +39,7 @@ When filling the form, please use an abbreviation for **currency**
 Ticking **Scrape Hotel Properties Only** box in the form means that the scraper will scrape only places that are hotels.
 If not ticked, the scraper will scrape all places available through Booking.com in the specified city.
 
+When filling the **country** part in the form, please enter the **full name** of the **country**.
+**Don't** use **abbreviation**.
 # Codebase Detail
 [Click here](docs/DOCS.md) to read a brief docs of this codebase.
