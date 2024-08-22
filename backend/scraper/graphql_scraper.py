@@ -5,7 +5,7 @@ import requests
 
 from logging_config import main_logger
 from scraper.scraper_func.data_extractor import extract_hotel_data
-from scraper.scraper_func.data_transformer import transform_data_in_df
+from scraper.scraper_func.data_transformer import transform_data_in_df, clean_city_name
 from scraper.scraper_func.graphql_func import get_header, check_city_data, check_currency_data, check_hotel_filter_data
 from scraper.scraper_func.utils import concat_df_list
 
@@ -15,17 +15,17 @@ class Scraper:
     """
     Scraper class, which holds hotel booking data required for web-scraping.
     Attributes:
-        city: City where the hotels are located.
-        check_in: Check-in date.
-        check_out: Check-out date.
-        selected_currency: Currency of the room price.
-        group_adults: Number of adults.
+        city (str): City where the hotels are located.
+        check_in (str): Check-in date.
+        check_out (str): Check-out date.
+        selected_currency (str): Currency of the room price.
+        group_adults (int): Number of adults.
                             Default is 1.
-        num_rooms: Number of rooms.
+        num_rooms (int): Number of rooms.
                         Default is 1.
-        group_children: Number of children.
+        group_children (int): Number of children.
                             Default is 0.
-        hotel_filter: If True, scrape only hotel properties, else scrape all properties.
+        hotel_filter (bool): If True, scrape only hotel properties, else scrape all properties.
                             Default is True.
     """
     city: str = None
@@ -37,6 +37,13 @@ class Scraper:
     group_children: int = 0
     hotel_filter: bool = True
 
+    def _validate_inputs(self) -> bool:
+        """
+        Validate if all required inputs are provided.
+        :return: True if all required inputs are provided, False otherwise
+        """
+        return all([self.city, self.check_in, self.check_out, self.selected_currency])
+
     def scrape_graphql(self) -> pd.DataFrame:
         """
         Scrape hotel data from GraphQL endpoint.
@@ -44,47 +51,49 @@ class Scraper:
         """
         main_logger.info("Start scraping data from GraphQL endpoint...")
 
-        main_logger.debug(f"City: {self.city} | Check-in: {self.check_in} | Check-out: {self.check_out} | Currency: {self.selected_currency}")
+        main_logger.debug(
+            f"City: {self.city} | Check-in: {self.check_in} | Check-out: {self.check_out} | Currency: {self.selected_currency}")
         main_logger.debug(f"Adults: {self.group_adults} | Children: {self.group_children} | Rooms: {self.num_rooms}")
         main_logger.debug(f"Only hotel properties: {self.hotel_filter}")
 
-        if self.city and self.check_in and self.check_out and self.selected_currency:
-            # GraphQL endpoint URL
-            url = f'https://www.booking.com/dml/graphql?selected_currency={self.selected_currency}'
-            headers = get_header()
-            graphql_query = self.get_graphql_query()
-
-            response = requests.post(url, headers=headers, json=graphql_query)
-            if response.status_code == 200:
-                data = response.json()
-
-                total_page_num, hotel_data_dict = self.check_info(data)
-                main_logger.debug(f"Total page number: {total_page_num}")
-
-                if total_page_num > 0 and hotel_data_dict != {}:
-                    df_list = []
-                    main_logger.info("Scraping data from GraphQL endpoint...")
-                    for offset in range(0, total_page_num, 100):
-                        graphql_query = self.get_graphql_query(page_offset=offset)
-                        response = requests.post(url, headers=headers, json=graphql_query)
-
-                        if response.status_code == 200:
-                            data = response.json()
-                            hotel_data_list: list = data['data']['searchQueries']['search']['results']
-
-                            extract_hotel_data(df_list, hotel_data_list)
-                        else:
-                            main_logger.error(f"Error: {response.status_code}")
-
-                    df = concat_df_list(df_list)
-                    return transform_data_in_df(self.check_in, self.check_out, self.city, df)
-                else:
-                    main_logger.error(f"Total page number is zero and hotel data is empty")
-                    raise SystemExit
-            else:
-                main_logger.error(f"Error: {response.status_code}")
-        else:
+        if not self._validate_inputs():
             main_logger.warning("Error: city, check_in, check_out and selected_currency are required")
+
+        # GraphQL endpoint URL
+        url = f'https://www.booking.com/dml/graphql?selected_currency={self.selected_currency}'
+        headers = get_header()
+        graphql_query = self.get_graphql_query()
+
+        response = requests.post(url, headers=headers, json=graphql_query)
+
+        if not response.status_code == 200:
+            main_logger.error(f"Error: {response.status_code}")
+
+        data = response.json()
+
+        total_page_num, hotel_data_dict = self.check_info(data)
+        main_logger.debug(f"Total page number: {total_page_num}")
+
+        if total_page_num > 0 and hotel_data_dict != {}:
+            df_list = []
+            main_logger.info("Scraping data from GraphQL endpoint...")
+            for offset in range(0, total_page_num, 100):
+                graphql_query = self.get_graphql_query(page_offset=offset)
+                response = requests.post(url, headers=headers, json=graphql_query)
+
+                if response.status_code == 200:
+                    data = response.json()
+                    hotel_data_list: list = data['data']['searchQueries']['search']['results']
+
+                    extract_hotel_data(df_list, hotel_data_list)
+                else:
+                    main_logger.error(f"Error: {response.status_code}")
+
+            df = concat_df_list(df_list)
+            return transform_data_in_df(self.check_in, self.check_out, self.city, df)
+        else:
+            main_logger.error(f"Total page number is zero and hotel data is empty")
+            raise SystemExit
 
     def get_graphql_query(self, page_offset: int = 0) -> dict:
         """
@@ -478,13 +487,17 @@ class Scraper:
         total_page_num = data['data']['searchQueries']['search']['pagination']['nbResultsTotal']
 
         if total_page_num > 0:
+            # Extract city name by splitting the entered city at commas
+            self.city = clean_city_name(self.city)
+
             city_data = check_city_data(data, self.city)
             selected_currency_data = check_currency_data(data)
             hotel_filter = check_hotel_filter_data(data)
 
             data_mapping = {
                 "city": city_data,
-                "check_in": data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkin'][0],
+                "check_in":
+                    data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkin'][0],
                 "check_out":
                     data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkout'][0],
                 "group_adults": data['data']['searchQueries']['search']['searchMeta']['nbAdults'],

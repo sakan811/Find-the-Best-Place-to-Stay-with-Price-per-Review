@@ -53,15 +53,18 @@ def check_city_data(data: dict, entered_city: str) -> str:
     try:
         # Loop through each breadcrumb in the GraphQL response
         for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
-            # Search each key-value pair in the breadcrumb dictionary
-            for key, value in breadcrumb.items():
-                # Check if the value matches the entered city
-                if str(value).lower() == entered_city.lower():
-                    city_data = breadcrumb.get('name', value)  # Return city name or the matched value
-                    return city_data
+            main_logger.debug(f'Breadcrumb data: {breadcrumb}')
+
+            if breadcrumb.get('name') is None:
+                continue
+
+            # Compare the 'name' field specifically with the entered city
+            if breadcrumb.get('name', '').lower() == entered_city.lower():
+                city_data = breadcrumb['name']  # Return the city name if a match is found
+                return city_data
 
         # In case no match is found for the entered city
-        if city_data is None:
+        if city_data == '':
             main_logger.warning(f"City '{entered_city}' not found in GraphQL breadcrumbs.")
     except KeyError:
         main_logger.error('KeyError: Issue while parsing city data')

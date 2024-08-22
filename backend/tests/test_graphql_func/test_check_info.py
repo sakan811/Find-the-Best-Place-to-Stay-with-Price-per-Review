@@ -32,7 +32,7 @@ def test_returns_correct_total_page_number_and_data_mapping():
             }
         }
     }
-    entered_city = "Test City"
+    entered_city = "Test City, Test District, Test Country"
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
