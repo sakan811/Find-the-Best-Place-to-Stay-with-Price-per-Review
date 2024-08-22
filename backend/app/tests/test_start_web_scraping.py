@@ -21,6 +21,7 @@ class TestStartWebScrape(TestCase):
 
         mock_form = {
             'city': 'London',
+            'country': 'United Kingdom',
             'check_in': check_in,
             'check_out': check_out,
             'group_adults': 2,
