@@ -23,8 +23,10 @@ def get_form_data(form_data: dict) -> tuple:
     hotel_filter = form_data.get('hotel_filter')
 
     # Capitalize first letter of each word
-    city = city.title()
-    country = country.title()
+    if city:
+        city = city.title()
+    if country:
+        country = country.title()
 
     if isinstance(check_in, date):
         check_in = check_in.strftime('%Y-%m-%d')

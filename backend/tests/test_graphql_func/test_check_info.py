@@ -12,9 +12,8 @@ def test_returns_correct_total_page_number_and_data_mapping():
                     'appliedFilterOptions': [],
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -120,9 +119,8 @@ def test_handles_response_with_currency_is_none():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -175,9 +173,8 @@ def test_data_mapping_check_in_not_match():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -223,9 +220,8 @@ def test_data_mapping_check_out_not_match():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -271,9 +267,8 @@ def test_data_mapping_adult_not_match():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -319,9 +314,8 @@ def test_data_mapping_room_not_match():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -366,9 +360,8 @@ def test_data_mapping_children_not_match():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -414,9 +407,8 @@ def test_data_mapping_currency_not_match():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -462,9 +454,8 @@ def test_data_mapping_city_not_match():
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Tokyo', 'destType': 'CITY', 'searchString': 'Tokyo, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Tokyo', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -510,9 +501,8 @@ def test_total_page_num_is_zero():
                 'search': {
                     'pagination': {'nbResultsTotal': 0},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
@@ -563,9 +553,8 @@ def test_data_mapping_hotel_filter_not_match():
                     'appliedFilterOptions': [{'urlId': "ht_id=204"}],
                     'pagination': {'nbResultsTotal': 1},
                     'breadcrumbs': [
-                        {},
-                        {},
-                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                        {'name': 'Test Country', 'destType': 'COUNTRY'},
+                        {'name': 'Test City', 'destType': 'CITY'}
                     ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
