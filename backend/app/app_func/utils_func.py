@@ -7,7 +7,8 @@ def get_form_data(form_data: dict) -> tuple:
     """
     Get data from Django form.
     :param form_data: Form data.
-    :return: Tuple of form data.
+    :return: Tuple of form data:
+            check_in, check_out, city, country, group_adults, group_children, hotel_filter, num_rooms, selected_currency
     """
     main_logger.info(f'Getting form data...')
 
