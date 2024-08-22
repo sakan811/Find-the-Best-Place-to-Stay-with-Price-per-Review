@@ -11,7 +11,11 @@ def test_returns_correct_total_page_number_and_data_mapping():
                 'search': {
                     'appliedFilterOptions': [],
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -32,7 +36,8 @@ def test_returns_correct_total_page_number_and_data_mapping():
             }
         }
     }
-    entered_city = "Test City, Test District, Test Country"
+    entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -42,7 +47,7 @@ def test_returns_correct_total_page_number_and_data_mapping():
     entered_hotel_filter = False
 
     # When
-    scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+    scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                       selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                       group_children=entered_num_children, num_rooms=entered_num_room,
                       hotel_filter=entered_hotel_filter)
@@ -53,6 +58,7 @@ def test_returns_correct_total_page_number_and_data_mapping():
      {'check_in': '2023-01-01',
       'check_out': '2023-01-02',
       'city': 'Test City',
+      'country': 'Test Country',
       'group_adults': 2,
       'group_children': 1,
       'hotel_filter': False,
@@ -113,7 +119,11 @@ def test_handles_response_with_currency_is_none():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ["2023-01-01"],
@@ -135,6 +145,7 @@ def test_handles_response_with_currency_is_none():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -145,7 +156,7 @@ def test_handles_response_with_currency_is_none():
     # When
     error_message = ''
     try:
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -163,7 +174,11 @@ def test_data_mapping_check_in_not_match():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-02-01'],
@@ -185,6 +200,7 @@ def test_data_mapping_check_in_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -193,7 +209,7 @@ def test_data_mapping_check_in_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -206,7 +222,11 @@ def test_data_mapping_check_out_not_match():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -228,6 +248,7 @@ def test_data_mapping_check_out_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -236,7 +257,7 @@ def test_data_mapping_check_out_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -249,7 +270,11 @@ def test_data_mapping_adult_not_match():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -271,6 +296,7 @@ def test_data_mapping_adult_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -279,7 +305,7 @@ def test_data_mapping_adult_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -292,7 +318,11 @@ def test_data_mapping_room_not_match():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -314,6 +344,7 @@ def test_data_mapping_room_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -322,7 +353,7 @@ def test_data_mapping_room_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -334,7 +365,11 @@ def test_data_mapping_children_not_match():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -356,6 +391,7 @@ def test_data_mapping_children_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -364,7 +400,7 @@ def test_data_mapping_children_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -377,7 +413,11 @@ def test_data_mapping_currency_not_match():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -399,6 +439,7 @@ def test_data_mapping_currency_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -407,7 +448,7 @@ def test_data_mapping_currency_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -420,7 +461,11 @@ def test_data_mapping_city_not_match():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Tokyo', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Tokyo', 'destType': 'CITY', 'searchString': 'Tokyo, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -442,6 +487,7 @@ def test_data_mapping_city_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -450,7 +496,7 @@ def test_data_mapping_city_not_match():
     entered_num_room = 1
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room)
         result = scraper.check_info(data)
@@ -463,7 +509,11 @@ def test_total_page_num_is_zero():
             'searchQueries': {
                 'search': {
                     'pagination': {'nbResultsTotal': 0},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -485,6 +535,7 @@ def test_total_page_num_is_zero():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -494,7 +545,7 @@ def test_total_page_num_is_zero():
     entered_hotel_filter = False
 
     # When
-    scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+    scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                       selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                       group_children=entered_num_children, num_rooms=entered_num_room, hotel_filter=entered_hotel_filter)
     result = scraper.check_info(data)
@@ -511,7 +562,11 @@ def test_data_mapping_hotel_filter_not_match():
                 'search': {
                     'appliedFilterOptions': [{'urlId': "ht_id=204"}],
                     'pagination': {'nbResultsTotal': 1},
-                    'breadcrumbs': [{}, {}, {'name': 'Test City', 'destType': 'CITY'}],
+                    'breadcrumbs': [
+                        {},
+                        {},
+                        {'name': 'Test City', 'destType': 'CITY', 'searchString': 'Test City, Test Country'}
+                    ],
                     'flexibleDatesConfig': {
                         'dateRangeCalendar': {
                             'checkin': ['2023-01-01'],
@@ -533,6 +588,7 @@ def test_data_mapping_hotel_filter_not_match():
         }
     }
     entered_city = "Test City"
+    entered_country = 'Test Country'
     entered_check_in = "2023-01-01"
     entered_check_out = "2023-01-02"
     entered_selected_currency = "USD"
@@ -542,7 +598,7 @@ def test_data_mapping_hotel_filter_not_match():
     entered_hotel_filter = False
 
     with pytest.raises(SystemExit):
-        scraper = Scraper(city=entered_city, check_in=entered_check_in, check_out=entered_check_out,
+        scraper = Scraper(city=entered_city, country=entered_country, check_in=entered_check_in, check_out=entered_check_out,
                           selected_currency=entered_selected_currency, group_adults=entered_num_adult,
                           group_children=entered_num_children, num_rooms=entered_num_room,
                           hotel_filter=entered_hotel_filter)

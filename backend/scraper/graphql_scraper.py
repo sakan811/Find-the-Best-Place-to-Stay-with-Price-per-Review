@@ -6,7 +6,8 @@ import requests
 from logging_config import main_logger
 from scraper.scraper_func.data_extractor import extract_hotel_data
 from scraper.scraper_func.data_transformer import transform_data_in_df
-from scraper.scraper_func.graphql_func import get_header, check_city_data, check_currency_data, check_hotel_filter_data
+from scraper.scraper_func.graphql_func import get_header, check_city_data, check_currency_data, check_hotel_filter_data, \
+    check_country_data
 from scraper.scraper_func.utils import concat_df_list
 
 
@@ -492,11 +493,13 @@ class Scraper:
 
         if total_page_num > 0:
             city_data = check_city_data(data, self.city)
+            country_data = check_country_data(data, self.country)
             selected_currency_data = check_currency_data(data)
             hotel_filter = check_hotel_filter_data(data)
 
             data_mapping = {
                 "city": city_data,
+                "country": country_data,
                 "check_in":
                     data['data']['searchQueries']['search']['flexibleDatesConfig']['dateRangeCalendar']['checkin'][0],
                 "check_out":

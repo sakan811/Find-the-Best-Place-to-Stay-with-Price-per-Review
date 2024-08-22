@@ -76,6 +76,42 @@ def check_city_data(data: dict, entered_city: str) -> str:
     return city_data  # Returns None if no match is found
 
 
+def check_country_data(data: dict, entered_country: str) -> str:
+    """
+    Check country data from the GraphQL response.
+    :param data: GraphQL response as JSON.
+    :param entered_country: Country name entered by the user.
+    :return: Country name.
+    """
+    main_logger.info("Checking country data from the GraphQL response...")
+    country_data = ''
+
+    try:
+        # Loop through each breadcrumb in the GraphQL response
+        for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
+            main_logger.debug(f'Breadcrumb data: {breadcrumb}')
+
+            if breadcrumb.get('name') is None:
+                continue
+
+            # Compare the 'name' field specifically with the entered country
+            if breadcrumb.get('name', '').lower() == entered_country.lower():
+                country_data = breadcrumb['name']  # Return the country name if a match is found
+                return country_data
+
+        # In case no match is found for the entered city
+        if country_data == '':
+            main_logger.warning(f"Country name not found in GraphQL breadcrumbs.")
+    except KeyError:
+        main_logger.error('KeyError: Issue while parsing country data')
+        raise KeyError
+    except IndexError:
+        main_logger.error('IndexError: Issue while parsing country data')
+        raise IndexError
+
+    return country_data  # Returns None if no match is found
+
+
 def check_hotel_filter_data(data) -> bool:
     """
     Check hotel filter data from the GraphQL response.
