@@ -91,5 +91,5 @@ class SaveScrapedDataViewTestCase(TestCase):
         response = client.get(url)
 
         self.assertEqual(response.status_code, 405)
-        self.assertEqual(response.json()['error_msg'], 'Invalid request method')
+        self.assertEqual(response.json()['detail'], 'Method "GET" not allowed.')
 

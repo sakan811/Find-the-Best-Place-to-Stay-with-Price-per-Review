@@ -34,7 +34,7 @@ class TestStartWebScrape(TestCase):
         json_data = json.dumps(mock_form)
 
         # Mock the form submission in a POST request
-        url = reverse('start_web_scraping')  # Replace with your actual URL name
+        url = reverse('start_web_scraping')
         request = self.factory.post(url, data=json_data, content_type='application/json')
 
         # Pass the request to your view
@@ -43,5 +43,13 @@ class TestStartWebScrape(TestCase):
         # Assert the response status code and content
         self.assertEqual(response.status_code, 200)
 
+    def test_invalid_request_method(self):
+        url = reverse('start_web_scraping')  
+        request = self.factory.get(url)  # Sending a GET request instead of POST
 
+        # Pass the request to your view
+        response = start_web_scraping(request)
 
+        # Assert the response status code and content
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.data['detail'], 'Method "GET" not allowed.')
