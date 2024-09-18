@@ -42,9 +42,9 @@ jobs:
         python -m pip install --upgrade pip
         if (Test-Path requirements.txt) { python -m pip install -r requirements.txt }
 
-    - name: Test Django
+    - name: Test Backend
       working-directory: ./backend
       env:
         USER_AGENT: ${{ secrets.USER_AGENT }}
       run: |
-        python manage.py test
+        pytest
