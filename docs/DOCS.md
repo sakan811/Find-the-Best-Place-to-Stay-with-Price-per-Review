@@ -24,10 +24,6 @@
 - [db_func.py](..%2Fbackend%2Fapp%2Fapp_func%2Fdb_func.py)
   - Contain Django database-related functions
 
-### [migrations](..%2Fbackend%2Fapp%2Fmigrations) Package
-* [0001_initial.py](..%2Fbackend%2Fapp%2Fmigrations%2F0001_initial.py)
-  * SQLite initialize
-
 ### Django
 * [settings.py](..%2Fbackend%2Fdjango_project%2Fsettings.py)
     * Django settings
