@@ -17,6 +17,7 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 ## To Use the Web-App
 ### Setup the Web App
+- Download [Docker Desktop](https://www.docker.com/products/docker-desktop) and install it.
 - Download [docker-compose.yml](docker-compose.yml) file and place it in any directory of your choice.
 - Find your **User Agent**:
   - Go to https://www.whatismybrowser.com/detect/what-is-my-user-agent/
