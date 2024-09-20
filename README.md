@@ -15,30 +15,51 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 [![Docker Build](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml)
 
-## To Use the Web-App
-### Setup the Web App
-- Download [Docker Desktop](https://www.docker.com/products/docker-desktop) and install it.
-- Download [docker-compose.yml](docker-compose.yml) file and place it in any directory of your choice.
-- Find your **User Agent**:
-  - Go to https://www.whatismybrowser.com/detect/what-is-my-user-agent/
-  - Enter your User Agent into **USER_AGENT** environment variable inside [docker-compose.yml](docker-compose.yml)
-- Execute:
-  ```
-  docker-compose up
-  ```
-  
-## Access the Web App
-- Navigate to [http://localhost:5000/](http://localhost:5000/)
-- Press **Ctrl + C** in the terminal or **stop** the Docker container to stop the web app.
+## How to Use the Web App
+
+### Step 1: Set Up the Web App
+
+1. **Install Docker Desktop**
+   - [Click here](https://www.docker.com/products/docker-desktop) to download Docker Desktop.
+   - Follow the instructions on the website to install it on your computer.
+
+2. **Download the Configuration File**
+   - [Click here](docker-compose.yml) to download the docker-compose.yml file.
+   - Save it in a folder where you can easily find it (e.g., your Desktop or Documents).
+
+3. **Find Your User Agent**
+   - Open your web browser and go to [What Is My Browser](https://www.whatismybrowser.com/detect/what-is-my-user-agent/).
+   - You will see a message that shows your User Agent. **Copy this text.**
+
+4. **Edit the Configuration File**
+   - Open the `docker-compose.yml` file you downloaded in a text editor (like Notepad).
+   - Look for the line that says `USER_AGENT`. Replace whatever is there with the User Agent you copied. 
+   - Save the file and close the text editor.
+
+5. **Start the Web App**
+   - Make sure that the Docker Desktop is running.
+   - Open a Command Prompt or Terminal window on your computer. (You can usually find this by searching for "cmd" or "Terminal" in your computer's search bar.)
+   - Navigate to the folder where you saved the `docker-compose.yml` file. You can do this by typing `cd path_to_your_folder`, where `path_to_your_folder` is the location of your file. 
+   - Type the following command and press **Enter**:
+     ```
+     docker-compose up
+     ```
+
+### Step 2: Access the Web App
+- Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/)
+- To stop the web app, return to the Command Prompt or Terminal window and press **Ctrl + C**. 
+  - Alternatively, you can open Docker Desktop and stop the container from the **Containers** section.
 
 ## Disclaimer
-When filling the form, please use an abbreviation for **currency**
-- For example, If the wanted currency is US Dollar, then enter USD in the currency tab.
 
-Ticking **Scrape Hotel Properties Only** box in the form means that the scraper will scrape only places that are hotels.
-If not ticked, the scraper will scrape all places available through Booking.com in the specified city.
+- When filling out the form, please use abbreviations for **currency**:
+  - For example, if you want to select the US Dollar, enter **USD** in the currency tab.
 
-When filling the **country** part in the form, please enter the **full name** of the **country**.
-**Don't** use **abbreviation**.
+- If you tick the **Scrape Hotel Properties Only** box, the scraper will only gather data on hotels. 
+  - If you leave this box unticked, the scraper will retrieve information on all types of places available through Booking.com in the specified city.
+
+- When entering the **country** in the form, please provide the **full name** of the country. 
+  - **Do not** use abbreviations.
+
 # Codebase Detail
 [Click here](docs/DOCS.md) to read a brief docs of this codebase.
