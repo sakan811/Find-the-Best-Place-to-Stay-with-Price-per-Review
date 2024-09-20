@@ -33,12 +33,16 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 4. **Edit the Configuration File**
    - Open the `docker-compose.yml` file you downloaded in a text editor (like Notepad).
-   - Look for the line that says `USER_AGENT`. Replace whatever is there with the User Agent you copied. 
+   - Look for the line that says `USER_AGENT`. Replace `your_user_agent` text with the User Agent you copied. 
    - Save the file and close the text editor.
 
 5. **Start the Web App**
    - Make sure that the Docker Desktop is running.
-   - Open a Command Prompt or Terminal window on your computer. (You can usually find this by searching for "cmd" or "Terminal" in your computer's search bar.)
+      - If not, start the Docker Desktop. 
+   - Open a **Command Prompt**, **Terminal**, or **Console** window on your computer:
+     - **Windows:** Search for "Command Prompt" or "cmd" in the Start menu.
+     - **macOS:** Open "Terminal" from the Applications > Utilities folder, or search for it using Spotlight (Cmd + Space).
+     - **Linux:** Open "Terminal" from your applications menu or use the shortcut Ctrl + Alt + T.
    - Navigate to the folder where you saved the `docker-compose.yml` file. You can do this by typing `cd path_to_your_folder`, where `path_to_your_folder` is the location of your file. 
    - Type the following command and press **Enter**:
      ```
