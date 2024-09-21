@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import { Table, Button, Alert } from 'react-bootstrap';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import './HotelTable.css';
@@ -123,9 +123,9 @@ const HotelTable: React.FC = () => {
             <Button variant="primary" className="backToFormButton" onClick={goToFormPage}>
                 Back to Form
             </Button>
-            <h2 style={{ textAlign: 'center' }}>Hotels' Room Price/Review Data</h2>
+            <h2 style={{ textAlign: 'center' }}>Hotels&apos; Room Price/Review Data</h2>
             <p style={{ textAlign: 'center', fontSize: '16px' }}>
-                A lower Price/Review Score indicates that the place isn't expensive, yet, with a great review score
+                A lower Price/Review Score indicates that the place isn&apos;t expensive, yet, with a great review score
             </p>
             <Button variant="success" className="saveDataButton" onClick={saveData}>
                 Save Data to Excel
@@ -185,7 +185,7 @@ const HotelTable: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((hotel, index) => (
+                    {data && data.map((hotel, index) => (
                         <tr key={index}>
                             <td>{hotel.city}</td>
                             <td>{hotel.hotel}</td>

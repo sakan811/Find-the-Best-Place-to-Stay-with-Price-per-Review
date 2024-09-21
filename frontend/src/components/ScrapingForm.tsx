@@ -1,7 +1,15 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import './ScrapingForm.css';
-import axios from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
 import { Helmet } from 'react-helmet-async';
+
+interface SystemExit extends AxiosError {
+  response: AxiosResponse & {
+    data: {
+      error: string;
+    };
+  };
+}
 
 // Define the shape of form data
 interface FormData {
@@ -50,24 +58,18 @@ const ScrapingForm: React.FC = () => {
       await axios.post('http://localhost:8000/scraping/', formData);
       setSubmitMessage('Form submitted successfully');
       window.location.href = '/hotel_data_table_page/';
-    } catch (error: any) { // use 'any' type to allow flexible error handling
-      if (error.response) {
-        console.error('Error response:', error.response.data);
-        console.error('Status code:', error.response.status);
-
-        if (error.response.data.error === 'SystemExit') {
-          setErrorMessage('No places found that can satisfy this booking. Please re-enter the form.');
-        } else if (error.response.status === 500) {
-          setErrorMessage('Internal server error. Please try again later.');
+    } catch (error: unknown) {
+      console.error('Error:', error);
+      const axiosError = error as AxiosError;
+      if (axiosError.isAxiosError) {
+        const systemError = axiosError as SystemExit;
+        if (systemError.response?.data?.error === 'SystemExit') {
+        setErrorMessage('No places found that can satisfy this booking. Please re-enter the form.');
+        } else if (axiosError.response?.status === 500) {
+        setErrorMessage('Internal server error. Please try again later.');
         } else {
-          setErrorMessage('An error occurred while submitting the form.');
+        setErrorMessage('An error occurred while submitting the form.');
         }
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-        setErrorMessage('No response received from the server. Please check your internet connection.');
-      } else {
-        console.error('Error setting up the request:', error.message);
-        setErrorMessage('An unexpected error occurred. Please try again later.');
       }
     } finally {
       setScrapingMessage('');
