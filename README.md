@@ -64,6 +64,3 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 - When entering the **country** in the form, please provide the **full name** of the country. 
   - **Do not** use abbreviations.
-
-# Codebase Detail
-[Click here](docs/DOCS.md) to read a brief docs of this codebase.
