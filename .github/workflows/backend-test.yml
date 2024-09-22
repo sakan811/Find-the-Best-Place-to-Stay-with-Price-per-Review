@@ -42,6 +42,10 @@ jobs:
         python -m pip install --upgrade pip
         if (Test-Path requirements.txt) { python -m pip install -r requirements.txt }
 
+    - name: Lint with Ruff
+      run: |
+          ruff check --fix --unsafe-fixes .
+
     - name: Test Backend
       working-directory: ./backend
       env:

@@ -48,7 +48,7 @@ def check_city_data(data: dict, entered_city: str) -> str:
     :return: City name.
     """
     main_logger.info("Checking city data from the GraphQL response...")
-    city_data = ''
+    city_data = 'Not Match'
 
     try:
         # Loop through each breadcrumb in the GraphQL response
@@ -64,7 +64,7 @@ def check_city_data(data: dict, entered_city: str) -> str:
                 return city_data
 
         # In case no match is found for the entered city
-        if city_data == '':
+        if city_data == 'Not Match':
             main_logger.warning(f"City '{entered_city}' not found in GraphQL breadcrumbs.")
     except KeyError:
         main_logger.error('KeyError: Issue while parsing city data')
@@ -84,7 +84,7 @@ def check_country_data(data: dict, entered_country: str) -> str:
     :return: Country name.
     """
     main_logger.info("Checking country data from the GraphQL response...")
-    country_data = ''
+    country_data = 'Not Match'
 
     try:
         # Loop through each breadcrumb in the GraphQL response
@@ -100,7 +100,7 @@ def check_country_data(data: dict, entered_country: str) -> str:
                 return country_data
 
         # In case no match is found for the entered city
-        if country_data == '':
+        if country_data == 'Not Match':
             main_logger.warning(f"Country name not found in GraphQL breadcrumbs.")
     except KeyError:
         main_logger.error('KeyError: Issue while parsing country data')

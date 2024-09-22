@@ -18,7 +18,9 @@
     "resolveJsonModule": true,             // Include modules imported with .json extension
     "noEmit": true,
     // Prevent output files from being created (useful when type-checking without generating files)
-    "jsx": "react"
+    "jsx": "react",
+    // Specify type definition files to be included in compilation
+    "types": ["vitest", "jest", "@testing-library/jest-dom"]
   },
   "include": ["src/**/*"],                 // Include all .ts, .tsx, and .js files within the `src` folder
   "exclude": ["node_modules"]              // Exclude the `node_modules` folder from compilation

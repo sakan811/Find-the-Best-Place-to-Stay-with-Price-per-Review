@@ -1,31 +1,36 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import ScrapingForm from "../src/components/ScrapingForm";
+import React, {ReactNode} from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import ScrapingForm from "../../src/components/ScrapingForm";
 import {HelmetProvider} from "react-helmet-async";
+import { describe, vi, test, expect } from 'vitest';
 
 // Mock react-helmet-async
-vi.mock('react-helmet-async', () => ({
-  Helmet: ({ children }) => <div data-testid="helmet-mock">{children}</div>,
-  HelmetProvider: ({ children }) => <div data-testid="helmet-provider-mock">{children}</div>,
-}));
+vi.mock('react-helmet-async', () => {
+  const HelmetProvider = ({ children }: { children: ReactNode }) => <div>{children}</div>;
+
+  return {
+    Helmet: () => <div></div>,
+    HelmetProvider,
+  };
+});
 
 describe('ScrapingForm', () => {
     test('updates formData on input change', () => {
-        const { getByLabelText } = render(
-                                                                                  <HelmetProvider>
-                                                                                    <ScrapingForm />
-                                                                                  </HelmetProvider>
-                                                                                );
+        render(
+            <HelmetProvider>
+                <ScrapingForm />
+            </HelmetProvider>
+        );
 
         // Get input elements
-        const cityInput = getByLabelText(/city/i);
-        const checkInInput = getByLabelText(/check-in/i);
-        const checkOutInput = getByLabelText(/check-out/i);
-        const adultsInput = getByLabelText(/adults/i);
-        const roomsInput = getByLabelText(/rooms/i);
-        const childrenInput = getByLabelText(/children/i);
-        const currencyInput = getByLabelText(/currency/i);
-        const hotelFilterInput = getByLabelText(/scrape hotel properties only/i);
+        const cityInput = screen.getByRole('textbox', { name: /City:/i }) as HTMLInputElement;
+        const checkInInput = screen.getByLabelText(/Check-in:/i) as HTMLInputElement;
+        const checkOutInput = screen.getByLabelText(/Check-out:/i) as HTMLInputElement;
+        const adultsInput = screen.getByRole('spinbutton', { name: /Adults:/i }) as HTMLInputElement;
+        const roomsInput = screen.getByRole('spinbutton', { name: /Rooms:/i }) as HTMLInputElement;
+        const childrenInput = screen.getByRole('spinbutton', { name: /Children:/i }) as HTMLInputElement;
+        const currencyInput = screen.getByRole('textbox', { name: /Currency:/i }) as HTMLInputElement;
+        const hotelFilterInput = screen.getByRole('checkbox', { name: /Scrape Hotel Properties Only:/i }) as HTMLInputElement;
 
         // Simulate user input
         fireEvent.change(cityInput, { target: { name: 'city', value: 'New York' } });
