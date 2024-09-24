@@ -26,7 +26,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-backend:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
