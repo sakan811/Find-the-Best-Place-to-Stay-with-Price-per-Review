@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Python (pip) updates
+  - package-ecosystem: "pip"  # Update Python dependencies using pip
+    directory: "/"  # Location of requirements.txt or pyproject.toml
+    schedule:
+      interval: "weekly"  # Check for updates every week
+
+  # Node.js (npm) updates
+  - package-ecosystem: "npm"  # Update Node.js dependencies using npm
+    directory: "/"  # Location of package.json and package-lock.json
+    schedule:
+      interval: "weekly"  # Check for updates every week
