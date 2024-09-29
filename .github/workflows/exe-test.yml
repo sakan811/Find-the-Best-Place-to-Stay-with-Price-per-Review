@@ -1,0 +1,38 @@
+name: Test EXE File
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run EXE file tests on Windows
+        run: |
+          .\app-windows.exe --test
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run EXE file tests on macOS
+        run: |
+          ./app-mac --test
+
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run EXE file tests on Linux
+        run: |
+          ./app-linux --test
