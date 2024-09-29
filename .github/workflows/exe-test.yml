@@ -5,6 +5,8 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   test-windows:
@@ -25,7 +27,7 @@ jobs:
 
       - name: Run EXE file tests on macOS
         run: |
-          ./app-mac --test
+          chmod +x ./app-mac --test
 
   test-linux:
     runs-on: ubuntu-latest
@@ -35,4 +37,4 @@ jobs:
 
       - name: Run EXE file tests on Linux
         run: |
-          ./app-linux --test
+          chmod +x ./app-linux --test
