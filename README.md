@@ -18,40 +18,40 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 ## How to Use the Web App
 
 ### Step 1: Set Up the Web App
-
 1. **Install Docker Desktop**
    - [Click here](https://www.docker.com/products/docker-desktop) to download Docker Desktop.
    - Follow the instructions on the website to install it on your computer.
+2. Download Web App Assets
+   - Click here to [Click here](https://www.docker.com/products/docker-desktop) to download the web-app assets.
+   - Extract the ZIP file.
 
-2. **Download the Configuration File**
-   - [Click here](docker-compose.yml) to download the docker-compose.yml file.
-   - Save it in a folder where you can easily find it (e.g., your Desktop or Documents).
-
-3. **Find Your User Agent**
+### Step 2: Find Your User Agent
+1. **Find Your User Agent**
    - Open your web browser and go to [What Is My Browser](https://www.whatismybrowser.com/detect/what-is-my-user-agent/).
    - You will see a message that shows your User Agent. **Copy this text.**
 
-4. **Edit the Configuration File**
-   - Open the `docker-compose.yml` file you downloaded in a text editor (like Notepad).
+2. **Edit the Configuration File**
+   - Open the `docker-compose.yml` file you extracted from the ZIP file in a text editor (like Notepad).
    - Look for the line that says `USER_AGENT`. Replace `your_user_agent` text with the User Agent you copied. 
    - Save the file and close the text editor.
 
-5. **Start the Web App**
+### Step 3: Access the Web App
+1. **Start the Web App**
    - Make sure that the Docker Desktop is running.
       - If not, start the Docker Desktop. 
-   - Open a **Command Prompt**, **Terminal**, or **Console** window on your computer:
-     - **Windows:** Search for "Command Prompt" or "cmd" in the Start menu.
-     - **macOS:** Open "Terminal" from the Applications > Utilities folder, or search for it using Spotlight (Cmd + Space).
-     - **Linux:** Open "Terminal" from your applications menu or use the shortcut Ctrl + Alt + T.
-   - Navigate to the folder where you saved the `docker-compose.yml` file. You can do this by typing `cd path_to_your_folder`, where `path_to_your_folder` is the location of your file. 
-   - Type the following command and press **Enter**:
-     ```
-     docker-compose up
-     ```
+   - Double-click the executable file:
+     - **Windows:** Double-click `app-windows.exe`
+     - **macOS:** Double-click `app-mac`
+     - **Linux:** Double-click `app-linux`
+2. **Check the Terminal**:
+     - A terminal window will open, indicating that the web app is starting. 
+       You should see messages in the terminal that confirm the app is launching.
 
-### Step 2: Access the Web App
-- Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/)
-- To stop the web app, return to the Command Prompt or Terminal window and press **Ctrl + C**. 
+3. **Access the Web App**
+   - Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/)
+
+### Step 4: Exit the Web App
+- Press `Enter` as prompted in the terminal.
   - Alternatively, you can open Docker Desktop and stop the container from the **Containers** section.
 
 ## Disclaimer
