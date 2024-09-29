@@ -27,7 +27,7 @@ func main() {
 	}
 
 	// Run docker-compose in detached mode (-d flag)
-	cmd := exec.Command("docker-compose", "up", "-d")
+	cmd := exec.Command("docker", "compose", "up", "-d")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Dir = "./"
