@@ -41,8 +41,8 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
       - If not, start the Docker Desktop. 
    - Double-click the executable file:
      - **Windows:** Double-click `app-windows.exe`
-     - **macOS:** Double-click `app-mac.exe`
-     - **Linux:** Double-click `app-linux.exe`
+     - **macOS:** Double-click `app-mac`
+     - **Linux:** Double-click `app-linux`
 2. **Check the Terminal**:
      - A terminal window will open, indicating that the web app is starting. 
        You should see messages in the terminal that confirm the app is launching.
