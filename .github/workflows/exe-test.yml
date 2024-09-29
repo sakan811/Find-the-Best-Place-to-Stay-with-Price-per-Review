@@ -9,35 +9,28 @@ on:
       - main
 
 jobs:
-  test-windows:
-    runs-on: windows-latest
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run EXE file tests on Windows
+      - name: Run EXE file test
         run: |
-          .\app-windows.exe --test | findstr /C:"Press 'Enter' to exit..." && exit 0 || (echo %ERRORLEVEL% && exit %ERRORLEVEL%)
-        shell: cmd
+          ${{ matrix.os == 'windows-latest' && '.\app-windows.exe' || './app-' }}${{ matrix.os == 'macos-latest' && 'mac' || 'linux' }} --test | tee output.log
 
-  test-macos:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run EXE file tests on macOS
+      - name: Check for specific error
+        if: failure()
         run: |
-          chmod +x ./app-mac
-          ./app-mac --test | grep "Press 'Enter' to exit..." && exit 0 || exit $?
+          ${{ matrix.os == 'windows-latest' && 'findstr' || 'grep' }} "Press 'Enter' to exit..." output.log && echo "::warning::Docker may not be running or there was an issue with docker-compose" || echo "::error::Unexpected error occurred"
 
-  test-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run EXE file tests on Linux
+      - name: Verify service is up
         run: |
-          chmod +x ./app-linux
-          ./app-linux --test | grep "Press 'Enter' to exit..." && exit 0 || exit $?
+          timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:5000)" != "200" ]]; do sleep 5; done' || exit 1
+
+      - name: Clean up
+        if: always()
+        run: docker-compose down
