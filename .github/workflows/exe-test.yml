@@ -18,6 +18,7 @@ jobs:
       - name: Run EXE file tests on Windows
         run: |
           .\app-windows.exe --test
+        shell: cmd
 
   test-macos:
     runs-on: macos-latest
@@ -27,7 +28,8 @@ jobs:
 
       - name: Run EXE file tests on macOS
         run: |
-          chmod +x ./app-mac --test
+          chmod +x ./app-mac
+          ./app-mac --test
 
   test-linux:
     runs-on: ubuntu-latest
@@ -37,4 +39,5 @@ jobs:
 
       - name: Run EXE file tests on Linux
         run: |
-          chmod +x ./app-linux --test
+          chmod +x ./app-linux
+          ./app-linux --test
