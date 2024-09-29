@@ -167,3 +167,8 @@ cython_debug/
 /backend/scraped_hotel_data/
 /backend/.idea/
 /prototypes/
+
+**/*.idea
+/frontend/node_modules
+/frontend/npm
+/build_exe.sh
