@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run EXE file tests on Windows
+        working-directory: ./exe
         run: |
           .\app-windows.exe --test | findstr /C:"Press 'Enter' to exit..." && exit 0 || (echo %ERRORLEVEL% && exit %ERRORLEVEL%)
         shell: cmd
@@ -27,6 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run EXE file tests on macOS
+        working-directory: ./exe
         run: |
           chmod +x ./app-mac
           ./app-mac --test | grep "Press 'Enter' to exit..." && exit 0 || exit $?
@@ -38,6 +40,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run EXE file tests on Linux
+        working-directory: ./exe
         run: |
           chmod +x ./app-linux
           ./app-linux --test | grep "Press 'Enter' to exit..." && exit 0 || exit $?
