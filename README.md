@@ -24,7 +24,7 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - [Click here](https://www.docker.com/products/docker-desktop) to download Docker Desktop.
    - Follow the instructions on the website to install it on your computer.
 2. Download Web App Assets
-   - Click here to [Click here](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/releases/download/v8.0.0/find-place-web-app.zip) to download the web-app assets.
+   - Click here to [Click here](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/releases/download/v8.0.2/find-place-web-app.zip) to download the web-app assets.
    - Extract the ZIP file.
 
 ### Step 2: Find Your User Agent
