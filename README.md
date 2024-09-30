@@ -15,6 +15,8 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 [![Docker Build](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-build.yml)
 
+[![Trivy Docker Scan](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/trivy-scan.yml)
+
 ## How to Use the Web App
 
 ### Step 1: Set Up the Web App

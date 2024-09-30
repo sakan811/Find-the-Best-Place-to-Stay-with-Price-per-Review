@@ -1,0 +1,27 @@
+name: Trivy Docker Scan
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner for Backend
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-backend:latest'
+          format: 'table'
+
+      - name: Run Trivy vulnerability scanner for Frontend
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest'
+          format: 'table'
