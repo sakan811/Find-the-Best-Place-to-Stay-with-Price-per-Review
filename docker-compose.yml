@@ -8,6 +8,9 @@ services:
     environment:
       - USER_AGENT=your_user_agent
     user: "1000:1000"
+    command: > 
+      sh -c "python manage.py migrate &&
+             gunicorn --bind 0.0.0.0:8000 django_project.wsgi:application"
 
   frontend:
     image: sakanbeer88/find-stay-place-frontend:latest
