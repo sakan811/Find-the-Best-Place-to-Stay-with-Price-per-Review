@@ -15,13 +15,13 @@ def get_header() -> dict:
     main_logger.info("Getting header...")
     headers = {
         "User-Agent": os.getenv("USER_AGENT"),
-        "X-Booking-Context-Action-Name": os.getenv("X_BOOKING_CONTEXT_ACTION_NAME"),
-        "X-Booking-Context-Aid": os.getenv("X_BOOKING_CONTEXT_AID"),
-        "X-Booking-CSRF-Token": os.getenv("X_BOOKING_CSRF_TOKEN"),
-        "X-Booking-ET-Serialized-State": os.getenv("X_BOOKING_ET_SERIALIZED_STATE"),
-        "X-Booking-Pageview-Id": os.getenv("X_BOOKING_PAGEVIEW_ID"),
-        "X-Booking-Site-Type-Id": os.getenv("X_BOOKING_SITE_TYPE_ID"),
-        "X-Booking-Topic": os.getenv("X_BOOKING_TOPIC"),
+        "x-booking-context-action-name": os.getenv("X_BOOKING_CONTEXT_ACTION_NAME"),
+        "x-booking-context-aid": os.getenv("X_BOOKING_CONTEXT_AID"),
+        "x-booking-csrf-token": os.getenv("X_BOOKING_CSRF_TOKEN"),
+        "x-booking-et-serialized-state": os.getenv("X_BOOKING_ET_SERIALIZED_STATE"),
+        "x-booking-pageview-id": os.getenv("X_BOOKING_PAGEVIEW_ID"),
+        "x-booking-site-type-id": os.getenv("X_BOOKING_SITE_TYPE_ID"),
+        "x-booking-topic": os.getenv("X_BOOKING_TOPIC"),
     }
     return headers
 
