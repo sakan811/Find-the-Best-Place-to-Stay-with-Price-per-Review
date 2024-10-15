@@ -1,6 +1,7 @@
 import datetime
 import pytest
 import pytz
+
 from scraper.graphql_scraper import Scraper
 from requests.exceptions import RequestException
 
