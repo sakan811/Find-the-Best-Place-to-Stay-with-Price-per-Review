@@ -40,7 +40,7 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - Rename the `.env.example` file to `.env`.
    - Open the `.env` via a text editor like Notepad, etc.
    - Look for the line that says `USER_AGENT`.
-   - Paste the User Agent you copied, for exaxmple:
+   - Paste the User Agent you copied, for example:
      ```
      USER_AGENT=copied_user_agent
      ```
