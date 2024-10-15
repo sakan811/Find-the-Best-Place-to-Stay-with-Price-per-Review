@@ -13,10 +13,17 @@ def get_header() -> dict:
     :return: Header as a dictionary.
     """
     main_logger.info("Getting header...")
-    return {
-        "User-Agent": os.getenv("USER_AGENT")
+    headers = {
+        "User-Agent": os.getenv("USER_AGENT"),
+        "X-Booking-Context-Action-Name": os.getenv("X_BOOKING_CONTEXT_ACTION_NAME"),
+        "X-Booking-Context-Aid": os.getenv("X_BOOKING_CONTEXT_AID"),
+        "X-Booking-CSRF-Token": os.getenv("X_BOOKING_CSRF_TOKEN"),
+        "X-Booking-ET-Serialized-State": os.getenv("X_BOOKING_ET_SERIALIZED_STATE"),
+        "X-Booking-Pageview-Id": os.getenv("X_BOOKING_PAGEVIEW_ID"),
+        "X-Booking-Site-Type-Id": os.getenv("X_BOOKING_SITE_TYPE_ID"),
+        "X-Booking-Topic": os.getenv("X_BOOKING_TOPIC"),
     }
-
+    return headers
 
 def check_currency_data(data) -> str:
     """
