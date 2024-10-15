@@ -26,6 +26,9 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 2. Download Docker Compose File
    - Download the [docker-compose.yml](docker-compose.yml) file from this repository.
    - Place the file in the directory of your choice.
+3. Download `.env.example` File
+   - Download the [.env.example](.env.example) file from this repository.
+   - Place the file in the same directory with Docker Compose file.
 
 ### Step 2: Find Your User Agent
 1. **Find Your User Agent**
