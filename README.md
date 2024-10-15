@@ -64,12 +64,13 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
        - Click on the `Network` tab at the top.
 
 3. **Find GraphQL Request:**
-   - In the search bar at the top of the Network tab, type `graphql`.
-   > If you don't see any `graphql` requests right away, scroll down the Booking.com page a little more. 
+   - In the **filter** bar at the top of the Network tab, type `graphql`.
+     
+   > If you don't see any requests start with `graphql` or named `graphql` right away, scroll down the Booking.com page a little more. 
    > This will load more requests in the Network tab, and you may find the `graphql` request there.
 
 4. **Inspect a Request:**
-   - Click on the request start with `graphql` or name `graphql` from the list in the Network tab.
+   - Click on the request start with `graphql` or named `graphql` from the list in the Network tab.
    - Look for the section labeled **Headers**. This section contains details about what was sent to the server.
 
 5. **Find the Necessary Headers:**
