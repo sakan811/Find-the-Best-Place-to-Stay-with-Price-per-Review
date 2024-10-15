@@ -117,6 +117,7 @@ class Scraper(BaseModel):
         for offset in range(0, total_page_num, 100):
             graphql_query = self.get_graphql_query(page_offset=offset)
             data = self._fetch_data(url, headers, graphql_query)
+            print(data)
             hotel_data_list = data['data']['searchQueries']['search']['results']
             extract_hotel_data(df_list, hotel_data_list)
         df = concat_df_list(df_list)
