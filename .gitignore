@@ -403,3 +403,5 @@ cython_debug/
 
 /prototypes/
 /frontend/npm
+**/*.db
+**/*.env
