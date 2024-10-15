@@ -3,3 +3,4 @@
 /venv
 request_test.py
 /tests
+**/*.db
