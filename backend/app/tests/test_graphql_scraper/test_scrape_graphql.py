@@ -1,7 +1,6 @@
 import datetime
 
 import pytest
-import pytz
 
 from scraper.graphql_scraper import Scraper
 
@@ -10,8 +9,7 @@ def test_graphql_scraper():
     city = 'Tokyo'
     country = 'Japan'
 
-    timezone = pytz.timezone('Asia/Tokyo')
-    today = datetime.datetime.now(timezone)
+    today = datetime.datetime.now()
     check_in = today.strftime('%Y-%m-%d')
     tomorrow = today + datetime.timedelta(days=1)
     check_out = tomorrow.strftime('%Y-%m-%d')
@@ -37,8 +35,7 @@ def test_graphql_scraper_all_properties():
     city = 'Tokyo'
     country = 'Japan'
 
-    timezone = pytz.timezone('Asia/Tokyo')
-    today = datetime.datetime.now(timezone)
+    today = datetime.datetime.now()
     check_in = today.strftime('%Y-%m-%d')
     tomorrow = today + datetime.timedelta(days=1)
     check_out = tomorrow.strftime('%Y-%m-%d')
