@@ -7,7 +7,7 @@ on:
     - cron: '0 0 */89 * *'  # Run every 89 days at midnight UTC
 
 jobs:
-  create-zip:
+  create-zip-and-update-readme:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,3 +36,28 @@ jobs:
         path: find-place-hotel-web-app.zip
         retention-days: 90
         overwrite: true
+
+    - name: Get Artifact Download URL and Update README
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Get the most recent workflow run ID
+        WORKFLOW_RUN_ID=$(gh run list --workflow="Create ZIP Archive and Update README" --limit 1 --json databaseId --jq '.[0].databaseId')
+        
+        # Get artifact download URL
+        ARTIFACT_URL=$(gh api "/repos/${{ github.repository }}/actions/runs/${WORKFLOW_RUN_ID}/artifacts" --jq '.artifacts[0].archive_download_url')
+        
+        # Update README with the new artifact link
+        sed -i 's|https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/.*/artifacts/.*|\[Download Latest Web App ZIP\]('"$ARTIFACT_URL"')|g' README.md
+        
+        # Update the "Download the zip file" link
+        sed -i 's|Download the zip file: \[Web App ZIP\](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/.*/artifacts/.*)|Download the zip file: [Web App ZIP]('"$ARTIFACT_URL"')|g' README.md
+
+    - name: Commit and push README changes
+      run: |
+        git config --global user.name 'GitHub Actions Bot'
+        git config --global user.email 'actions@github.com'
+        
+        git add README.md
+        git commit -m "Update web app ZIP download link" || exit 0
+        git push

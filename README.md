@@ -17,20 +17,17 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 [![Trivy Docker Scan](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/trivy-scan.yml)
 
+[![Create ZIP Archive](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/create-zip.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/create-zip.yml)
+
 ## How to Use the Web App
 
 ### Step 1: Set Up the Web App
 1. Install Docker Desktop
    - [Click here](https://www.docker.com/products/docker-desktop) to download **Docker Desktop**.
    - Follow the instructions on the website to install it on your computer.
-2. Download the Necessary Files
-   - Download the following files from this repository:
-     - [docker-compose.yml](docker-compose.yml)
-     - [.env.example](.env.example)
-     - [requirements.txt](requirements.txt)
-     - [entrypoint.sh](entrypoint.sh)
-     - [get_auth_headers.py](get_auth_headers.py)
-   - Place the files in the directory of your choice.
+2. Download the Zip File
+   - Download the zip file: [Web App ZIP](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/.../artifacts/...)
+   - Extract the files to the directory of your choice.
 
 ### Step 2: Access the Web App
 1. **Start the Web App**
