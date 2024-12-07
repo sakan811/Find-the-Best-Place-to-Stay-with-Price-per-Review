@@ -33,10 +33,13 @@ services:
   playwright:
     image: mcr.microsoft.com/playwright/python:v1.49.0-noble
     volumes:
-      - .:/app
+      - ./:/app
     working_dir: /app
-    user: pwuser
-    entrypoint: ["/app/entrypoint.sh"]
+    command: >
+      /bin/bash -c "
+      pip install --user -r requirements.txt &&
+      xvfb-run python get_auth_headers.py &&
+      touch /tmp/playwright_done"
     healthcheck:
       test: [ "CMD-SHELL", "[ -f /tmp/playwright_done ] || exit 1" ]
       interval: 10s
