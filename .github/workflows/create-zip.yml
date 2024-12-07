@@ -26,7 +26,6 @@ jobs:
         
         # Copy specific files/directories you want to include
         cp docker-compose.yml package/
-        cp entrypoint.sh package/
         cp requirements.txt package/
         cp get_auth_headers.py package/
         cp .env.example package/
