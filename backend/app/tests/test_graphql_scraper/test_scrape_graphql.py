@@ -6,8 +6,8 @@ from scraper.graphql_scraper import Scraper
 
 
 def test_graphql_scraper():
-    city = 'Tokyo'
-    country = 'Japan'
+    city = 'London'
+    country = 'United Kingdom'
 
     today = datetime.datetime.now()
     check_in = today.strftime('%Y-%m-%d')
@@ -32,8 +32,8 @@ def test_graphql_scraper():
 
 
 def test_graphql_scraper_all_properties():
-    city = 'Tokyo'
-    country = 'Japan'
+    city = 'London'
+    country = 'United Kingdom'
 
     today = datetime.datetime.now()
     check_in = today.strftime('%Y-%m-%d')

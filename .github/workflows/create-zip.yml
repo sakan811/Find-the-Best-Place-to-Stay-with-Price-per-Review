@@ -1,0 +1,38 @@
+name: Create ZIP Archive
+
+on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 */89 * *'  # Run every 89 days at midnight UTC
+
+jobs:
+  create-zip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create ZIP archive
+      run: |
+        # Create a directory for the ZIP contents
+        mkdir -p package
+        
+        # Copy specific files/directories you want to include
+        cp docker-compose.yml package/
+        cp entrypoint.sh package/
+        cp requirements.txt package/
+        cp get_auth_headers.py package/
+        cp .env.example package/
+        
+        # Create the ZIP file
+        zip -r find-place-hotel-web-app.zip package
+
+    - name: Upload ZIP as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: find-place-hotel-web-app-zip
+        path: find-place-hotel-web-app.zip
+        retention-days: 90
+        overwrite: true
