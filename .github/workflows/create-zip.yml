@@ -21,18 +21,8 @@ jobs:
 
     - name: Create ZIP archive
       run: |
-        # Create a directory for the ZIP contents
-        mkdir -p package
-        
-        # Copy specific files/directories you want to include
-        cp docker-compose.yml package/
-        cp entrypoint.sh package/
-        cp requirements.txt package/
-        cp get_auth_headers.py package/
-        cp .env.example package/
-        
-        # Create the ZIP file
-        zip -r find-place-hotel-web-app.zip package
+        # Create the ZIP file directly without an intermediate directory
+        zip -r find-place-hotel-web-app.zip docker-compose.yml requirements.txt get_auth_headers.py .env.example
 
     - name: Upload ZIP as artifact
       uses: actions/upload-artifact@v4
