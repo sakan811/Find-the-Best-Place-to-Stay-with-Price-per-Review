@@ -47,7 +47,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Get the most recent workflow run ID
-        WORKFLOW_RUN_ID=$(gh run list --workflow="Create ZIP Archive and Update README" --limit 1 --json databaseId --jq '.[0].databaseId')
+        WORKFLOW_RUN_ID=$(gh run list --workflow="Create ZIP Archive" --limit 1 --json databaseId --jq '.[0].databaseId')
         
         # Get artifact ID
         ARTIFACT_ID=$(gh api "/repos/${{ github.repository }}/actions/runs/${WORKFLOW_RUN_ID}/artifacts" --jq '.artifacts[0].id')
