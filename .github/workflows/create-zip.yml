@@ -27,7 +27,7 @@ jobs:
           docker-compose.yml
           requirements.txt
           get_auth_headers.py
-          .env.example
+          ".env.example"
         retention-days: 90
         overwrite: true
 
