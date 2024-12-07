@@ -57,11 +57,26 @@ jobs:
         # Update the "Download the zip file" link
         sed -i 's|Download the zip file: \[Web App ZIP\](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/.*/artifacts/.*)|Download the zip file: [Web App ZIP]('"$ARTIFACT_URL"')|g' README.md
 
-    - name: Commit and push README changes
+    - name: Create a new branch
+      run: |
+        git checkout -b update-readme-${{ github.run_number }}
+
+    - name: Commit README changes
       run: |
         git config --global user.name 'GitHub Actions Bot'
         git config --global user.email 'actions@github.com'
-        
         git add README.md
         git commit -m "Update web app ZIP download link" || exit 0
-        git push
+
+    - name: Push changes
+      run: |
+        git push origin update-readme-${{ github.run_number }}
+
+    - name: Create Pull Request
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh pr create --title "Update web app ZIP download link" \
+                     --body "Automated PR to update the web app ZIP download link in README.md" \
+                     --base main \
+                     --head update-readme-${{ github.run_number }}
