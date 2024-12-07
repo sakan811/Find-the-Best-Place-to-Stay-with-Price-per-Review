@@ -6,6 +6,10 @@ on:
   schedule:
     - cron: '0 0 */89 * *'  # Run every 89 days at midnight UTC
 
+
+permissions:
+  contents: write
+
 jobs:
   create-zip-and-update-readme:
     runs-on: ubuntu-latest
