@@ -47,15 +47,15 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Get the most recent workflow run ID
-        WORKFLOW_RUN_ID=$(gh run list --workflow="Create ZIP Archive" --limit 1 --json databaseId --jq '.[0].databaseId')
+        WORKFLOW_RUN_ID=$(gh run list --workflow="Create ZIP Archive and Update README" --limit 1 --json databaseId --jq '.[0].databaseId')
         
-        # Get artifact download URL
+        # Get artifact ID
+        ARTIFACT_ID=$(gh api "/repos/${{ github.repository }}/actions/runs/${WORKFLOW_RUN_ID}/artifacts" --jq '.artifacts[0].id')
+        
+        # Construct the correct download URL
         ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${WORKFLOW_RUN_ID}/artifacts/${ARTIFACT_ID}"
         
-        # Update README with the new artifact link
-        sed -i 's|https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/.*/artifacts/.*|\[Web App ZIP\]('"$ARTIFACT_URL"')|g' README.md
-        
-        # Update the "Download the zip file" link
+        # Update the "Download the zip file" link with the specific pattern
         sed -i 's|Download the zip file: \[Web App ZIP\](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/.*/artifacts/.*)|Download the zip file: [Web App ZIP]('"$ARTIFACT_URL"')|g' README.md
 
     - name: Create a new branch
