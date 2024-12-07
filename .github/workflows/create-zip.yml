@@ -9,7 +9,7 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
+  issues: write
 
 jobs:
   create-zip-and-update-readme:
@@ -73,11 +73,9 @@ jobs:
       run: |
         git push origin update-readme-${{ github.run_number }}
 
-    - name: Create Pull Request
+    - name: Create Issue
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh pr create --title "Update web app ZIP download link" \
-                     --body "Automated PR to update the web app ZIP download link in README.md" \
-                     --base main \
-                     --head update-readme-${{ github.run_number }}
+        gh issue create --title "README Update: New ZIP link available" \
+                        --body "A new branch 'update-readme-${{ github.run_number }}' has been created with updates to the README.md file. Please review and create a pull request if the changes are acceptable."
