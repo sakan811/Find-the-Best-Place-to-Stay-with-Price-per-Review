@@ -1,4 +1,4 @@
-name: Create ZIP Archive and Update README
+name: Create ZIP Archive
 
 on:
   push:
