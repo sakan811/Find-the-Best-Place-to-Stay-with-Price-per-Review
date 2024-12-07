@@ -24,12 +24,13 @@ jobs:
       with:
         name: find-place-hotel-web-app
         path: |
-          docker-compose.yml
-          requirements.txt
-          get_auth_headers.py
-          **/.env.example
+          ./docker-compose.yml
+          ./requirements.txt
+          ./get_auth_headers.py
+          ./.env.example
         retention-days: 90
         overwrite: true
+        include-hidden-files: true
 
     - name: Get Artifact Download URL and Update README
       env:
