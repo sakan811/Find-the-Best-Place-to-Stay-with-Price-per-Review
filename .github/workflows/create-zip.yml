@@ -19,27 +19,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Create ZIP archive
-      run: |
-        # Create a temporary directory
-        mkdir temp_zip_contents
-        
-        # Copy files to the temporary directory
-        cp docker-compose.yml requirements.txt get_auth_headers.py .env.example temp_zip_contents/
-        
-        # Create the ZIP file from the temporary directory
-        cd temp_zip_contents
-        zip -r ../find-place-hotel-web-app.zip .
-        cd ..
-        
-        # Remove the temporary directory
-        rm -rf temp_zip_contents
-
-    - name: Upload ZIP as artifact
+    - name: Upload files as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: find-place-hotel-web-app-zip
-        path: find-place-hotel-web-app.zip
+        name: find-place-hotel-web-app
+        path: |
+          docker-compose.yml
+          requirements.txt
+          get_auth_headers.py
+          .env.example
         retention-days: 90
         overwrite: true
 
