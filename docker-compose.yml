@@ -1,47 +1,26 @@
 version: '3.x'
+
 services:
   backend:
     image: sakanbeer88/find-stay-place-backend:latest
     ports:
       - "8000:8000"
-    user: "1000:1000"
     environment:
-      - USER_AGENT=${USER_AGENT}
-      - X_BOOKING_CONTEXT_ACTION_NAME=${X_BOOKING_CONTEXT_ACTION_NAME}
-      - X_BOOKING_CONTEXT_AID=${X_BOOKING_CONTEXT_AID}
-      - X_BOOKING_CSRF_TOKEN=${X_BOOKING_CSRF_TOKEN}
-      - X_BOOKING_ET_SERIALIZED_STATE=${X_BOOKING_ET_SERIALIZED_STATE}
-      - X_BOOKING_PAGEVIEW_ID=${X_BOOKING_PAGEVIEW_ID}
-      - X_BOOKING_SITE_TYPE_ID=${X_BOOKING_SITE_TYPE_ID}
-      - X_BOOKING_TOPIC=${X_BOOKING_TOPIC}
+      USER_AGENT: ${USER_AGENT}
+      X_BOOKING_CONTEXT_ACTION_NAME: ${X_BOOKING_CONTEXT_ACTION_NAME}
+      X_BOOKING_CONTEXT_AID: ${X_BOOKING_CONTEXT_AID}
+      X_BOOKING_CSRF_TOKEN: ${X_BOOKING_CSRF_TOKEN}
+      X_BOOKING_ET_SERIALIZED_STATE: ${X_BOOKING_ET_SERIALIZED_STATE}
+      X_BOOKING_PAGEVIEW_ID: ${X_BOOKING_PAGEVIEW_ID}
+      X_BOOKING_SITE_TYPE_ID: ${X_BOOKING_SITE_TYPE_ID}
+      X_BOOKING_TOPIC: ${X_BOOKING_TOPIC}
+    user: "1000:1000"
     command: > 
       sh -c "python manage.py migrate &&
              gunicorn --bind 0.0.0.0:8000 django_project.wsgi:application"
-    depends_on:
-      playwright:
-        condition: service_completed_successfully
-  
+
   frontend:
     image: sakanbeer88/find-stay-place-frontend:latest
     ports:
       - "5000:80"
     user: "1001:1001"
-    depends_on:
-      playwright:
-        condition: service_completed_successfully
-  
-  playwright:
-    image: mcr.microsoft.com/playwright/python:v1.49.0-noble
-    volumes:
-      - ./:/app
-    working_dir: /app
-    command: >
-      /bin/bash -c "
-      pip install --user -r requirements.txt &&
-      xvfb-run python get_auth_headers.py &&
-      touch /tmp/playwright_done"
-    healthcheck:
-      test: [ "CMD-SHELL", "[ -f /tmp/playwright_done ] || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
