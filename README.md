@@ -26,7 +26,7 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - [Click here](https://www.docker.com/products/docker-desktop) to download **Docker Desktop**.
    - Follow the instructions on the website to install it on your computer.
 2. Download the Zip File
-   - Download the zip file: [Web App ZIP](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/.../artifacts/...)
+   - Download the zip file: [Web App ZIP](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/runs/12215280820/artifacts/2289040929)
    - Extract the files to the directory of your choice.
 
 ### Step 2: Access the Web App
