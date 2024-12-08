@@ -40,6 +40,4 @@ jobs:
         
         # Create an issue with just the artifact URL
         gh issue create --title "New Web App ZIP Artifact Available" \
-                        --body "Artifact Download URL: $ARTIFACT_URL
-
-Please update the README.md with this link manually."
+                        --body "Artifact Download URL: $ARTIFACT_URL Please update the README.md with this link manually."
