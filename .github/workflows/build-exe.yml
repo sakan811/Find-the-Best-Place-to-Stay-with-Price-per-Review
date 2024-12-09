@@ -29,25 +29,20 @@ jobs:
           fi
           go mod tidy
           
-      # Create the dist directory explicitly
-      - name: Create dist directory
-        run: |
-          mkdir -p dist
-
-      # Build Go binary for different platforms
+      # Build Go binary for different platforms directly to the root of the repo
       - name: Build Binaries
         run: |
           # Build for Linux (amd64)
-          GOOS=linux GOARCH=amd64 go build -o dist/find_place_hotel_web_app-linux-amd64 get_auth_headers.go
+          GOOS=linux GOARCH=amd64 go build -o find_place_hotel_web_app-linux-amd64 get_auth_headers.go
           
           # Build for macOS Intel (x86_64)
-          GOOS=darwin GOARCH=amd64 go build -o dist/find_place_hotel_web_app-darwin-amd64 get_auth_headers.go
+          GOOS=darwin GOARCH=amd64 go build -o find_place_hotel_web_app-darwin-amd64 get_auth_headers.go
 
           # Build for macOS Apple Silicon (arm64)
-          GOOS=darwin GOARCH=arm64 go build -o dist/find_place_hotel_web_app-darwin-arm64 get_auth_headers.go
+          GOOS=darwin GOARCH=arm64 go build -o find_place_hotel_web_app-darwin-arm64 get_auth_headers.go
 
           # Build for Windows (amd64)
-          GOOS=windows GOARCH=amd64 go build -o dist/find_place_hotel_web_app-windows-amd64.exe get_auth_headers.go
+          GOOS=windows GOARCH=amd64 go build -o find_place_hotel_web_app-windows-amd64.exe get_auth_headers.go
 
       # Get the latest release tag dynamically
       - name: Get Latest Release Tag
@@ -63,10 +58,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.tag }} # Use dynamically fetched tag
           file: |
-            dist/find_place_hotel_web_app-linux-amd64
-            dist/find_place_hotel_web_app-darwin-amd64
-            dist/find_place_hotel_web_app-darwin-arm64
-            dist/find_place_hotel_web_app-windows-amd64.exe
+            find_place_hotel_web_app-linux-amd64
+            find_place_hotel_web_app-darwin-amd64
+            find_place_hotel_web_app-darwin-arm64
+            find_place_hotel_web_app-windows-amd64.exe
           asset_name: |
             find_place_hotel_web_app-linux-amd64
             find_place_hotel_web_app-darwin-amd64
