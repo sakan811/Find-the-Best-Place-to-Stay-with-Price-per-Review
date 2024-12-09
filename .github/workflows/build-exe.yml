@@ -64,10 +64,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.tag }} # Use dynamically fetched tag
           file: |
-            find_place_hotel_web_app-linux-amd64
-            find_place_hotel_web_app-darwin-amd64
-            find_place_hotel_web_app-darwin-arm64
-            find_place_hotel_web_app-windows-amd64.exe
+            ./find_place_hotel_web_app-linux-amd64
+            ./find_place_hotel_web_app-darwin-amd64
+            ./find_place_hotel_web_app-darwin-arm64
+            ./find_place_hotel_web_app-windows-amd64.exe
           asset_name: |
             find_place_hotel_web_app-linux-amd64
             find_place_hotel_web_app-darwin-amd64
