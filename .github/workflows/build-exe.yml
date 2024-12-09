@@ -20,13 +20,9 @@ jobs:
         with:
           go-version: 1.21
 
-      # Initialize Go modules (if go.mod doesn't exist, it will create it)
-      - name: Initialize Go Module
+      # Initialize Go modules (this will ensure go.mod is set up correctly)
+      - name: Go Mod Tidy
         run: |
-          if [ ! -f go.mod ]; then
-            echo "Initializing Go module"
-            go mod init github.com/${{ github.repository }}
-          fi
           go mod tidy
           
       # Build Go binary for different platforms
