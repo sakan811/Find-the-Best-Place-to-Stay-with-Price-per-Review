@@ -29,15 +29,13 @@ jobs:
           fi
           go mod tidy
           
-      # Create the dist directory explicitly
-      - name: Create dist directory
-        run: |
-          mkdir -p dist
-
       # Build Go binary for different platforms
       - name: Build Binaries
         run: |
-          # Build for Linux (amd64)
+          # Create output directory
+          mkdir -p dist
+
+          # Build for Linux
           GOOS=linux GOARCH=amd64 go build -o dist/find_place_hotel_web_app-linux-amd64 get_auth_headers.go
           
           # Build for macOS Intel (x86_64)
