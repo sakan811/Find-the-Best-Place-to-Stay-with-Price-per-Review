@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "embed"
 	"fmt"
 	"log"
 	"os"
@@ -16,56 +15,16 @@ var intercepted bool
 
 const envFilename = ".env"
 
-// Embed the .env.example and docker-compose.yml files
-//go:embed .env.example
-var envExampleContent string
-
-//go:embed docker-compose.yml
-var dockerComposeContent string
-
 func main() {
 	err := playwright.Install()
 	if err != nil {
 		log.Fatalf("Could not install playwright: %v", err)
 	}
 
-	// Ensure embedded files are written
-	if err := writeEmbeddedFiles(); err != nil {
-		log.Fatalf("Could not write embedded files: %v", err)
-	}
-
 	err = extractXHeaders()
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func writeEmbeddedFiles() error {
-	// Write .env.example
-	if err := writeFile(".env.example", envExampleContent); err != nil {
-		return fmt.Errorf("could not write .env.example: %v", err)
-	}
-
-	// Write docker-compose.yml
-	if err := writeFile("docker-compose.yml", dockerComposeContent); err != nil {
-		return fmt.Errorf("could not write docker-compose.yml: %v", err)
-	}
-
-	return nil
-}
-
-func writeFile(filename, content string) error {
-	// Check if the file already exists
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		// Create the file and write the content
-		if err := os.WriteFile(filename, []byte(content), 0644); err != nil {
-			return err
-		}
-		fmt.Printf("Written embedded file: %s\n", filename)
-	} else {
-		fmt.Printf("File already exists: %s\n", filename)
-	}
-	return nil
 }
 
 func extractXHeaders() error {
@@ -134,10 +93,16 @@ func handleRequest(request playwright.Request) {
 }
 
 func updateEnvExample(envVars map[string]string) {
+	envExamplePath := filepath.Join(".", ".env.example")
 	envPath := filepath.Join(".", envFilename)
 
-	content := envExampleContent
-	lines := strings.Split(content, "\n")
+	content, err := os.ReadFile(envExamplePath)
+	if err != nil {
+		log.Printf("Error reading .env.example: %v", err)
+		return
+	}
+
+	lines := strings.Split(string(content), "\n")
 	updatedLines := make([]string, 0, len(lines))
 
 	for _, line := range lines {
@@ -151,7 +116,7 @@ func updateEnvExample(envVars map[string]string) {
 		updatedLines = append(updatedLines, line)
 	}
 
-	err := os.WriteFile(envPath, []byte(strings.Join(updatedLines, "\n")), 0644)
+	err = os.WriteFile(envPath, []byte(strings.Join(updatedLines, "\n")), 0644)
 	if err != nil {
 		log.Printf("Error writing to %s: %v", envFilename, err)
 		return
