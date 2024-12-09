@@ -32,17 +32,23 @@ jobs:
       # Build Go binary for different platforms directly to the root of the repo
       - name: Build Binaries
         run: |
-          # Build for Linux (amd64)
+          echo "Building Linux binary"
           GOOS=linux GOARCH=amd64 go build -o find_place_hotel_web_app-linux-amd64 get_auth_headers.go
           
-          # Build for macOS Intel (x86_64)
+          echo "Building macOS Intel binary"
           GOOS=darwin GOARCH=amd64 go build -o find_place_hotel_web_app-darwin-amd64 get_auth_headers.go
 
-          # Build for macOS Apple Silicon (arm64)
+          echo "Building macOS Apple Silicon binary"
           GOOS=darwin GOARCH=arm64 go build -o find_place_hotel_web_app-darwin-arm64 get_auth_headers.go
 
-          # Build for Windows (amd64)
+          echo "Building Windows binary"
           GOOS=windows GOARCH=amd64 go build -o find_place_hotel_web_app-windows-amd64.exe get_auth_headers.go
+
+      # List the files in the repository to verify the binaries
+      - name: Check files in repo
+        run: |
+          echo "Listing files in the repository"
+          ls -la
 
       # Get the latest release tag dynamically
       - name: Get Latest Release Tag
