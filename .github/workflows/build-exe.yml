@@ -20,11 +20,6 @@ jobs:
         with:
           go-version: 1.21
 
-      # Initialize Go modules (this will ensure go.mod is set up correctly)
-      - name: Go Mod Tidy
-        run: |
-          go mod tidy
-          
       # Build Go binary for different platforms
       - name: Build Binaries
         run: |
