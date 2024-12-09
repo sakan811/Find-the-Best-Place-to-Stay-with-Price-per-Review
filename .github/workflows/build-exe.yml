@@ -1,0 +1,64 @@
+name: Build and Release Find Place Hotel Web App
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21
+
+      # Build Go binary for different platforms
+      - name: Build Binaries
+        run: |
+          # Create output directory
+          mkdir -p dist
+
+          # Build for Linux
+          GOOS=linux GOARCH=amd64 go build -o dist/find_place_hotel_web_app-linux-amd64 get_auth_headers.go
+          
+          # Build for macOS Intel (x86_64)
+          GOOS=darwin GOARCH=amd64 go build -o dist/find_place_hotel_web_app-darwin-amd64 get_auth_headers.go
+
+          # Build for macOS Apple Silicon (arm64)
+          GOOS=darwin GOARCH=arm64 go build -o dist/find_place_hotel_web_app-darwin-arm64 get_auth_headers.go
+
+          # Build for Windows (amd64)
+          GOOS=windows GOARCH=amd64 go build -o dist/find_place_hotel_web_app-windows-amd64.exe get_auth_headers.go
+
+      # Get the latest release tag dynamically
+      - name: Get Latest Release Tag
+        id: get_latest_release
+        run: |
+          tag=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          echo "tag=$tag" >> $GITHUB_ENV
+
+      # Upload the binaries to the latest release
+      - name: Upload Binaries to Latest Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.tag }} # Use dynamically fetched tag
+          file: |
+            dist/find_place_hotel_web_app-linux-amd64
+            dist/find_place_hotel_web_app-darwin-amd64
+            dist/find_place_hotel_web_app-darwin-arm64
+            dist/find_place_hotel_web_app-windows-amd64.exe
+          asset_name: |
+            find_place_hotel_web_app-linux-amd64
+            find_place_hotel_web_app-darwin-amd64
+            find_place_hotel_web_app-darwin-arm64
+            find_place_hotel_web_app-windows-amd64.exe
+          overwrite: true # Replace existing assets if any
