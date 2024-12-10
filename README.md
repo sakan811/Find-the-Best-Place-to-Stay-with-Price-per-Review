@@ -51,7 +51,7 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 2. **Access the Web App**
    - Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/)
 
-### Step 5: Stop the Web App
+### Step 4: Stop the Web App
 1. **Open Docker Desktop**  
    - Go to the **Containers** section.  
 
