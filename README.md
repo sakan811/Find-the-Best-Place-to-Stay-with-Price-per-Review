@@ -29,6 +29,7 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 3. Download `.env.example` File
    - Download the [.env.example](.env.example) file from this repository.
    - Place the file in the same directory with Docker Compose file.
+   - After download, make sure that the filename is still `.env.example`
 
 ### Step 2: Setup the Necessary Headers
 1. Download the executable file inside [get_auth_headers_exe](get_auth_headers_exe) folder depend on your OS.
