@@ -9,6 +9,10 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"os/signal"
+	"syscall"
+	"net/http"
+	"time"
 
 	"github.com/playwright-community/playwright-go"
 )
@@ -22,31 +26,49 @@ const (
 )
 
 func main() {
-	err := playwright.Install()
-	if err != nil {
+	log.Println("Starting application...")
+
+	if err := checkFiles(); err != nil {
+		log.Fatalf("File check failed: %v", err)
+	}
+
+	if err := playwright.Install(); err != nil {
 		log.Fatalf("Could not install Playwright: %v", err)
 	}
 
-	fmt.Println("Starting header interception with Playwright...")
-	err = extractXHeaders()
-	if err != nil {
+	if err := extractXHeaders(); err != nil {
 		log.Fatalf("Header interception failed: %v", err)
 	}
 
-	fmt.Println("Header interception successful! Starting Docker Compose...")
-	err = runDockerCompose()
-	if err != nil {
+	if err := runDockerCompose(); err != nil {
 		log.Fatalf("Docker Compose failed: %v", err)
 	}
 
-	fmt.Println("Navigating to http://localhost:5000")
-	err = openBrowser("http://localhost:5000")
-	if err != nil {
+	gracefulShutdown()
+
+	if err := waitForServer(); err != nil {
+		log.Fatalf("Server did not start: %v", err)
+	}
+
+	if err := openBrowser("http://localhost:5000"); err != nil {
 		log.Printf("Failed to open browser: %v", err)
 	}
+
+	select {}
+}
+
+func checkFiles() error {
+	files := []string{envExampleFile, composeFile}
+	for _, file := range files {
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			return fmt.Errorf("required file %s not found", file)
+		}
+	}
+	return nil
 }
 
 func extractXHeaders() error {
+	log.Println("Starting header interception with Playwright...")
 	pw, err := playwright.Run()
 	if err != nil {
 		return fmt.Errorf("could not start Playwright: %v", err)
@@ -89,6 +111,7 @@ func extractXHeaders() error {
 		return fmt.Errorf("no matching headers intercepted")
 	}
 
+	log.Println("Header interception successful")
 	return nil
 }
 
@@ -106,19 +129,21 @@ func handleRequest(request playwright.Request) {
 				}
 			}
 
-			updateEnvFile(envVars)
+			if err := updateEnvFile(envVars); err != nil {
+				log.Printf("Failed to update env file: %v", err)
+			}
 			intercepted = true
 		}
 	}
 }
 
-func updateEnvFile(envVars map[string]string) {
+func updateEnvFile(envVars map[string]string) error {
 	envExamplePath := filepath.Join(".", envExampleFile)
 	envPath := filepath.Join(".", envFilename)
 
 	content, err := os.ReadFile(envExamplePath)
 	if err != nil {
-		log.Fatalf("Error reading %s: %v", envExampleFile, err)
+		return fmt.Errorf("error reading %s: %v", envExampleFile, err)
 	}
 
 	lines := strings.Split(string(content), "\n")
@@ -135,34 +160,59 @@ func updateEnvFile(envVars map[string]string) {
 		updatedLines = append(updatedLines, line)
 	}
 
-	err = os.WriteFile(envPath, []byte(strings.Join(updatedLines, "\n")), 0644)
-	if err != nil {
-		log.Fatalf("Error writing to %s: %v", envFilename, err)
+	if err := os.WriteFile(envPath, []byte(strings.Join(updatedLines, "\n")), 0644); err != nil {
+		return fmt.Errorf("error writing to %s: %v", envFilename, err)
 	}
 
-	fmt.Printf("Headers updated in %s file\n", envFilename)
+	log.Printf("Headers updated in %s file", envFilename)
+	return nil
 }
 
 func runDockerCompose() error {
-	// Check if the compose file exists
+	log.Println("Starting Docker Compose...")
 	if _, err := os.Stat(composeFile); os.IsNotExist(err) {
 		return fmt.Errorf("docker-compose.yml file not found")
 	}
 
-	// Execute `docker-compose up` in interactive mode
-	cmd := exec.Command("docker-compose", "up")
+	cmd := exec.Command("docker-compose", "up", "-d")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	err := cmd.Run()
-	if err != nil {
-		return fmt.Errorf("docker-compose up failed: %v", err)
-	}
+	return cmd.Run()
+}
 
-	return nil
+func gracefulShutdown() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		log.Println("Shutting down...")
+		cmd := exec.Command("docker-compose", "down")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			log.Printf("Error during shutdown: %v", err)
+		}
+		os.Exit(0)
+	}()
+}
+
+func waitForServer() error {
+	log.Println("Waiting for server to start...")
+	for i := 0; i < 30; i++ {
+		resp, err := http.Get("http://localhost:5000")
+		if err == nil {
+			resp.Body.Close()
+			log.Println("Server is up and running")
+			return nil
+		}
+		time.Sleep(time.Second)
+	}
+	return fmt.Errorf("server did not start within the expected time")
 }
 
 func openBrowser(url string) error {
+	log.Printf("Attempting to open browser at %s", url)
 	var cmd *exec.Cmd
 
 	switch runtime.GOOS {
