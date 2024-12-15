@@ -30,33 +30,17 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - Download the [.env.example](.env.example) file from this repository.
    - Place the file in the same directory with Docker Compose file.
    - After download, make sure that the filename is still `.env.example`
+4. Download the executable file inside [get_auth_headers_exe](get_auth_headers_exe) folder depend on your OS.
+5. Place the file in the same directory as `.env.example` and `docker-compose.yml` files.
 
-### Step 2: Setup the Necessary Headers
-1. Download the executable file inside [get_auth_headers_exe](get_auth_headers_exe) folder depend on your OS.
-2. Place the file in the same directory as `.env.example` and `docker-compose.yml` files.
-3. Run the executable file.
-
-### Step 3: Access the Web App
-1. **Start the Web App**
-   - Make sure that the Docker Desktop is running.
-      - If not, start the Docker Desktop. 
-   - Open the terminal
-   - Use the `cd` command to go to the folder where you saved the `docker-compose.yml` file.  
-     Example:
-     ```bash
-     cd /path/to/directory
-     ```
-   - Run `docker-compose up` to start the web app.
-
-2. **Access the Web App**
-   - Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/)
-
-### Step 4: Stop the Web App
-1. **Open Docker Desktop**  
-   - Go to the **Containers** section.  
-
-2. **Stop the Container**  
-   - Find the running container for the web app and click **Stop**.
+### Step 2: Access the Web App
+1. Make sure that the Docker Desktop is running.
+   - If not, start the Docker Desktop. 
+2. Run the executable file.
+   - A terminal will open, and the app will intercept the network for necessary headers, then pull the Docker images, 
+     start the containers, and navigate you to the web app via your default browser.
+   - Close the terminal to close the web app and Docker containers.
+3. URL to the web app is [http://localhost:5000/](http://localhost:5000/)
 
 ## Disclaimer
 
