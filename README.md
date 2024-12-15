@@ -31,6 +31,9 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - Place the file in the same directory with Docker Compose file.
    - After download, make sure that the filename is still `.env.example`
 4. Download the executable file inside [get_auth_headers_exe](get_auth_headers_exe) folder depend on your OS.
+   - Windows: [find-place-web-app_windows_amd64.exe](get_auth_headers_exe/find-place-web-app_windows_amd64.exe)
+   - MacOS (Intel): [find-place-web-app_darwin_amd64](get_auth_headers_exe/find-place-web-app_darwin_amd64)
+   - MacOS (Apple Silicon): [find-place-web-app_darwin_arm64](get_auth_headers_exe/find-place-web-app_darwin_arm64)
 5. Place the file in the same directory as `.env.example` and `docker-compose.yml` files.
 
 ### Step 2: Access the Web App
