@@ -1,10 +1,16 @@
-package main
+package tests
 
 import (
+	"fmt"
+	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"regexp"
+	"runtime"
 	"strings"
 	"testing"
+	"time"
 )
 
 var (
@@ -12,14 +18,35 @@ var (
 	envFilename    = ".env"
 	envExampleFile = ".env.example"
 	composeFile    = "docker-compose.yml"
+	intercepted    bool
+	httpGet        = http.Get
+	goos           = runtime.GOOS
 )
 
 func updateEnvFile(vars map[string]string) error {
-	content := ""
-	for k, v := range vars {
-		content += k + "=" + v + "\n"
+	// Read existing content from .env.example
+	examplePath := filepath.Join(execDir, envExampleFile)
+	content, err := os.ReadFile(examplePath)
+	if err != nil {
+		return fmt.Errorf("error reading %s: %v", envExampleFile, err)
 	}
-	return os.WriteFile(filepath.Join(execDir, envFilename), []byte(content), 0644)
+
+	lines := strings.Split(string(content), "\n")
+	updatedLines := make([]string, 0, len(lines))
+
+	for _, line := range lines {
+		if parts := strings.SplitN(line, "=", 2); len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			if value, exists := vars[key]; exists {
+				line = fmt.Sprintf("%s=%s", key, value)
+			}
+		}
+		if line != "" {
+			updatedLines = append(updatedLines, line)
+		}
+	}
+
+	return os.WriteFile(filepath.Join(execDir, envFilename), []byte(strings.Join(updatedLines, "\n")), 0644)
 }
 
 func writeEmbeddedFile(filename, content string) error {
@@ -34,6 +61,94 @@ func checkFiles() error {
 
 	// Create .env.example
 	return writeEmbeddedFile(envExampleFile, "USER_AGENT=example\n")
+}
+
+func handleRequest(request *MockRequest) error {
+	if matched, _ := regexp.MatchString(`https://www\.booking\.com/dml/graphql.*`, request.URL()); matched {
+		headers := request.Headers()
+		envVars := make(map[string]string)
+
+		// Create a map of existing env vars from .env.example
+		examplePath := filepath.Join(execDir, envExampleFile)
+		content, err := os.ReadFile(examplePath)
+		if err != nil {
+			return fmt.Errorf("error reading %s: %v", envExampleFile, err)
+		}
+
+		envKeys := make(map[string]string) // lowercase -> actual case
+		for _, line := range strings.Split(string(content), "\n") {
+			if parts := strings.SplitN(line, "=", 2); len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				envKeys[strings.ToLower(key)] = key
+			}
+		}
+
+		// Match headers to env vars case-insensitively
+		for key, value := range headers {
+			if strings.HasPrefix(key, "x-") || key == "user-agent" {
+				envKey := strings.ToUpper(strings.ReplaceAll(key, "-", "_"))
+				if actualKey, exists := envKeys[strings.ToLower(envKey)]; exists {
+					envVars[actualKey] = value
+				}
+			}
+		}
+
+		intercepted = true
+		return updateEnvFile(envVars)
+	}
+	return nil
+}
+
+func runDockerCompose() error {
+	composePath := filepath.Join(execDir, composeFile)
+	if _, err := os.Stat(composePath); os.IsNotExist(err) {
+		return fmt.Errorf("docker-compose.yml file not found")
+	}
+
+	cmd := execCommand("docker-compose", "-f", composePath, "up", "-d")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
+}
+
+func gracefulShutdown() {
+	composePath := filepath.Join(execDir, composeFile)
+	cmd := execCommand("docker-compose", "-f", composePath, "down")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Error during shutdown: %v\n", err)
+	}
+}
+
+func waitForServer() error {
+	for i := 0; i < 30; i++ {
+		resp, err := httpGet("http://localhost:5000")
+		if err == nil {
+			resp.Body.Close()
+			return nil
+		}
+		time.Sleep(time.Second)
+	}
+	return fmt.Errorf("server did not start within the expected time")
+}
+
+func openBrowser(url string) error {
+	var cmd *exec.Cmd
+
+	switch goos {
+	case "linux":
+		cmd = execCommand("xdg-open", url)
+	case "windows":
+		cmd = execCommand("rundll32", "url.dll,FileProtocolHandler", url)
+	case "darwin":
+		cmd = execCommand("open", url)
+	default:
+		return fmt.Errorf("unsupported platform")
+	}
+
+	return cmd.Start()
 }
 
 func TestWriteEmbeddedFile(t *testing.T) {
@@ -93,7 +208,7 @@ func TestWriteEmbeddedFile(t *testing.T) {
 	}
 }
 
-func TestUpdateEnvFile(t *testing.T) {
+func TestUpdateEnvFileInit(t *testing.T) {
 	// Create a temporary directory for testing
 	tmpDir, err := os.MkdirTemp("", "test")
 	if err != nil {
@@ -144,7 +259,7 @@ X_BOOKING_PAGE_ORIGIN=test`
 	}
 }
 
-func TestCheckFiles(t *testing.T) {
+func TestCheckFilesCreation(t *testing.T) {
 	// Create a temporary directory for testing
 	tmpDir, err := os.MkdirTemp("", "test")
 	if err != nil {
