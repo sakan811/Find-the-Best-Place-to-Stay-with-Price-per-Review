@@ -288,6 +288,36 @@ func TestCheckFilesCreation(t *testing.T) {
 	}
 }
 
+func TestGracefulShutdownInit(t *testing.T) {
+	// Create a temporary directory for testing
+	tmpDir, err := os.MkdirTemp("", "test")
+	if err != nil {
+		t.Fatalf("Failed to create temp dir: %v", err)
+	}
+	defer os.RemoveAll(tmpDir)
+
+	// Save original execDir and restore it after test
+	originalExecDir := execDir
+	execDir = tmpDir
+	defer func() { execDir = originalExecDir }()
+
+	// Create a mock docker-compose file
+	if err := writeEmbeddedFile(composeFile, "version: '3'\n"); err != nil {
+		t.Fatalf("Failed to create docker-compose file: %v", err)
+	}
+
+	// Mock the exec.Command
+	originalExecCommand := execCommand
+	defer func() { execCommand = originalExecCommand }()
+
+	execCommand = func(command string, args ...string) *exec.Cmd {
+		return exec.Command("echo", "mock command") // Use echo as a safe command
+	}
+
+	// Test graceful shutdown
+	gracefulShutdown()
+}
+
 // Helper function to check if a string contains another string
 func contains(s, substr string) bool {
 	return strings.Contains(s, substr)
