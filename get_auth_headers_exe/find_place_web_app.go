@@ -3,27 +3,44 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"regexp"
 	"runtime"
 	"strings"
-	"os/signal"
 	"syscall"
-	"net/http"
 	"time"
+
+	_ "embed"
 
 	"github.com/playwright-community/playwright-go"
 )
 
 var intercepted bool
+var execDir string
 
 const (
 	envFilename    = ".env"
 	envExampleFile = ".env.example"
 	composeFile    = "docker-compose.yml"
 )
+
+//go:embed docker-compose.yml
+var dockerComposeTemplate string
+
+//go:embed .env.example
+var envExampleTemplate string
+
+func init() {
+	executable, err := os.Executable()
+	if err != nil {
+		log.Fatalf("Failed to get executable path: %v", err)
+	}
+	execDir = filepath.Dir(executable)
+}
 
 func main() {
 	log.Println("Starting application...")
@@ -58,12 +75,33 @@ func main() {
 }
 
 func checkFiles() error {
-	files := []string{envExampleFile, composeFile}
-	for _, file := range files {
-		if _, err := os.Stat(file); os.IsNotExist(err) {
-			return fmt.Errorf("required file %s not found", file)
+	if err := writeEmbeddedFile(composeFile, dockerComposeTemplate); err != nil {
+		return fmt.Errorf("failed to write docker-compose.yml: %v", err)
+	}
+
+	if err := writeEmbeddedFile(envExampleFile, envExampleTemplate); err != nil {
+		return fmt.Errorf("failed to write .env.example: %v", err)
+	}
+
+	return nil
+}
+
+func writeEmbeddedFile(filename, content string) error {
+	fullPath := filepath.Join(execDir, filename)
+
+	exists := true
+	if _, err := os.Stat(fullPath); os.IsNotExist(err) {
+		exists = false
+		if err := os.WriteFile(fullPath, []byte(content), 0644); err != nil {
+			return err
 		}
 	}
+
+	log.Printf("%s file %s at: %s",
+		filename,
+		map[bool]string{true: "exists", false: "created"}[exists],
+		fullPath)
+
 	return nil
 }
 
@@ -94,10 +132,10 @@ func extractXHeaders() error {
 		return fmt.Errorf("could not navigate to the URL: %v", err)
 	}
 
-	if err = page.Fill("input[name=\"ss\"]", "Tokyo"); err != nil {
+	if err = page.Locator("input[name=\"ss\"]").Fill("Tokyo"); err != nil {
 		return fmt.Errorf("could not fill input: %v", err)
 	}
-	if err = page.Press("input[name=\"ss\"]", "Enter"); err != nil {
+	if err = page.Locator("input[name=\"ss\"]").Press("Enter"); err != nil {
 		return fmt.Errorf("could not press Enter: %v", err)
 	}
 
@@ -138,8 +176,8 @@ func handleRequest(request playwright.Request) {
 }
 
 func updateEnvFile(envVars map[string]string) error {
-	envExamplePath := filepath.Join(".", envExampleFile)
-	envPath := filepath.Join(".", envFilename)
+	envExamplePath := filepath.Join(execDir, envExampleFile)
+	envPath := filepath.Join(execDir, envFilename)
 
 	content, err := os.ReadFile(envExamplePath)
 	if err != nil {
@@ -170,11 +208,12 @@ func updateEnvFile(envVars map[string]string) error {
 
 func runDockerCompose() error {
 	log.Println("Starting Docker Compose...")
-	if _, err := os.Stat(composeFile); os.IsNotExist(err) {
+	composePath := filepath.Join(execDir, composeFile)
+	if _, err := os.Stat(composePath); os.IsNotExist(err) {
 		return fmt.Errorf("docker-compose.yml file not found")
 	}
 
-	cmd := exec.Command("docker-compose", "up", "-d")
+	cmd := exec.Command("docker-compose", "-f", composePath, "up", "-d")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -187,7 +226,8 @@ func gracefulShutdown() {
 	go func() {
 		<-c
 		log.Println("Shutting down...")
-		cmd := exec.Command("docker-compose", "down")
+		composePath := filepath.Join(execDir, composeFile)
+		cmd := exec.Command("docker-compose", "-f", composePath, "down")
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		if err := cmd.Run(); err != nil {
