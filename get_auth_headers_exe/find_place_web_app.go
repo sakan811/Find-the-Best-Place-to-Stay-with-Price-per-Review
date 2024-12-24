@@ -155,7 +155,7 @@ func extractXHeaders() error {
 
 func handleRequest(request playwright.Request) {
 	if !intercepted {
-		matched, _ := regexp.MatchString(`https://www\.booking\.com/dml/graphql.*`, request.URL())
+		matched, _ := regexp.MatchString(`^https://www\.booking\.com/dml/graphql.*$`, request.URL())
 		if matched {
 			headers := request.Headers()
 			envVars := make(map[string]string)
