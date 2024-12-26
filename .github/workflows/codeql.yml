@@ -64,9 +64,9 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~\AppData\Local\pip\Cache
-        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ matrix.language }}-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-pip-${{ matrix.python-version }}
+          ${{ runner.os }}-pip-${{ matrix.language }}
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
