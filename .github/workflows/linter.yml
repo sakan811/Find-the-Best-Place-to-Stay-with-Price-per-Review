@@ -31,23 +31,13 @@ jobs:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Enable specific linters
-          FIX_ENV: true
-          FIX_GITHUB_ACTIONS: true
-          FIX_GITLEAKS: true
-          FIX_GIT_MERGE_CONFLICT_MARKERS: true
-          FIX_JSCPD: true
-          FIX_MARKDOWN: true
-          FIX_MARKDOWN_PRETTIER: true
-          FIX_NATURAL_LANGUAGE: true
-          FIX_PYTHON_BLACK: true
-          FIX_PYTHON_PYLINT: true
-          FIX_PYTHON_FLAKE8: true
-          FIX_PYTHON_ISORT: true
-          FIX_PYTHON_MYPY: true
-          FIX_PYTHON_PYINK: true
           FIX_PYTHON_RUFF: true
-          FIX_YAML: true
-          FIX_YAML_PRETTIER: true
+          FIX_TYPESCRIPT_ES: true 
+          FIX_JAVASCRIPT_ES: true
+          FIX_ENV: true
+          FIX_GO_MODULES: true
+          FIX_GO: true
+          FIX_TSX: true
 
       - name: Commit and push linting fixes
         # Run only on:
