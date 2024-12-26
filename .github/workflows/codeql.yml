@@ -19,6 +19,8 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+permissions: read-all # Set default to read-only
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -29,16 +31,13 @@ jobs:
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'windows-latest' }}
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    
     permissions:
-      # required for all workflows
-      security-events: write
-
-      # required to fetch internal or private CodeQL packs
-      packages: read
-
-      # only required for workflows in private repositories
-      actions: read
-      contents: read
+      # Only required permissions for CodeQL
+      security-events: write  # Required for uploading CodeQL results
+      actions: read          # Required for detecting existing workflows
+      contents: read         # Required for checking out code
+      packages: read         # Required for fetching CodeQL packs
 
     strategy:
       fail-fast: false
