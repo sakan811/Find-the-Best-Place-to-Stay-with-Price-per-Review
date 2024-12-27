@@ -30,6 +30,7 @@ describe('HotelTable Component', () => {
         price_per_review: 17.65,
         check_in: '2023-10-01',
         check_out: '2023-10-05',
+        accommodation_name: 'Hotels'
       },
     ];
 
@@ -76,6 +77,7 @@ describe('HotelTable Component', () => {
       expect(screen.getByText(': USD')).toBeInTheDocument();
       expect(screen.getByText('Only Hotel Properties', { selector: 'strong' })).toBeInTheDocument();
       expect(screen.getByText(': true')).toBeInTheDocument();
+      expect(screen.getByText('Hotels')).toBeInTheDocument();
     });
   });
 
