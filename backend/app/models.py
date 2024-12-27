@@ -2,7 +2,7 @@ from django.db import models
 
 
 class RoomPrice(models.Model):
-    hotel = models.CharField(max_length=100)
+    hotel = models.CharField(max_length=200)
     room_price = models.FloatField()
     review_score = models.FloatField()
     price_per_review = models.FloatField()
@@ -10,6 +10,7 @@ class RoomPrice(models.Model):
     check_out = models.DateField()
     as_of_date = models.DateField()
     city = models.CharField(max_length=100)
+    accommodation_name = models.CharField(max_length=255, null=True)
 
 
 class BookingDetails(models.Model):

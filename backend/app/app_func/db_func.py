@@ -22,7 +22,8 @@ def save_data_to_db(df) -> None:
             check_in=row['CheckIn'],
             check_out=row['CheckOut'],
             as_of_date=row['AsOf'],
-            city=row['City']
+            city=row['City'],
+            accommodation_name=row['AccommodationName']
         )
         room_price.save()
 

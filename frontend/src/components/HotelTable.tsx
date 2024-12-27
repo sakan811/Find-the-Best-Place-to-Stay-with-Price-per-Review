@@ -12,6 +12,7 @@ interface HotelData {
     price_per_review: number;
     check_in: string;
     check_out: string;
+    accommodation_name: string;
 }
 
 interface BookingDetail {
@@ -182,6 +183,7 @@ const HotelTable: React.FC = () => {
                         <th>Price/Review</th>
                         <th>Check In</th>
                         <th>Check Out</th>
+                        <th>Accommodation Type</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -194,6 +196,7 @@ const HotelTable: React.FC = () => {
                             <td>{formatNumber(hotel.price_per_review)}</td>
                             <td>{hotel.check_in}</td>
                             <td>{hotel.check_out}</td>
+                            <td>{hotel.accommodation_name}</td>
                         </tr>
                     ))}
                 </tbody>
