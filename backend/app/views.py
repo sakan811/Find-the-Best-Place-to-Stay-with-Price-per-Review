@@ -70,7 +70,8 @@ def get_hotel_data_from_db(request):
 
     with connection.cursor() as cursor:
         cursor.execute('''
-            SELECT hotel, room_price, review_score, price_per_review, check_in, check_out, city 
+            SELECT hotel, room_price, review_score, price_per_review, check_in, check_out, city, 
+                   accommodation_name
             FROM app_roomprice
             order by price_per_review
         ''')
