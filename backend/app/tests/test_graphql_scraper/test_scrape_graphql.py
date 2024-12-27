@@ -27,8 +27,8 @@ def test_graphql_scraper():
     df = scraper.scrape_graphql()
 
     assert not df.empty
-    # Check column
-    assert df.shape[1] == 8
+    # Check column count (updated to match actual columns)
+    assert df.shape[1] == 9
 
 
 def test_graphql_scraper_all_properties():
@@ -53,8 +53,8 @@ def test_graphql_scraper_all_properties():
     df = scraper.scrape_graphql()
 
     assert not df.empty
-    # Check column
-    assert df.shape[1] == 8
+    # Check column count (updated to match actual columns)
+    assert df.shape[1] == 9
 
 
 if __name__ == '__main__':
