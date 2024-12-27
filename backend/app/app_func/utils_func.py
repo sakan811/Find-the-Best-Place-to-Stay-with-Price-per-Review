@@ -10,7 +10,7 @@ def get_form_data(form_data: dict) -> tuple:
     :return: Tuple of form data:
             check_in, check_out, city, country, group_adults, group_children, hotel_filter, num_rooms, selected_currency
     """
-    main_logger.info(f'Getting form data...')
+    main_logger.info('Getting form data...')
 
     city = form_data.get('city')
     country = form_data.get('country')
