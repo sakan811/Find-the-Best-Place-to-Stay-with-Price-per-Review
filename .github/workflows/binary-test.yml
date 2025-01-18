@@ -1,0 +1,78 @@
+name: Binary Tests
+
+on:
+  push:
+    paths:
+      - 'web-app-exe/**'
+    branches: [ main ]
+  pull_request:
+    paths:
+      - 'web-app-exe/**'
+    branches: [ main ]
+
+jobs:
+  test-binaries:
+    name: Test Binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+        include:
+          - os: windows-latest
+            binary: find-place-web-app_windows_amd64.exe
+          - os: macos-latest
+            binary: find-place-web-app_darwin_amd64
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Install dependencies
+      working-directory: ./web-app-exe
+      run: go mod download
+
+    - name: Run Go tests
+      working-directory: ./web-app-exe
+      run: go test -v ./tests/...
+
+    - name: Build binaries
+      working-directory: ./web-app-exe
+      run: |
+        chmod +x build-exe.sh
+        ./build-exe.sh
+      shell: bash
+
+    - name: Test binary execution (Windows)
+      if: matrix.os == 'windows-latest'
+      working-directory: ./web-app-exe
+      run: |
+        # Test if binary exists
+        if (!(Test-Path "${{ matrix.binary }}")) {
+          Write-Error "Binary not found"
+          exit 1
+        }
+        # Test if binary is executable
+        $process = Start-Process -FilePath ".\${{ matrix.binary }}" -ArgumentList "--version" -NoNewWindow -PassThru -Wait
+        if ($process.ExitCode -ne 0) {
+          Write-Error "Binary execution failed"
+          exit 1
+        }
+
+    - name: Test binary execution (macOS)
+      if: matrix.os == 'macos-latest'
+      working-directory: ./web-app-exe
+      run: |
+        # Test if binary exists
+        if [ ! -f "${{ matrix.binary }}" ]; then
+          echo "Binary not found"
+          exit 1
+        fi
+        # Make binary executable
+        chmod +x "${{ matrix.binary }}"
+        # Test if binary is executable
+        ./"${{ matrix.binary }}" --version
+      shell: bash
