@@ -2,8 +2,16 @@ name: Backend Test
 
 on:
   push:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-test.yml'
+      - 'pytest.ini'
     branches: [ "main" ]
   pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-test.yml'
+      - 'pytest.ini'
     branches: [ "main" ]
   schedule:
     - cron: '0 0 * * *'
