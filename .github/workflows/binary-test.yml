@@ -35,6 +35,31 @@ jobs:
       working-directory: ./web-app-exe
       run: go mod download
 
+    - name: Install Docker Compose (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install docker-compose
+        docker-compose --version
+
+    - name: Install Docker Compose (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install docker-compose
+        docker-compose --version
+
+    - name: Install Playwright Browser Dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install webkit2png
+        brew install --cask chromium
+        brew install --cask firefox
+
+    - name: Install Playwright Browser Dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install chromium
+        choco install firefox
+
     - name: Run Go tests
       working-directory: ./web-app-exe
       run: go test -v ./tests/...
@@ -56,7 +81,7 @@ jobs:
           exit 1
         }
         # Test if binary is executable
-        $process = Start-Process -FilePath ".\${{ matrix.binary }}" -ArgumentList "--version" -NoNewWindow -PassThru -Wait
+        $process = Start-Process -FilePath ".\${{ matrix.binary }}" -ArgumentList "--help" -NoNewWindow -PassThru -Wait
         if ($process.ExitCode -ne 0) {
           Write-Error "Binary execution failed"
           exit 1
@@ -74,5 +99,13 @@ jobs:
         # Make binary executable
         chmod +x "${{ matrix.binary }}"
         # Test if binary is executable
-        ./"${{ matrix.binary }}" --version
+        ./"${{ matrix.binary }}" --help
       shell: bash
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: binaries-${{ matrix.os }}
+        path: |
+          web-app-exe/find-place-web-app_*
+        retention-days: 5
