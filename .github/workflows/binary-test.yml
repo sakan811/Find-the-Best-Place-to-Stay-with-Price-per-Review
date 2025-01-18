@@ -39,17 +39,25 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: powershell
       run: |
-        # Enable Windows features required for Docker
-        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
-        Enable-WindowsOptionalFeature -Online -FeatureName Containers -All -NoRestart
+        # Install Docker CLI
+        $ProgressPreference = 'SilentlyContinue'
+        Write-Host "Downloading Docker..."
+        Invoke-WebRequest -UseBasicParsing -OutFile docker.exe https://download.docker.com/win/static/stable/x86_64/docker-24.0.7.zip
+        Expand-Archive docker.exe -DestinationPath $Env:ProgramFiles\Docker
+        Remove-Item -Force docker.exe
+        $Env:Path = $Env:Path + ";$Env:ProgramFiles\Docker"
         
-        # Install Docker using winget
-        winget install Docker.DockerDesktop
+        # Install Docker Compose
+        Write-Host "Installing Docker Compose..."
+        $composeVersion = "v2.23.3"
+        Invoke-WebRequest -UseBasicParsing -OutFile $Env:ProgramFiles\Docker\docker-compose.exe "https://github.com/docker/compose/releases/download/$composeVersion/docker-compose-windows-x86_64.exe"
         
         # Start Docker service
+        Write-Host "Starting Docker service..."
         Start-Service docker
         
         # Wait for Docker to be ready
+        Write-Host "Waiting for Docker to be ready..."
         $retries = 30
         $ready = $false
         while ($retries -gt 0 -and -not $ready) {
@@ -69,6 +77,7 @@ jobs:
         }
         
         # Verify Docker Compose
+        Write-Host "Verifying Docker Compose..."
         docker compose version
 
     - name: Setup Docker (macOS)
