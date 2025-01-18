@@ -19,6 +19,8 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 [![Go Tests](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/go-test.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/go-test.yml)
 
+[![Binary Tests](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/binary-test.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/binary-test.yml)
+
 ## How to Use the Web App
 
 ### Step 1: Set Up the Web App
