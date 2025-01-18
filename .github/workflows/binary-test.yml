@@ -35,88 +35,6 @@ jobs:
       working-directory: ./web-app-exe
       run: go mod download
 
-    - name: Setup Docker (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: powershell
-      run: |
-        # Install Docker CLI
-        $ProgressPreference = 'SilentlyContinue'
-        Write-Host "Downloading Docker..."
-        Invoke-WebRequest -UseBasicParsing -OutFile docker.exe https://download.docker.com/win/static/stable/x86_64/docker-24.0.7.zip
-        Expand-Archive docker.exe -DestinationPath $Env:ProgramFiles\Docker
-        Remove-Item -Force docker.exe
-        $Env:Path = $Env:Path + ";$Env:ProgramFiles\Docker"
-        
-        # Install Docker Compose
-        Write-Host "Installing Docker Compose..."
-        $composeVersion = "v2.23.3"
-        Invoke-WebRequest -UseBasicParsing -OutFile $Env:ProgramFiles\Docker\docker-compose.exe "https://github.com/docker/compose/releases/download/$composeVersion/docker-compose-windows-x86_64.exe"
-        
-        # Start Docker service
-        Write-Host "Starting Docker service..."
-        Start-Service docker
-        
-        # Wait for Docker to be ready
-        Write-Host "Waiting for Docker to be ready..."
-        $retries = 30
-        $ready = $false
-        while ($retries -gt 0 -and -not $ready) {
-            try {
-                docker version
-                $ready = $true
-            } catch {
-                Write-Host "Waiting for Docker to be ready..."
-                Start-Sleep -Seconds 10
-                $retries--
-            }
-        }
-        
-        if (-not $ready) {
-            Write-Error "Docker failed to start"
-            exit 1
-        }
-        
-        # Verify Docker Compose
-        Write-Host "Verifying Docker Compose..."
-        docker compose version
-
-    - name: Setup Docker (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        # Install Docker
-        brew install docker docker-compose
-        brew install --cask docker
-        
-        # Start Docker
-        open -a Docker
-        
-        # Wait for Docker to start
-        for i in {1..30}; do
-          if docker info > /dev/null 2>&1; then
-            echo "Docker is ready"
-            break
-          fi
-          echo "Waiting for Docker to be ready..."
-          sleep 10
-        done
-        
-        # Verify Docker is running
-        docker version
-        docker compose version
-
-    - name: Install Playwright Browser Dependencies (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install webkit2png
-        brew install --cask chromium
-        brew install --cask firefox
-
-    - name: Install Playwright Browser Dependencies (Windows)
-      if: matrix.os == 'windows-latest'
-      run: |
-        choco install chromium -y
-        choco install firefox -y
-
     - name: Run Go tests
       working-directory: ./web-app-exe
       run: go test -v ./tests/...
@@ -137,11 +55,23 @@ jobs:
           Write-Error "Binary not found"
           exit 1
         }
-        # Test if binary is executable
-        $env:PATH = "$env:PATH;C:\Program Files\Docker\Docker"
+        
+        # Create test environment file
+        Copy-Item .env.example .env
+        
+        # Test version command
+        Write-Host "Testing version command..."
+        $process = Start-Process -FilePath ".\${{ matrix.binary }}" -ArgumentList "--version" -NoNewWindow -PassThru -Wait
+        if ($process.ExitCode -ne 0) {
+          Write-Error "Version command failed"
+          exit 1
+        }
+        
+        # Test help command
+        Write-Host "Testing help command..."
         $process = Start-Process -FilePath ".\${{ matrix.binary }}" -ArgumentList "--help" -NoNewWindow -PassThru -Wait
         if ($process.ExitCode -ne 0) {
-          Write-Error "Binary execution failed"
+          Write-Error "Help command failed"
           exit 1
         }
 
@@ -154,11 +84,40 @@ jobs:
           echo "Binary not found"
           exit 1
         fi
+        
         # Make binary executable
         chmod +x "${{ matrix.binary }}"
-        # Test if binary is executable
+        
+        # Create test environment file
+        cp .env.example .env
+        
+        # Test version command
+        echo "Testing version command..."
+        ./"${{ matrix.binary }}" --version
+        
+        # Test help command
+        echo "Testing help command..."
         ./"${{ matrix.binary }}" --help
-      shell: bash
+
+    - name: Debug binary info (Windows)
+      if: matrix.os == 'windows-latest'
+      working-directory: ./web-app-exe
+      run: |
+        Write-Host "Binary details:"
+        Get-Item "${{ matrix.binary }}" | Format-List *
+        Write-Host "File hash:"
+        Get-FileHash "${{ matrix.binary }}" | Format-List *
+
+    - name: Debug binary info (macOS)
+      if: matrix.os == 'macos-latest'
+      working-directory: ./web-app-exe
+      run: |
+        echo "Binary details:"
+        ls -l "${{ matrix.binary }}"
+        echo "File type:"
+        file "${{ matrix.binary }}"
+        echo "File hash:"
+        shasum -a 256 "${{ matrix.binary }}"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
