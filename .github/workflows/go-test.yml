@@ -2,8 +2,18 @@ name: Go Tests
 
 on:
   push:
+    paths:
+      - 'web-app-exe/**'
+      - '.github/workflows/go-test.yml'
+      - 'go.mod'
+      - 'go.sum'
     branches: [ main ]
   pull_request:
+    paths:
+      - 'web-app-exe/**'
+      - '.github/workflows/go-test.yml'
+      - 'go.mod'
+      - 'go.sum'
     branches: [ main ]
 
 jobs:

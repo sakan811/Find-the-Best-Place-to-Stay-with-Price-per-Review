@@ -2,9 +2,19 @@ name: Frontend Test
 
 on:
   push:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-test.yml'
+      - 'package.json'
+      - 'package-lock.json'
     branches:
       - main
   pull_request:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-test.yml'
+      - 'package.json'
+      - 'package-lock.json'
     branches:
       - main
   schedule:
