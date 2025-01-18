@@ -35,17 +35,36 @@ jobs:
       working-directory: ./web-app-exe
       run: go mod download
 
-    - name: Install Docker Compose (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install docker-compose
-        docker-compose --version
+    - name: Setup Docker (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: docker/setup-buildx-action@v3
+      with:
+        install: true
 
-    - name: Install Docker Compose (Windows)
+    - name: Install Docker Desktop (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        choco install docker-compose
-        docker-compose --version
+        choco install docker-desktop -y
+        Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+        # Wait for Docker Desktop to start
+        Start-Sleep -s 60
+        # Verify Docker is running
+        docker version
+        # Verify Docker Compose V2
+        docker compose version
+
+    - name: Install Docker (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install docker docker-compose
+        brew install --cask docker
+        # Start Docker Desktop
+        open -a Docker
+        # Wait for Docker to start
+        sleep 60
+        # Verify Docker is running
+        docker version
+        docker compose version
 
     - name: Install Playwright Browser Dependencies (macOS)
       if: matrix.os == 'macos-latest'
@@ -57,8 +76,8 @@ jobs:
     - name: Install Playwright Browser Dependencies (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        choco install chromium
-        choco install firefox
+        choco install chromium -y
+        choco install firefox -y
 
     - name: Run Go tests
       working-directory: ./web-app-exe
@@ -81,6 +100,7 @@ jobs:
           exit 1
         }
         # Test if binary is executable
+        $env:PATH = "$env:PATH;C:\Program Files\Docker\Docker"
         $process = Start-Process -FilePath ".\${{ matrix.binary }}" -ArgumentList "--help" -NoNewWindow -PassThru -Wait
         if ($process.ExitCode -ne 0) {
           Write-Error "Binary execution failed"
