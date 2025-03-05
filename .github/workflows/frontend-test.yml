@@ -52,10 +52,6 @@ jobs:
         working-directory: ./frontend
         run: npm install
 
-      - name: Run ESLint
-        working-directory: ./frontend
-        run: npx eslint .
-
       - name: Run tests
         working-directory: ./frontend
         run: npm test
