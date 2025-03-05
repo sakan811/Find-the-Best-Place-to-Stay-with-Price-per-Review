@@ -13,8 +13,6 @@ on:
       - '.github/workflows/backend-test.yml'
       - 'pytest.ini'
     branches: [ "main" ]
-  schedule:
-    - cron: '0 0 * * *'
 
 permissions:
   contents: read
@@ -24,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest 
     strategy:
       matrix:
-        python-version: [ "3.12" ]
+        python-version: [ "3.13" ]
 
     steps:
     - uses: actions/checkout@v4
@@ -32,19 +30,11 @@ jobs:
         # Full git history is needed for Super-Linter
         fetch-depth: 0
 
-    - name: Cache pip dependencies
-      id: cache
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip  
-        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-${{ matrix.python-version }}
-
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
 
     - name: Install dependencies
       working-directory: ./backend

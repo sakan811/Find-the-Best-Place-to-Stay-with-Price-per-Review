@@ -17,16 +17,12 @@ on:
       - 'package-lock.json'
     branches:
       - main
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   test:
     strategy:
       matrix:
         node-version:
-          - 18
-          - 19
           - 20
 
     runs-on: ubuntu-latest
