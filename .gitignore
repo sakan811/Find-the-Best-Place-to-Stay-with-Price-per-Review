@@ -405,3 +405,4 @@ cython_debug/
 /frontend/npm
 **/*.db
 **/*.env
+/.idea

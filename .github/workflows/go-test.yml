@@ -2,22 +2,32 @@ name: Go Tests
 
 on:
   push:
-    paths:
-      - 'web-app-exe/**'
-      - '.github/workflows/go-test.yml'
-      - 'go.mod'
-      - 'go.sum'
     branches: [ main ]
   pull_request:
-    paths:
-      - 'web-app-exe/**'
-      - '.github/workflows/go-test.yml'
-      - 'go.mod'
-      - 'go.sum'
     branches: [ main ]
 
 jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.filter.outputs.go_code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            go_code:
+              - 'web-app-exe/**'
+              - '.github/workflows/go-test.yml'
+              - 'go.mod'
+              - 'go.sum'
+
   test:
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
