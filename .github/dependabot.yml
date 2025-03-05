@@ -15,7 +15,7 @@ updates:
       day: "tuesday"  # Run updates on Tuesday
 
   # Go updates
-  - package-ecosystem: "go"  # Update Go dependencies using go mod
+  - package-ecosystem: "gomod"  # Update Go dependencies using go mod
     directory: "/web-app-exe"  # Location of go.mod and go.sum
     schedule:
       interval: "weekly"  # Check for updates every week
