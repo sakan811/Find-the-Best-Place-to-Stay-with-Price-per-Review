@@ -5,9 +5,11 @@ updates:
     directory: "/"  # Location of requirements.txt or pyproject.toml
     schedule:
       interval: "weekly"  # Check for updates every week
+      day: "tuesday"  # Run updates on Tuesday
 
   # Node.js (npm) updates
   - package-ecosystem: "npm"  # Update Node.js dependencies using npm
     directory: "/"  # Location of package.json and package-lock.json
     schedule:
       interval: "weekly"  # Check for updates every week
+      day: "tuesday"  # Run updates on Tuesday
