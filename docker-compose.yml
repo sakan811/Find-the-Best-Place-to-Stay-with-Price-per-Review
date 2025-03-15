@@ -16,7 +16,8 @@ services:
       X_BOOKING_TOPIC: ${X_BOOKING_TOPIC}
     user: "1000:1000"
     command: > 
-      sh -c "python auth_header/extract_booking_headers.py &&
+      sh -c "playwright install &&
+      python auth_header/extract_booking_headers.py &&
              python manage.py migrate &&
              gunicorn --bind 0.0.0.0:8000 django_project.wsgi:application"
 

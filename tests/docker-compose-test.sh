@@ -3,8 +3,8 @@
 # Function to clean up
 cleanup() {
     echo "Cleaning up Docker Compose environment..."
-    docker-compose down
-    echo "Cleanup complete."
+    docker-compose down --rmi all
+    echo "Removed containers, networks, volumes, and images."
     exit 0
 }
 
