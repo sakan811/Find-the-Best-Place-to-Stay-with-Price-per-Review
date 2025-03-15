@@ -13,27 +13,7 @@ permissions:
   checks: write
 
 jobs:
-  check_changes:
-    runs-on: ubuntu-latest
-    outputs:
-      should_run: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            frontend:
-              - 'frontend/**'
-              - '.github/workflows/frontend-test.yml'
-              - 'package.json'
-              - 'package-lock.json'
-
   test:
-    needs: check_changes
-    if: ${{ needs.check_changes.outputs.should_run == 'true' }}
     strategy:
       matrix:
         node-version:
