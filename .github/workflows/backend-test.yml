@@ -12,26 +12,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  check_changes:
-    runs-on: ubuntu-latest
-    outputs:
-      should_run: ${{ steps.filter.outputs.backend }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            backend:
-              - 'backend/**'
-              - '.github/workflows/backend-test.yml'
-              - 'pytest.ini'
-
   build:
-    needs: check_changes
-    if: ${{ needs.check_changes.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest 
     strategy:
       matrix:
