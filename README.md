@@ -22,21 +22,15 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 1. Install Docker Desktop
    - [Click here](https://www.docker.com/products/docker-desktop) to download **Docker Desktop**.
    - Follow the instructions on the website to install it on your computer.
-2. Download the executable file inside [web-app-exe](./web-app-exe/) folder depend on your OS.
-   - Windows: [find-place-web-app_windows_amd64.exe](get_auth_headers_exe/find-place-web-app_windows_amd64.exe)
-   - MacOS (Intel): [find-place-web-app_darwin_amd64](get_auth_headers_exe/find-place-web-app_darwin_amd64)
-   - MacOS (Apple Silicon): [find-place-web-app_darwin_arm64](get_auth_headers_exe/find-place-web-app_darwin_arm64)
+2. Download [Docker Compose](./docker-compose.yml) file from this repo.
 3. Place the file in any directory of your choice.
 
 ### Step 2: Access the Web App
 
 1. Make sure that the Docker Desktop is running.
    - If not, start the Docker Desktop.
-2. Run the executable file.
-   - A terminal will open, and the app will intercept the network for necessary headers, then pull the Docker images,
-     start the containers, and navigate you to the web app via your default browser.
-   - Close the terminal to close the web app and Docker containers.
-3. URL to the web app is [http://localhost:5000/](http://localhost:5000/)
+2. Run the Docker Compose file.
+3. Navigate to the web app via [http://localhost:5000/](http://localhost:5000/)
 
 ## Disclaimer
 
