@@ -39,5 +39,5 @@ def test_get_accommodation_type_name_negative():
     assert get_accommodation_type_name(-1) == "Other"
 
 
-if __name__ == '__main__':
-    pytest.main() 
+if __name__ == "__main__":
+    pytest.main()

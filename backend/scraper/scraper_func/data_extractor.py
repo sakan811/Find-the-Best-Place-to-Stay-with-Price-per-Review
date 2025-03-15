@@ -35,36 +35,40 @@ def extract_hotel_data(df_list: list, hotel_data_list: list) -> None:
         review_scores = []
         final_prices = []
         accommodation_names = []
-        
+
         for key, val in hotel_data.items():
             if key == "displayName":
                 if val:
-                    display_names.append(val['text'])
+                    display_names.append(val["text"])
                 else:
                     display_names.append(None)
 
             if key == "basicPropertyData":
                 if val:
-                    review_scores.append(val['reviewScore']['score'])
-                    accom_type_id = val.get('accommodationTypeId')
-                    accommodation_names.append(get_accommodation_type_name(accom_type_id))
+                    review_scores.append(val["reviewScore"]["score"])
+                    accom_type_id = val.get("accommodationTypeId")
+                    accommodation_names.append(
+                        get_accommodation_type_name(accom_type_id)
+                    )
                 else:
                     review_scores.append(None)
                     accommodation_names.append(None)
 
             if key == "blocks":
                 if val:
-                    final_prices.append(val[0]['finalPrice']['amount'])
+                    final_prices.append(val[0]["finalPrice"]["amount"])
                 else:
                     final_prices.append(None)
 
         main_logger.debug("Create a Pandas Dataframe to store extracted data")
-        df = pd.DataFrame({
-            "Hotel": display_names,
-            "Review": review_scores,
-            "Price": final_prices,
-            "AccommodationName": accommodation_names
-        })
+        df = pd.DataFrame(
+            {
+                "Hotel": display_names,
+                "Review": review_scores,
+                "Price": final_prices,
+                "AccommodationName": accommodation_names,
+            }
+        )
 
         main_logger.debug("Append dataframe to a df_list")
         df_list.append(df)

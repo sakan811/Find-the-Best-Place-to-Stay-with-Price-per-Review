@@ -1,4 +1,5 @@
-FROM python:3.12-alpine
+FROM python:3.13-alpine
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create a non-root user and group
 RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -S appuser
@@ -15,7 +16,10 @@ ENV PATH="/home/appuser/.local/bin:${PATH}"
 
 # Copy the requirements file and install dependencies
 COPY --chown=appuser:appgroup requirements.txt ./
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN uv pip install --user --no-cache-dir -r requirements.txt
+
+# Install playwright
+RUN playwright install --with-deps
 
 # Copy the rest of the application code
 COPY --chown=appuser:appgroup . .

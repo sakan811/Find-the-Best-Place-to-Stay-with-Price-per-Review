@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from app.models import RoomPrice
 
+
 class BaseTestCase(TestCase):
     def setUp(self):
         super().setUp()
@@ -9,4 +10,4 @@ class BaseTestCase(TestCase):
         self.room_price = RoomPrice.objects.create(
             accommodation_name="Test Hotel",
             # ... other required fields ...
-        ) 
+        )
