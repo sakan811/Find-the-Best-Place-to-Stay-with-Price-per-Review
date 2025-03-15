@@ -103,13 +103,19 @@ async def extract_headers() -> Optional[BookingHeaderExtractor]:
         await page.goto("https://www.booking.com/")
 
         # Wait for navigation and some interaction
-        print("Waiting for page to load and sending initial interactions...", file=sys.stderr)
+        print(
+            "Waiting for page to load and sending initial interactions...",
+            file=sys.stderr,
+        )
         await page.wait_for_load_state("networkidle")
 
         # Click on some elements to trigger API calls
         try:
             # Click search button using the provided CSS selector
-            await page.click('#indexsearch > div.hero-banner-searchbox > div > form > div > div.e22b782521.d12ff5f5bf > button', timeout=5000)
+            await page.click(
+                "#indexsearch > div.hero-banner-searchbox > div > form > div > div.e22b782521.d12ff5f5bf > button",
+                timeout=5000,
+            )
         except Exception as e:
             print(f"Could not interact with search button: {e}", file=sys.stderr)
 
@@ -130,7 +136,10 @@ async def extract_headers() -> Optional[BookingHeaderExtractor]:
             print("Successfully extracted Booking.com headers!", file=sys.stderr)
             return extractor
         else:
-            print("Could not extract all required headers. Please try running the script again.", file=sys.stderr)
+            print(
+                "Could not extract all required headers. Please try running the script again.",
+                file=sys.stderr,
+            )
             return None
 
 
@@ -138,7 +147,7 @@ async def main():
     """Main function to run the header extraction."""
     # Extract headers
     extractor = await extract_headers()
-    
+
     if extractor:
         # Output as environment variables
         extractor.print_env_variables()

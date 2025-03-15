@@ -1,7 +1,12 @@
 name: Dependabot Auto-Merge
 on:
-  pull_request:
-    types: [opened]
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  check_suite:
+    types: [completed]
+  workflow_run:
+    workflows: ["*"]
+    types: [completed]
 
 permissions:
   contents: write
@@ -10,9 +15,30 @@ permissions:
 jobs:
   auto_merge_dependabot:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    if: github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
-      - name: Auto-merge Dependabot PRs
-        run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url }}"
+      - name: Fetch Metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      
+      - name: Approve PR
+        run: gh pr review --approve "${{ github.event.pull_request.html_url || github.event.repository.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Enable Auto-Merge
+        run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url || github.event.repository.html_url }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Auto-merge (retry mechanism)
+        # This is a fallback if the first attempt fails
+        if: failure()
+        uses: pascalgn/automerge-action@v0.15.6
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_METHOD: "merge"
+          MERGE_RETRY_SLEEP: "60000" # 1 minute
+          MERGE_RETRIES: "10"
