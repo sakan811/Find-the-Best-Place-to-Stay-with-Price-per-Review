@@ -14,13 +14,6 @@ def pytest_configure(config):
         "markers",
         "asyncio: mark test to run with asyncio, default loop_scope=session"
     )
-    
-    # Set the default fixture loop scope explicitly to avoid the deprecation warning
-    config.addini(
-        "asyncio_default_fixture_loop_scope",
-        help="default event loop scope for async fixtures",
-        default="function"  # Using function scope as recommended in the warning
-    )
 
 # This tells pytest-asyncio to use session scope for fixture event loops
 def pytest_addoption(parser):
