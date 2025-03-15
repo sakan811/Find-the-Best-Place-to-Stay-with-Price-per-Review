@@ -1,9 +1,9 @@
 """
-Shared pytest fixtures for auth_header tests.
+Global pytest configuration for the backend.
 """
 import pytest
 
-# Remove the custom event_loop fixture and use pytest-asyncio's configuration
+# Define pytest plugins at the top level
 pytest_plugins = ["pytest_asyncio"]
 
 # Configure pytest-asyncio to use session scope by default
@@ -14,6 +14,13 @@ def pytest_configure(config):
         "markers",
         "asyncio: mark test to run with asyncio, default loop_scope=session"
     )
+    
+    # Set the default fixture loop scope explicitly to avoid the deprecation warning
+    config.addini(
+        "asyncio_default_fixture_loop_scope",
+        help="default event loop scope for async fixtures",
+        default="function"  # Using function scope as recommended in the warning
+    )
 
 # This tells pytest-asyncio to use session scope for fixture event loops
 def pytest_addoption(parser):
@@ -21,7 +28,7 @@ def pytest_addoption(parser):
     parser.addini(
         "asyncio_default_fixture_loop_scope",
         help="default event loop scope for async fixtures",
-        default="session"
+        default="function"  # Using function scope as recommended in the warning
     )
 
 @pytest.fixture(scope="session")
