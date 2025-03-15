@@ -16,7 +16,7 @@ ENV PATH="/home/appuser/.local/bin:${PATH}"
 
 # Copy the requirements file and install dependencies
 COPY --chown=appuser:appgroup requirements.txt ./
-RUN uv pip install --no-cache-dir -r requirements.txt
+RUN uv pip install --no-cache-dir -r requirements.txt --system
 
 # Install playwright
 RUN playwright install --with-deps
