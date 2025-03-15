@@ -2,14 +2,22 @@ version: 2
 updates:
   # Python (pip) updates
   - package-ecosystem: "pip"  # Update Python dependencies using pip
-    directory: "/"  # Location of requirements.txt or pyproject.toml
+    directory: "/backend"  # Location of requirements.txt or pyproject.toml
     schedule:
       interval: "weekly"  # Check for updates every week
       day: "tuesday"  # Run updates on Tuesday
 
   # Node.js (npm) updates
   - package-ecosystem: "npm"  # Update Node.js dependencies using npm
-    directory: "/"  # Location of package.json and package-lock.json
+    directory: "/frontend"  # Location of package.json and package-lock.json
     schedule:
       interval: "weekly"  # Check for updates every week
       day: "tuesday"  # Run updates on Tuesday
+
+  # Go updates
+  - package-ecosystem: "gomod"  # Update Go dependencies using go mod
+    directory: "/web-app-exe"  # Location of go.mod and go.sum
+    schedule:
+      interval: "weekly"  # Check for updates every week
+      day: "tuesday"  # Run updates on Tuesday
+
