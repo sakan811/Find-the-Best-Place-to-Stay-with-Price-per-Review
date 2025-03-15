@@ -2,8 +2,9 @@ import logging
 import os
 
 
-def configure_logging_with_file(log_dir: str, log_file: str, logger_name: str = 'root',
-                                level: str = 'DEBUG') -> None | logging.Logger:
+def configure_logging_with_file(
+    log_dir: str, log_file: str, logger_name: str = "root", level: str = "DEBUG"
+) -> None | logging.Logger:
     """
     Configure logging with a file.
     :param log_dir: Directory where log files are located.
@@ -20,19 +21,19 @@ def configure_logging_with_file(log_dir: str, log_file: str, logger_name: str = 
         logger.handlers.clear()
 
     # Set the logging level
-    if level == 'DEBUG':
+    if level == "DEBUG":
         logger.setLevel(logging.DEBUG)
-    elif level == 'INFO':
+    elif level == "INFO":
         logger.setLevel(logging.INFO)
-    elif level == 'WARNING':
+    elif level == "WARNING":
         logger.setLevel(logging.WARNING)
-    elif level == 'ERROR':
+    elif level == "ERROR":
         logger.setLevel(logging.ERROR)
-    elif level == 'CRITICAL':
+    elif level == "CRITICAL":
         logger.setLevel(logging.CRITICAL)
 
     # Define a custom log format
-    log_format = '%(asctime)s | %(filename)s | line:%(lineno)d | %(funcName)s | %(levelname)s | %(message)s'
+    log_format = "%(asctime)s | %(filename)s | line:%(lineno)d | %(funcName)s | %(levelname)s | %(message)s"
 
     # Make log directory
     os.makedirs(log_dir, exist_ok=True)
@@ -40,7 +41,9 @@ def configure_logging_with_file(log_dir: str, log_file: str, logger_name: str = 
     log_path = os.path.join(log_dir, log_file)
 
     # Create a FileHandler to write logs to the specified file in overwrite mode
-    file_handler = logging.FileHandler(log_path, mode='w')  # 'w' for write mode (overwrite)
+    file_handler = logging.FileHandler(
+        log_path, mode="w"
+    )  # 'w' for write mode (overwrite)
 
     # Create a StreamHandler to output logs to the terminal
     stream_handler = logging.StreamHandler()
@@ -59,4 +62,6 @@ def configure_logging_with_file(log_dir: str, log_file: str, logger_name: str = 
     return logger
 
 
-main_logger = configure_logging_with_file(log_dir='logs', log_file='main.log', logger_name='main', level="WARNING")
+main_logger = configure_logging_with_file(
+    log_dir="logs", log_file="main.log", logger_name="main", level="WARNING"
+)

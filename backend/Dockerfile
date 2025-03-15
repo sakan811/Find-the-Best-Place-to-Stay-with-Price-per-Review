@@ -1,11 +1,23 @@
-FROM python:3.12-alpine
+FROM python:3.13-bookworm
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create a non-root user and group
-RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -S appuser
+RUN groupadd -g 1000 appgroup && useradd -u 1000 -g appgroup -s /bin/bash -m appuser
 
-# Set the working directory and ensure it's owned by the non-root user
+# Set the working directory
 WORKDIR /app
-RUN chown appuser:appgroup /app
+
+# Copy the requirements file
+COPY requirements.txt ./
+
+# Install dependencies as root
+RUN uv pip install --no-cache-dir -r requirements.txt --system
+
+# Install playwright as root
+RUN playwright install --with-deps
+
+# Set ownership of the application directory to the non-root user
+RUN chown -R appuser:appgroup /app
 
 # Switch to the non-root user for the rest of the build stage
 USER appuser
@@ -13,11 +25,7 @@ USER appuser
 # Set PATH to include user-specific bin directory
 ENV PATH="/home/appuser/.local/bin:${PATH}"
 
-# Copy the requirements file and install dependencies
-COPY --chown=appuser:appgroup requirements.txt ./
-RUN pip install --user --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code
+# Copy the rest of the application code with proper ownership
 COPY --chown=appuser:appgroup . .
 
 # Expose the port the app runs on

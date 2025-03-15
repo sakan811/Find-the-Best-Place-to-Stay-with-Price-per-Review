@@ -16,6 +16,7 @@ class BookingDetails(BaseModel):
         selected_currency (str): The currency for the booking.
         hotel_filter (bool): Whether to filter only hotel properties.
     """
+
     city: str
     country: str
     check_in: str

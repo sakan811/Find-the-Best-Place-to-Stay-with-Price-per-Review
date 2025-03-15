@@ -15,28 +15,29 @@ def save_data_to_db(df) -> None:
     main_logger.info("Saving data to database...")
     for index, row in df.iterrows():
         room_price = RoomPrice(
-            hotel=row['Hotel'],
-            room_price=row['Price'],
-            review_score=row['Review'],
-            price_per_review=row['Price/Review'],
-            check_in=row['CheckIn'],
-            check_out=row['CheckOut'],
-            as_of_date=row['AsOf'],
-            city=row['City'],
-            accommodation_name=row['AccommodationName']
+            hotel=row["Hotel"],
+            room_price=row["Price"],
+            review_score=row["Review"],
+            price_per_review=row["Price/Review"],
+            check_in=row["CheckIn"],
+            check_out=row["CheckOut"],
+            as_of_date=row["AsOf"],
+            city=row["City"],
+            accommodation_name=row["AccommodationName"],
         )
         room_price.save()
 
 
 def save_booking_details_to_db(
-        check_in: str,
-        check_out: str,
-        city: str,
-        num_adults: int,
-        num_children: int,
-        num_rooms: int,
-        currency: str,
-        only_hotel: bool) -> None:
+    check_in: str,
+    check_out: str,
+    city: str,
+    num_adults: int,
+    num_children: int,
+    num_rooms: int,
+    currency: str,
+    only_hotel: bool,
+) -> None:
     """
     Save the booking details into a database.
     :param check_in: Check-In date.
@@ -63,7 +64,7 @@ def save_booking_details_to_db(
         num_children=num_children,
         num_rooms=num_rooms,
         currency=currency,
-        only_hotel=only_hotel
+        only_hotel=only_hotel,
     )
     booking_detail.save()
 
@@ -88,4 +89,3 @@ def truncate_booking_details_table() -> None:
     BookingDetails.objects.all().delete()
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM sqlite_sequence")
-

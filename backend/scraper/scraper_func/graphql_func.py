@@ -25,6 +25,7 @@ def get_header() -> dict:
     }
     return headers
 
+
 def check_currency_data(data) -> str:
     """
     Check currency data from the GraphQL response.
@@ -34,16 +35,16 @@ def check_currency_data(data) -> str:
     main_logger.info("Checking currency data from the GraphQL response...")
     selected_currency_data = None
     try:
-        for result in data['data']['searchQueries']['search']['results']:
-            if 'blocks' in result:
-                for block in result['blocks']:
-                    if 'finalPrice' in block:
-                        selected_currency_data = block['finalPrice']['currency']
+        for result in data["data"]["searchQueries"]["search"]["results"]:
+            if "blocks" in result:
+                for block in result["blocks"]:
+                    if "finalPrice" in block:
+                        selected_currency_data = block["finalPrice"]["currency"]
                         break
     except KeyError:
-        main_logger.error('KeyError: Currency data not found')
+        main_logger.error("KeyError: Currency data not found")
     except IndexError:
-        main_logger.error('IndexError: Currency data not found')
+        main_logger.error("IndexError: Currency data not found")
     return selected_currency_data
 
 
@@ -55,29 +56,33 @@ def check_city_data(data: dict, entered_city: str) -> str:
     :return: City name.
     """
     main_logger.info("Checking city data from the GraphQL response...")
-    city_data = 'Not Match'
+    city_data = "Not Match"
 
     try:
         # Loop through each breadcrumb in the GraphQL response
-        for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
-            main_logger.debug(f'Breadcrumb data: {breadcrumb}')
+        for breadcrumb in data["data"]["searchQueries"]["search"]["breadcrumbs"]:
+            main_logger.debug(f"Breadcrumb data: {breadcrumb}")
 
-            if breadcrumb.get('name') is None:
+            if breadcrumb.get("name") is None:
                 continue
 
             # Compare the 'name' field specifically with the entered city
-            if breadcrumb.get('name', '').lower() == entered_city.lower():
-                city_data = breadcrumb['name']  # Return the city name if a match is found
+            if breadcrumb.get("name", "").lower() == entered_city.lower():
+                city_data = breadcrumb[
+                    "name"
+                ]  # Return the city name if a match is found
                 return city_data
 
         # In case no match is found for the entered city
-        if city_data == 'Not Match':
-            main_logger.warning(f"City '{entered_city}' not found in GraphQL breadcrumbs.")
+        if city_data == "Not Match":
+            main_logger.warning(
+                f"City '{entered_city}' not found in GraphQL breadcrumbs."
+            )
     except KeyError:
-        main_logger.error('KeyError: Issue while parsing city data')
+        main_logger.error("KeyError: Issue while parsing city data")
         raise KeyError
     except IndexError:
-        main_logger.error('IndexError: Issue while parsing city data')
+        main_logger.error("IndexError: Issue while parsing city data")
         raise IndexError
 
     return city_data  # Returns None if no match is found
@@ -91,29 +96,31 @@ def check_country_data(data: dict, entered_country: str) -> str:
     :return: Country name.
     """
     main_logger.info("Checking country data from the GraphQL response...")
-    country_data = 'Not Match'
+    country_data = "Not Match"
 
     try:
         # Loop through each breadcrumb in the GraphQL response
-        for breadcrumb in data['data']['searchQueries']['search']['breadcrumbs']:
-            main_logger.debug(f'Breadcrumb data: {breadcrumb}')
+        for breadcrumb in data["data"]["searchQueries"]["search"]["breadcrumbs"]:
+            main_logger.debug(f"Breadcrumb data: {breadcrumb}")
 
-            if breadcrumb.get('name') is None:
+            if breadcrumb.get("name") is None:
                 continue
 
             # Compare the 'name' field specifically with the entered country
-            if breadcrumb.get('name', '').lower() == entered_country.lower():
-                country_data = breadcrumb['name']  # Return the country name if a match is found
+            if breadcrumb.get("name", "").lower() == entered_country.lower():
+                country_data = breadcrumb[
+                    "name"
+                ]  # Return the country name if a match is found
                 return country_data
 
         # In case no match is found for the entered city
-        if country_data == 'Not Match':
+        if country_data == "Not Match":
             main_logger.warning("Country name not found in GraphQL breadcrumbs.")
     except KeyError:
-        main_logger.error('KeyError: Issue while parsing country data')
+        main_logger.error("KeyError: Issue while parsing country data")
         raise KeyError
     except IndexError:
-        main_logger.error('IndexError: Issue while parsing country data')
+        main_logger.error("IndexError: Issue while parsing country data")
         raise IndexError
 
     return country_data  # Returns None if no match is found
@@ -128,16 +135,16 @@ def check_hotel_filter_data(data) -> bool:
     main_logger.info("Checking hotel filter data from the GraphQL response...")
 
     try:
-        for option in data['data']['searchQueries']['search']['appliedFilterOptions']:
-            main_logger.debug(f'Filter options: {option}')
-            if 'urlId' in option:
-                if option['urlId'] == "ht_id=204":
+        for option in data["data"]["searchQueries"]["search"]["appliedFilterOptions"]:
+            main_logger.debug(f"Filter options: {option}")
+            if "urlId" in option:
+                if option["urlId"] == "ht_id=204":
                     return True
     except KeyError:
-        main_logger.error('KeyError: hotel_filter not found')
+        main_logger.error("KeyError: hotel_filter not found")
         return False
     except IndexError:
-        main_logger.error('IndexError: hotel_filter not found')
+        main_logger.error("IndexError: hotel_filter not found")
         return False
 
     return False
