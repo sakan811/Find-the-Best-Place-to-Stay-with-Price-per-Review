@@ -1,4 +1,4 @@
-FROM python:3.13-alpine
+FROM python:3.13-bookworm
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create a non-root user and group

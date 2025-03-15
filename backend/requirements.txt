@@ -11,4 +11,4 @@ gunicorn~=23.0.0
 djangorestframework~=3.15.2
 pytest-django~=4.10.0
 pydantic~=2.10.6
-playwright>=1.42.0
+playwright>=1.50.0
