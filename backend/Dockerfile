@@ -2,7 +2,7 @@ FROM python:3.13-bookworm
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create a non-root user and group
-RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -S appuser
+RUN groupadd -g 1000 appgroup && useradd -u 1000 -g appgroup -s /bin/bash -m appuser
 
 # Set the working directory and ensure it's owned by the non-root user
 WORKDIR /app
