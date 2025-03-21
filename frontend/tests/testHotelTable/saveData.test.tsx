@@ -7,10 +7,6 @@ import React from "react";
 
 vi.mock('axios');
 
-vi.mock('react-helmet-async', () => ({
-  Helmet: () => <div></div>,
-}));
-
 // Mocking URL.createObjectURL and revokeObjectURL
 (window.URL as unknown) = {
     createObjectURL: vi.fn(() => 'mocked-url'),
@@ -34,6 +30,7 @@ describe('HotelTable Component', () => {
                 price_per_review: 44.44,
                 check_in: '2023-10-01',
                 check_out: '2023-10-05',
+                accommodation_name: 'Hotel',
             },
         ];
 

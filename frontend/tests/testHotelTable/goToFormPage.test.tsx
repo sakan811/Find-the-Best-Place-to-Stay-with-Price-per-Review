@@ -4,10 +4,6 @@ import { describe, it, expect, vi } from 'vitest';
 import HotelTable from "../../src/components/HotelTable";
 import React from "react";
 
-vi.mock('react-helmet-async', () => ({
-  Helmet: () => <div></div>,
-}));
-
 describe('HotelTable Component', () => {
     it('should redirect to the form page when the button is clicked', () => {
         // Mock window.location

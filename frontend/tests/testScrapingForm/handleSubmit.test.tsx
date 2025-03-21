@@ -6,9 +6,6 @@ import React from "react";
 import { expect } from 'vitest'
 
 vi.mock('axios');
-vi.mock('react-helmet-async', () => ({
-  Helmet: () => <div></div>,
-}));
 
 describe('ScrapingForm handleSubmit', () => {
   const fillForm = () => {
