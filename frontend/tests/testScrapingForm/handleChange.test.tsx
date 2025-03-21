@@ -1,26 +1,11 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ScrapingForm from "../../src/components/ScrapingForm";
-import {HelmetProvider} from "react-helmet-async";
 import { describe, vi, test, expect } from 'vitest';
-
-// Mock react-helmet-async
-vi.mock('react-helmet-async', () => {
-  const HelmetProvider = ({ children }: { children: ReactNode }) => <div>{children}</div>;
-
-  return {
-    Helmet: () => <div></div>,
-    HelmetProvider,
-  };
-});
 
 describe('ScrapingForm', () => {
     test('updates formData on input change', () => {
-        render(
-            <HelmetProvider>
-                <ScrapingForm />
-            </HelmetProvider>
-        );
+        render(<ScrapingForm />);
 
         // Get input elements
         const cityInput = screen.getByRole('textbox', { name: /City:/i }) as HTMLInputElement;

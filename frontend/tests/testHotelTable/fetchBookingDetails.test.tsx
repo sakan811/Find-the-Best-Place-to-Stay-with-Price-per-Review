@@ -5,9 +5,6 @@ import HotelTable from '../../src/components/HotelTable';
 import React from 'react';
 
 vi.mock('axios');
-vi.mock('react-helmet-async', () => ({
-  Helmet: () => <div></div>,
-}));
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
