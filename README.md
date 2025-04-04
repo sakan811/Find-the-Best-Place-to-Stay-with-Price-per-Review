@@ -49,8 +49,12 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    ```
 
    - This command will start the containers defined in the `docker-compose.yml` file.
-   - The web app will be accessible at [http://localhost:5000/](http://localhost:5000/).
-  
+   - The process runs in two phases:
+     - **Phase 1**: Authentication headers setup (may take 1-2 minutes to complete)
+     - **Phase 2**: Starting the backend and frontend services
+   - Please be patient and wait for both phases to complete.
+   - The web app will be accessible at [http://localhost:5000/](http://localhost:5000/) once all services are running.
+
 4. Clean up the containers after use:
 
    ```bash
