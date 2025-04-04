@@ -177,7 +177,7 @@ def start_web_scraping(request):  # type: ignore
         main_logger.error(f"KeyError: {e}")
         main_logger.error(f"Missing key in GraphQL response: {e}")
         return Response(
-            {"error": f"Missing data in Booking.com response: {e}"},
+            {"error": f"Missing data in Booking.com response"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
     except Exception as e:
