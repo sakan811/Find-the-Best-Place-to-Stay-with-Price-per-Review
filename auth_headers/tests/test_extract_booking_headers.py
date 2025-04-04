@@ -1,8 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock, mock_open
 
-# Import the module we want to test
-from auth_headers.extract_booking_headers import (
+from extract_booking_headers import (
     BookingHeaderExtractor,
     extract_headers,
     main,
