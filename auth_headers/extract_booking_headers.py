@@ -88,7 +88,8 @@ class BookingHeaderExtractor:
             
             with open(env_file_path, "w") as env_file:
                 for key, value in self.headers.items():
-                    env_file.write(f"{key}={value}\n")
+                    # Quote the value to handle special characters
+                    env_file.write(f'{key}="{value}"\n')
             main_logger.info(f"Environment variables saved to {env_file_path}")
         except IOError as e:
             main_logger.error(f"Failed to write to .env file: {e}")

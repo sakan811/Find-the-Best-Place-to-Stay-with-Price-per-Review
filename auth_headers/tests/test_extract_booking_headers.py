@@ -119,8 +119,8 @@ class TestBookingHeaderExtractor:
 
         # Check that write was called for each header
         expected_calls = [
-            f"USER_AGENT=test-user-agent\n",
-            f"X_BOOKING_CSRF_TOKEN=test-csrf-token\n",
+            'USER_AGENT="test-user-agent"\n',
+            'X_BOOKING_CSRF_TOKEN="test-csrf-token"\n',
         ]
         write_calls = [call[0][0] for call in handle.write.call_args_list]
         assert sorted(write_calls) == sorted(expected_calls)
@@ -218,7 +218,117 @@ async def test_main_calls_extract_headers(mock_extract_headers):
     # Verify extract_headers was called and the result was processed
     mock_extract_headers.assert_called_once()
     mock_extractor.write_env_variables.assert_called_once()
+    @patch("extract_booking_headers.main_logger")
+    @patch("os.environ.get")
+    @patch("builtins.open", new_callable=mock_open)
+    @patch("os.getcwd")
+    def test_write_env_variables_with_headers_fixed(self, mock_getcwd, mock_file, mock_env_get, mock_logger):
+        """Test writing environment variables when headers are present (with proper quoting)."""
+        # Setup
+        extractor = BookingHeaderExtractor()
+        extractor.headers = {
+            "USER_AGENT": "test-user-agent",
+            "X_BOOKING_CSRF_TOKEN": "test-csrf-token",
+        }
+        
+        # Make sure mock_env_get returns None to prevent overwriting the USER_AGENT
+        mock_env_get.return_value = None
 
+        # Mock directory path for .env file
+        mock_getcwd.return_value = "/mock/path"
+
+        # Call the method
+        extractor.write_env_variables()
+
+        # Verify the file was opened and written to correctly
+        mock_file.assert_called_once_with(os.path.join("/mock/path", ".env"), "w")
+        handle = mock_file()
+
+        # Check that write was called for each header with quotes
+        expected_calls = [
+            'USER_AGENT="test-user-agent"\n',
+            'X_BOOKING_CSRF_TOKEN="test-csrf-token"\n',
+        ]
+        write_calls = [call[0][0] for call in handle.write.call_args_list]
+        assert sorted(write_calls) == sorted(expected_calls)
+
+        # Verify that success was logged
+        mock_logger.info.assert_any_call(f"Environment variables saved to {os.path.join('/mock/path', '.env')}")
+
+
+    @patch("extract_booking_headers.main_logger")
+    @patch("os.environ.get")
+    @patch("builtins.open", new_callable=mock_open)
+    @patch("os.getcwd")
+    def test_write_env_variables_with_docker_user_agent(self, mock_getcwd, mock_file, mock_env_get, mock_logger):
+        """Test writing environment variables when Docker USER_AGENT is available."""
+        # Setup
+        extractor = BookingHeaderExtractor()
+        extractor.headers = {
+            "USER_AGENT": "original-user-agent",
+            "X_BOOKING_CSRF_TOKEN": "test-csrf-token",
+        }
+        
+        # Mock USER_AGENT from environment
+        mock_env_get.return_value = "docker-user-agent"
+
+        # Mock directory path for .env file
+        mock_getcwd.return_value = "/mock/path"
+
+        # Call the method
+        extractor.write_env_variables()
+
+        # Verify that the docker USER_AGENT was used
+        handle = mock_file()
+        write_calls = [call[0][0] for call in handle.write.call_args_list]
+        
+        # Check that the USER_AGENT was overridden
+        assert 'USER_AGENT="docker-user-agent"\n' in write_calls
+        assert 'USER_AGENT="original-user-agent"\n' not in write_calls
+        
+        # Check that the info log was made about using the environment USER_AGENT
+        mock_logger.info.assert_any_call("Using USER_AGENT from environment variables")
+
+
+    @patch("extract_booking_headers.main_logger")
+    @patch("os.environ.get")
+    @patch("builtins.open")
+    @patch("os.getcwd")
+    def test_write_env_variables_io_error(self, mock_getcwd, mock_file, mock_env_get, mock_logger):
+        """Test handling IO error when writing environment variables."""
+        # Setup
+        extractor = BookingHeaderExtractor()
+        extractor.headers = {"USER_AGENT": "test-user-agent"}
+        
+        # Make sure mock_env_get returns None
+        mock_env_get.return_value = None
+
+        # Mock an IOError when opening the file
+        mock_getcwd.return_value = "/mock/path"
+        mock_file.side_effect = IOError("Test IO error")
+
+        # Call the method
+        extractor.write_env_variables()
+
+        # Verify that the error was logged
+        mock_logger.error.assert_called_once_with("Failed to write to .env file: Test IO error")
+
+
+    @patch("extract_booking_headers.main_logger")
+    def test_write_env_variables_no_headers_fixed(self, mock_logger):
+        """Test trying to write environment variables when no headers are present (fixed version)."""
+        # Setup
+        extractor = BookingHeaderExtractor()
+        extractor.headers = {}
+
+        # Call the method
+        extractor.write_env_variables()
+
+        # Verify warning was logged and no further processing occurred
+        mock_logger.warning.assert_called_once_with("No headers collected.")
+        # Ensure no other logger methods were called
+        mock_logger.info.assert_not_called()
+        mock_logger.error.assert_not_called()
 
 if __name__ == "__main__":
     pytest.main()
