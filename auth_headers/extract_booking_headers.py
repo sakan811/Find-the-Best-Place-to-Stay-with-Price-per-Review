@@ -11,7 +11,7 @@ from typing import Dict, Optional
 
 from playwright.async_api import async_playwright, Request, Route
 
-from auth_headers.logging_config import main_logger
+from logging_config import main_logger
 
 # Headers we want to extract from Booking.com
 TARGET_HEADERS = [

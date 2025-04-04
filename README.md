@@ -26,6 +26,10 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - Follow the instructions on the website to install it on your computer.
 2. Download [Docker Compose](./docker-compose.yml) file from this repo.
 3. Place the file in any directory of your choice.
+4. Create an empty `.env` file in the same directory as the `docker-compose.yml` file.
+   - This file will be used to store environment variables.
+   - On Windows: Open PowerShell in your directory and run `New-Item -Path .env -ItemType File -Force`
+   - On Mac: Open Terminal in your directory and run `touch .env`
 
 ### Step 2: Access the Web App
 
