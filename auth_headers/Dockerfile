@@ -8,9 +8,6 @@ RUN getent group 2000 || groupadd -g 2000 appgroup && \
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file
-COPY requirements.txt ./
-
 # Install dependencies as root
 RUN uv pip install python-dotenv pytest pytest-asyncio --system
 
