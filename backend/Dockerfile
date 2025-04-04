@@ -2,8 +2,7 @@ FROM python:3.13.0-alpine3.20
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create a non-root user and group
-RUN getent group 1000 || groupadd -g 1000 appgroup && \
-    getent passwd 1000 || useradd -u 1000 -g 1000 -s /bin/bash -m appuser
+RUN addgroup -g 1000 appgroup && adduser -u 1000 -G appgroup -S appuser
 
 # Set the working directory
 WORKDIR /app
