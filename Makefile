@@ -16,6 +16,12 @@ backend-ruff:
 auth-headers:
 	cd auth_headers && python extract_booking_headers.py
 
+auth-headers-ruff:
+	cd auth_headers && ruff check . --fix && ruff format .
+
+auth-headers-test:
+	cd auth_headers && pytest
+
 frontend-dev:
 	cd frontend && npm run dev
 
