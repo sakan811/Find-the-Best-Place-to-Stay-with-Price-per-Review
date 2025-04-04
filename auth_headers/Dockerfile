@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/playwright/python:v1.50.0-noble
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create a non-root user and group
 RUN getent group 2000 || groupadd -g 2000 appgroup && \
@@ -6,6 +7,12 @@ RUN getent group 2000 || groupadd -g 2000 appgroup && \
 
 # Set the working directory
 WORKDIR /app
+
+# Copy the requirements file
+COPY requirements.txt ./
+
+# Install dependencies as root
+RUN uv pip install --no-cache-dir -r requirements.txt --system
 
 # Set ownership of the application directory to the non-root user
 RUN chown -R 2000:2000 /app
