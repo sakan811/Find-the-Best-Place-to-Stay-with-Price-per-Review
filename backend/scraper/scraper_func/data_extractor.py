@@ -1,6 +1,6 @@
 import pandas as pd
 
-from logging_config import main_logger
+from logger.logging_config import main_logger
 
 
 def get_accommodation_type_name(type_id: int) -> str:

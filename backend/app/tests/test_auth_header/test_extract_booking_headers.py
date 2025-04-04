@@ -1,6 +1,7 @@
 """
 Tests for the extract_booking_headers module.
 """
+
 import asyncio
 import pytest
 from unittest.mock import MagicMock, patch, AsyncMock
@@ -51,7 +52,7 @@ class TestBookingHeaderExtractor:
         """Test that GraphQL requests extract headers."""
         # Setup mock headers
         mock_headers = {header: f"value-{header}" for header in TARGET_HEADERS}
-        
+
         # Setup mocks
         route_mock = AsyncMock()
         request_mock = MagicMock()
@@ -72,7 +73,7 @@ class TestBookingHeaderExtractor:
         """Test that GraphQL requests with partial headers are handled correctly."""
         # Use only the first header
         partial_headers = {TARGET_HEADERS[0]: f"value-{TARGET_HEADERS[0]}"}
-        
+
         # Setup mocks
         route_mock = AsyncMock()
         request_mock = MagicMock()
@@ -83,9 +84,13 @@ class TestBookingHeaderExtractor:
         await header_extractor.handle_request(route_mock, request_mock)
 
         # Assert
-        expected_headers = {HEADER_TO_ENV[TARGET_HEADERS[0]]: partial_headers[TARGET_HEADERS[0]]}
+        expected_headers = {
+            HEADER_TO_ENV[TARGET_HEADERS[0]]: partial_headers[TARGET_HEADERS[0]]
+        }
         assert header_extractor.headers == expected_headers
-        assert not header_extractor.completed  # Should not be complete with partial headers
+        assert (
+            not header_extractor.completed
+        )  # Should not be complete with partial headers
         route_mock.continue_.assert_called_once()
 
     def test_print_env_variables_with_headers(self, header_extractor, monkeypatch):
@@ -95,16 +100,16 @@ class TestBookingHeaderExtractor:
             "USER_AGENT": "test-user-agent",
             "X_BOOKING_CONTEXT_AID": "test-aid",
         }
-        
+
         # Capture stdout
         captured_stdout = StringIO()
         monkeypatch.setattr(sys, "stdout", captured_stdout)
-        
+
         # Call the function
         header_extractor.print_env_variables()
-        
+
         # Assert
-        output = captured_stdout.getvalue().strip().split('\n')
+        output = captured_stdout.getvalue().strip().split("\n")
         assert len(output) == 2
         assert "USER_AGENT=test-user-agent" in output
         assert "X_BOOKING_CONTEXT_AID=test-aid" in output
@@ -116,16 +121,16 @@ class TestBookingHeaderExtractor:
         captured_stderr = StringIO()
         monkeypatch.setattr(sys, "stdout", captured_stdout)
         monkeypatch.setattr(sys, "stderr", captured_stderr)
-        
+
         # Call the function
         header_extractor.print_env_variables()
-        
+
         # Assert
         assert captured_stdout.getvalue() == ""
         assert "No headers collected." in captured_stderr.getvalue()
 
 
-@patch('auth_header.extract_booking_headers.async_playwright')
+@patch("auth_header.extract_booking_headers.async_playwright")
 @pytest.mark.asyncio(loop_scope="session")
 async def test_extract_headers_success(mock_playwright):
     """Test successful header extraction."""
@@ -133,12 +138,12 @@ async def test_extract_headers_success(mock_playwright):
     mock_browser = AsyncMock()
     mock_context = AsyncMock()
     mock_page = AsyncMock()
-    
+
     # Configure mock chain
     mock_playwright.return_value.__aenter__.return_value.chromium.launch.return_value = mock_browser
     mock_browser.new_context.return_value = mock_context
     mock_context.new_page.return_value = mock_page
-    
+
     # Make route handler trigger completion
     async def side_effect(url_pattern, handler):
         # Create mock route and request
@@ -146,16 +151,16 @@ async def test_extract_headers_success(mock_playwright):
         mock_request = MagicMock()
         mock_request.url = "https://booking.com/graphql"
         mock_request.headers = {header: f"value-{header}" for header in TARGET_HEADERS}
-        
+
         # Call the handler
         await handler(mock_route, mock_request)
-    
+
     # Assign side effect to route method
     mock_page.route.side_effect = side_effect
-    
+
     # Call the function
     result = await extract_headers()
-    
+
     # Assert
     assert result is not None
     assert result.completed
@@ -163,7 +168,7 @@ async def test_extract_headers_success(mock_playwright):
     mock_browser.close.assert_called_once()
 
 
-@patch('auth_header.extract_booking_headers.async_playwright')
+@patch("auth_header.extract_booking_headers.async_playwright")
 @pytest.mark.asyncio(loop_scope="session")
 async def test_extract_headers_failure(mock_playwright):
     """Test header extraction failure."""
@@ -171,12 +176,12 @@ async def test_extract_headers_failure(mock_playwright):
     mock_browser = AsyncMock()
     mock_context = AsyncMock()
     mock_page = AsyncMock()
-    
+
     # Configure mock chain
     mock_playwright.return_value.__aenter__.return_value.chromium.launch.return_value = mock_browser
     mock_browser.new_context.return_value = mock_context
     mock_context.new_page.return_value = mock_page
-    
+
     # Make route handler NOT trigger completion (no headers)
     async def side_effect(url_pattern, handler):
         # Create mock route and request with no headers
@@ -184,32 +189,32 @@ async def test_extract_headers_failure(mock_playwright):
         mock_request = MagicMock()
         mock_request.url = "https://booking.com/graphql"
         mock_request.headers = {}
-        
+
         # Call the handler
         await handler(mock_route, mock_request)
-    
+
     # Assign side effect to route method
     mock_page.route.side_effect = side_effect
-    
+
     # Call the function
     result = await extract_headers()
-    
+
     # Assert
     assert result is None
     mock_browser.close.assert_called_once()
 
 
-@patch('auth_header.extract_booking_headers.extract_headers')
-@patch('auth_header.extract_booking_headers.asyncio.run')
+@patch("auth_header.extract_booking_headers.extract_headers")
+@patch("auth_header.extract_booking_headers.asyncio.run")
 def test_main_calls_extract_headers(mock_run, mock_extract_headers):
     """Test that main calls extract_headers and prints output."""
     # Import the function to test
     from auth_header.extract_booking_headers import main
-    
+
     # Setup mocks
     extractor_mock = MagicMock()
     mock_extract_headers.return_value = extractor_mock
-    
+
     # Create a mock event loop that runs main directly
     def run_main(coro):
         loop = asyncio.new_event_loop()
@@ -217,16 +222,16 @@ def test_main_calls_extract_headers(mock_run, mock_extract_headers):
             return loop.run_until_complete(coro)
         finally:
             loop.close()
-    
+
     mock_run.side_effect = run_main
-    
+
     # Call the function (via asyncio.run which we've mocked)
     asyncio.run(main())
-    
+
     # Assert
     mock_extract_headers.assert_called_once()
     extractor_mock.print_env_variables.assert_called_once()
 
 
 if __name__ == "__main__":
-    pytest.main() 
+    pytest.main()

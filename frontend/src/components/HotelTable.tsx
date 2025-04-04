@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { Table, Button, Alert } from 'react-bootstrap';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import './HotelTable.css';
-import { Helmet } from 'react-helmet-async';
 
 interface HotelData {
     city: string;
@@ -118,9 +117,7 @@ const HotelTable: React.FC = () => {
 
     return (
         <>
-            <Helmet>
-                <title>Find the Best Place to Stay with Price/Review - Table</title>
-            </Helmet>
+            <title>Find the Best Place to Stay with Price/Review - Table</title>
             <Button variant="primary" className="backToFormButton" onClick={goToFormPage}>
                 Back to Form
             </Button>

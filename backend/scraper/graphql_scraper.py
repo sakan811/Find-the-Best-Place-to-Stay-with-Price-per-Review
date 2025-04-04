@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 from pydantic import BaseModel, Field
 
-from logging_config import main_logger
+from logger.logging_config import main_logger
 from scraper.booking_details import BookingDetails
 from scraper.scraper_func.data_extractor import extract_hotel_data
 from scraper.scraper_func.data_transformer import transform_data_in_df
@@ -513,6 +513,9 @@ class Scraper(BaseModel):
         main_logger.info(
             "Checking whether the entered data match the data from the GraphQL response..."
         )
+        
+        main_logger.debug(f"Response Data: {data}")
+        
         total_page_num = data["data"]["searchQueries"]["search"]["pagination"][
             "nbResultsTotal"
         ]

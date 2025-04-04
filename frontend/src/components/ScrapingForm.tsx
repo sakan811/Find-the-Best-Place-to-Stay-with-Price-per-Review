@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import './ScrapingForm.css';
 import axios, {AxiosError, AxiosResponse} from 'axios';
-import { Helmet } from 'react-helmet-async';
 
 interface SystemExit extends AxiosError {
   response: AxiosResponse & {
@@ -78,9 +77,7 @@ const ScrapingForm: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Find the Best Place to Stay with Price/Review - Form</title>
-      </Helmet>
+      <title>Find the Best Place to Stay with Price/Review - Form</title>
       <h1 style={{ textAlign: 'center' }}>Finding the Best Place to Stay with Price/Review from Booking.com</h1>
       <p style={{ textAlign: 'center', fontSize: '16px' }}>
         Enter the hotel booking details below to scrape the hotel data
