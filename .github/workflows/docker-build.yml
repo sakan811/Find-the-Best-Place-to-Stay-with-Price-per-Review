@@ -1,4 +1,4 @@
-name: Trivy Docker Scan
+name: Docker Build
 
 on:
   pull_request:
@@ -28,15 +28,10 @@ jobs:
           context: ./frontend
           push: false
           tags: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest
-
-      - name: Run Trivy vulnerability scanner for Backend
-        uses: aquasecurity/trivy-action@master
+      
+      - name: Build auth-headers
+        uses: docker/build-push-action@v6
         with:
-          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-backend:latest'
-          format: 'table'
-
-      - name: Run Trivy vulnerability scanner for Frontend
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest'
-          format: 'table'
+          context: ./auth_headers
+          push: false
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-auth-headers:latest

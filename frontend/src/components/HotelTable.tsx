@@ -117,9 +117,7 @@ const HotelTable: React.FC = () => {
 
     return (
         <>
-            <head>
-                <title>Find the Best Place to Stay with Price/Review - Table</title>
-            </head>
+            <title>Find the Best Place to Stay with Price/Review - Table</title>
             <Button variant="primary" className="backToFormButton" onClick={goToFormPage}>
                 Back to Form
             </Button>

@@ -1,19 +1,20 @@
 import datetime
 
 from django.db import connection
+import pandas as pd
 
 from app.models import BookingDetails, RoomPrice
-from logging_config import main_logger
+from logger.logging_config import main_logger
 
 
-def save_data_to_db(df) -> None:
+def save_data_to_db(df: pd.DataFrame) -> None:
     """
     Save the data into a database.
     :param df: DataFrame.
     :return: None.
     """
     main_logger.info("Saving data to database...")
-    for index, row in df.iterrows():
+    for _, row in df.iterrows(): # type: ignore
         room_price = RoomPrice(
             hotel=row["Hotel"],
             room_price=row["Price"],
@@ -86,6 +87,5 @@ def truncate_booking_details_table() -> None:
     :return: None.
     """
     main_logger.info("Truncating app_bookingdetails table...")
-    BookingDetails.objects.all().delete()
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM sqlite_sequence")

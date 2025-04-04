@@ -77,9 +77,7 @@ const ScrapingForm: React.FC = () => {
 
   return (
     <>
-      <head>
-        <title>Find the Best Place to Stay with Price/Review - Form</title>
-      </head>
+      <title>Find the Best Place to Stay with Price/Review - Form</title>
       <h1 style={{ textAlign: 'center' }}>Finding the Best Place to Stay with Price/Review from Booking.com</h1>
       <p style={{ textAlign: 'center', fontSize: '16px' }}>
         Enter the hotel booking details below to scrape the hotel data

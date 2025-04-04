@@ -2,9 +2,9 @@ import os
 
 from dotenv import load_dotenv
 
-from logging_config import main_logger
+from logger.logging_config import main_logger
 
-load_dotenv()
+load_dotenv(".env")
 
 
 def get_header() -> dict:

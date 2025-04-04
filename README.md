@@ -29,8 +29,15 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 1. Make sure that the Docker Desktop is running.
    - If not, start the Docker Desktop.
-2. Run the Docker Compose file.
-3. Navigate to the web app via [http://localhost:5000/](http://localhost:5000/)
+
+2. Navigate to <https://www.whatismybrowser.com/detect/what-is-my-user-agent/>
+   - Copy the **User-Agent** string from the website.
+   - Paste the **User-Agent** string into the `docker-compose.yml` file.
+   - Find the line that starts with `- USER_AGENT=` and replace the value with your copied **User-Agent** string.
+
+3. Run the Docker Compose file: `docker-compose up -d`.
+   - This command will start the web app in the background.
+   - The web app will be accessible at [http://localhost:5000/](http://localhost:5000/).
 
 ## Disclaimer
 

@@ -2,7 +2,7 @@ import datetime
 
 import pandas as pd
 
-from logging_config import main_logger
+from logger.logging_config import main_logger
 
 
 def transform_data_in_df(

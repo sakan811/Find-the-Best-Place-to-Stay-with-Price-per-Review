@@ -1,14 +1,27 @@
 version: '3.x'
 
 services:
+  auth-headers:
+    image: sakanbeer88/find-stay-place-auth-headers:latest
+    volumes:
+      - ./.env:/app/.env
+    user: "2000:2000"
+    command: python extract_booking_headers.py
+    environment:
+      - PYTHONPATH=/app
+      - USER_AGENT=
+
   backend:
     image: sakanbeer88/find-stay-place-backend:latest
     ports:
       - "8000:8000"
     user: "1000:1000"
+    env_file:
+      - ./.env
+    depends_on:
+      - auth-headers
     command: > 
-      sh -c "python auth_header/extract_booking_headers.py &&
-             python manage.py migrate &&
+      sh -c "python manage.py migrate &&
              gunicorn --bind 0.0.0.0:8000 django_project.wsgi:application"
 
   frontend:
@@ -16,3 +29,5 @@ services:
     ports:
       - "5000:80"
     user: "1001:1001"
+    depends_on:
+      - backend
