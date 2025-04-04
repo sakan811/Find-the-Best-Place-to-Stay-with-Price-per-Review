@@ -41,9 +41,31 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - Paste the **User-Agent** string into the `docker-compose.yml` file.
    - Find the line that starts with `- USER_AGENT=` and replace the value with your copied **User-Agent** string.
 
-3. Run the Docker Compose file: `docker-compose up -d`.
+3. Run the Docker Compose file:
+
+   ```bash
+   docker-compose --profile phase1 up --abort-on-container-exit && \
+   docker-compose --profile phase2 up -d
+   ```
+
    - This command will start the web app in the background.
    - The web app will be accessible at [http://localhost:5000/](http://localhost:5000/).
+  
+4. Clean up the containers after use:
+
+   ```bash
+   docker-compose --profile phase1 down && \
+   docker-compose --profile phase2 down
+   ```
+
+   - This command will stop and remove the containers created by the Docker Compose file.
+
+   ```bash
+   docker-compose --profile phase1 down --volumes --remove-orphans && \
+   docker-compose --profile phase2 down --volumes --remove-orphans
+   ```
+
+   - This command will stop and remove the containers, volumes, and orphaned containers created by the Docker Compose file.
 
 ## Disclaimer
 

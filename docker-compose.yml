@@ -2,6 +2,7 @@ version: '3.x'
 
 services:
   auth-headers:
+    profiles: ["phase1"]
     image: sakanbeer88/find-stay-place-auth-headers:latest
     volumes:
       - ./.env:/app/.env
@@ -19,28 +20,24 @@ services:
       start_period: 5s
 
   backend:
+    profiles: ["phase2"]
     image: sakanbeer88/find-stay-place-backend:latest
     ports:
       - "8000:8000"
     user: "1000:1000"
-    volumes:
-      - ./.env:/app/.env
-    depends_on:
-      auth-headers:
-        condition: service_completed_successfully
+    env_file:
+      - ./.env
     command: > 
       sh -c "
-             . /app/.env &&
              python manage.py migrate &&
              gunicorn --bind 0.0.0.0:8000 django_project.wsgi:application"
 
   frontend:
+    profiles: ["phase2"]
     image: sakanbeer88/find-stay-place-frontend:latest
     ports:
       - "5000:80"
     user: "1001:1001"
     depends_on:
-      auth-headers:
-        condition: service_completed_successfully
       backend:
         condition: service_started

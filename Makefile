@@ -29,10 +29,14 @@ frontend-test:
 	cd frontend && npm run test
 
 docker-compose-up:
-	docker-compose up -d
+	touch .env && \
+	docker-compose --profile phase1 up --abort-on-container-exit && \
+	docker-compose --profile phase2 up -d
 
 docker-compose-down:
-	docker-compose down
+	docker-compose --profile phase1 down && \
+	docker-compose --profile phase2 down
 
 docker-compose-clean:
-	docker-compose down --volumes --remove-orphans
+	docker-compose --profile phase1 down --volumes --remove-orphans && \
+	docker-compose --profile phase2 down --volumes --remove-orphans
