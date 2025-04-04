@@ -12,7 +12,7 @@ WORKDIR /app
 COPY requirements.txt ./
 
 # Install dependencies as root
-RUN uv add python-dotenv pytest pytest-asyncio
+RUN uv pip install python-dotenv pytest pytest-asyncio
 
 # Set ownership of the application directory to the non-root user
 RUN chown -R 2000:2000 /app
