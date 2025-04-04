@@ -14,7 +14,7 @@ def save_data_to_db(df: pd.DataFrame) -> None:
     :return: None.
     """
     main_logger.info("Saving data to database...")
-    for _, row in df.iterrows(): # type: ignore
+    for _, row in df.iterrows():  # type: ignore
         room_price = RoomPrice(
             hotel=row["Hotel"],
             room_price=row["Price"],

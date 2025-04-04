@@ -513,9 +513,9 @@ class Scraper(BaseModel):
         main_logger.info(
             "Checking whether the entered data match the data from the GraphQL response..."
         )
-        
+
         main_logger.debug(f"Response Data: {data}")
-        
+
         total_page_num = data["data"]["searchQueries"]["search"]["pagination"][
             "nbResultsTotal"
         ]

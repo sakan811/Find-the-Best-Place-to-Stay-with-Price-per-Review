@@ -1,10 +1,12 @@
 import logging
 
 
-def configure_logging(logger_name: str = "root", level: str = "DEBUG") -> logging.Logger:
+def configure_logging(
+    logger_name: str = "root", level: str = "DEBUG"
+) -> logging.Logger:
     """
     Configure logging to output only to terminal.
-    
+
     :param logger_name: Logger name. Default is 'root'.
     :param level: Logging level.
     :return: Logger instance.
