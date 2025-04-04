@@ -5,9 +5,6 @@ import HotelTable from "../../src/components/HotelTable";
 import React from "react";
 
 vi.mock('axios');
-vi.mock('react-helmet-async', () => ({
-  Helmet: () => <div></div>,
-}));
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
@@ -22,6 +19,7 @@ describe('HotelTable Component', () => {
                 price_per_review: 44.44,
                 check_in: '2023-10-01',
                 check_out: '2023-10-05',
+                accommodation_name: 'Hotel',
             },
         ];
 
@@ -39,6 +37,7 @@ describe('HotelTable Component', () => {
             expect(screen.getByText('44.44')).toBeInTheDocument();
             expect(screen.getByText('2023-10-01')).toBeInTheDocument();
             expect(screen.getByText('2023-10-05')).toBeInTheDocument();
+            expect(screen.getByRole('cell', { name: 'Hotel' })).toBeInTheDocument();
         });
     });
 

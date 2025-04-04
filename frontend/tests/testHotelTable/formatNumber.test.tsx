@@ -4,10 +4,6 @@ import React from "react";
 import HotelTable from "../../src/components/HotelTable";
 import axios from "axios";
 
-vi.mock('react-helmet-async', () => ({
-  Helmet: () => <div></div>,
-}));
-
 vi.mock('axios');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -23,6 +19,7 @@ describe('HotelTable', () => {
                 price_per_review: 270.123,
                 check_in: '2023-10-01',
                 check_out: '2023-10-05',
+                accommodation_name: 'Hotel',
             },
         ];
 
