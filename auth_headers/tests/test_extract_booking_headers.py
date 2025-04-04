@@ -89,7 +89,7 @@ class TestBookingHeaderExtractor:
         # Verify the route was continued
         mock_route.continue_.assert_called_once()
 
-    @patch("auth_headers.extract_booking_headers.main_logger")
+    @patch("extract_booking_headers.main_logger")
     @patch("os.environ.get")
     @patch("builtins.open", new_callable=mock_open)
     @patch("os.path.dirname")
@@ -134,7 +134,7 @@ class TestBookingHeaderExtractor:
                 break
         assert called_with_expected_message, "Log did not contain expected message about saving environment variables"
 
-    @patch("auth_headers.extract_booking_headers.main_logger")
+    @patch("extract_booking_headers.main_logger")
     def test_write_env_variables_no_headers(self, mock_logger):
         """Test trying to write environment variables when no headers are present."""
         # Setup
@@ -149,7 +149,7 @@ class TestBookingHeaderExtractor:
 
 
 @pytest.mark.asyncio
-@patch("auth_headers.extract_booking_headers.async_playwright")
+@patch("extract_booking_headers.async_playwright")
 async def test_extract_headers_success(mock_playwright):
     """Test successful header extraction."""
     # Setup mocks
@@ -191,7 +191,7 @@ async def test_extract_headers_success(mock_playwright):
 
 
 @pytest.mark.asyncio
-@patch("auth_headers.extract_booking_headers.async_playwright")
+@patch("extract_booking_headers.async_playwright")
 async def test_extract_headers_failure(mock_playwright):
     """Test header extraction when an error occurs."""
     # Setup mocks to raise an exception
@@ -205,7 +205,7 @@ async def test_extract_headers_failure(mock_playwright):
 
 
 @pytest.mark.asyncio
-@patch("auth_headers.extract_booking_headers.extract_headers")
+@patch("extract_booking_headers.extract_headers")
 async def test_main_calls_extract_headers(mock_extract_headers):
     """Test that main calls extract_headers and processes the result."""
     # Setup
