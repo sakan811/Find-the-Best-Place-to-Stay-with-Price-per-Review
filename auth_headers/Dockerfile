@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright/python:v1.50.0-noble
+FROM mcr.microsoft.com/playwright/python:v1.51.0-noble
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create a non-root user and group
@@ -12,7 +12,7 @@ WORKDIR /app
 COPY requirements.txt ./
 
 # Install dependencies as root
-RUN uv pip install --no-cache-dir -r requirements.txt --system
+RUN uv add python-dotenv pytest pytest-asyncio
 
 # Set ownership of the application directory to the non-root user
 RUN chown -R 2000:2000 /app
