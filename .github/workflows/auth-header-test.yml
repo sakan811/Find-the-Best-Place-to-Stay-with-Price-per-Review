@@ -1,0 +1,52 @@
+name: Auth Header Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    strategy:
+      matrix:
+        python-version: [ "3.13" ]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Full git history is needed for Super-Linter
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+
+    - name: Install dependencies
+      working-directory: ./auth_headers
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+
+    - name: Test Auth Header
+      working-directory: ./auth_headers
+      env:
+        USER_AGENT: ${{ secrets.USER_AGENT }}
+        X_BOOKING_CONTEXT_ACTION_NAME: ${{ secrets.X_BOOKING_CONTEXT_ACTION_NAME }}
+        X_BOOKING_CONTEXT_AID: ${{ secrets.X_BOOKING_CONTEXT_AID }}
+        X_BOOKING_CSRF_TOKEN: ${{ secrets.X_BOOKING_CSRF_TOKEN }}
+        X_BOOKING_ET_SERIALIZED_STATE: ${{ secrets.X_BOOKING_ET_SERIALIZED_STATE }}
+        X_BOOKING_PAGEVIEW_ID: ${{ secrets.X_BOOKING_PAGEVIEW_ID }}
+        X_BOOKING_SITE_TYPE_ID: ${{ secrets.X_BOOKING_SITE_TYPE_ID }}
+        X_BOOKING_TOPIC: ${{ secrets.X_BOOKING_TOPIC }}
+      run: |
+        python -m pytest
+

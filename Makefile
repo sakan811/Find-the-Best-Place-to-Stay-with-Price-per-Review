@@ -20,7 +20,7 @@ auth-headers-ruff:
 	cd auth_headers && ruff check . --fix && ruff format .
 
 auth-headers-test:
-	cd auth_headers && pytest
+	cd auth_headers && python -m pytest
 
 frontend-dev:
 	cd frontend && npm run dev
