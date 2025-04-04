@@ -48,5 +48,5 @@ jobs:
         X_BOOKING_SITE_TYPE_ID: ${{ secrets.X_BOOKING_SITE_TYPE_ID }}
         X_BOOKING_TOPIC: ${{ secrets.X_BOOKING_TOPIC }}
       run: |
-        pytest -m pytest
+        pytest
 
