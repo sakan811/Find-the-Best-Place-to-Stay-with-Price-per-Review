@@ -7,15 +7,11 @@ and outputs them as environment variables.
 
 import asyncio
 import os
-import sys
 from typing import Dict, Optional
 
 from playwright.async_api import async_playwright, Request, Route
 
-# Add the parent directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from logging_config import main_logger
+from auth_headers.logging_config import main_logger
 
 # Headers we want to extract from Booking.com
 TARGET_HEADERS = [
@@ -78,20 +74,20 @@ class BookingHeaderExtractor:
         if not self.headers:
             main_logger.warning("No headers collected.")
             return
-        
+
         # Use USER_AGENT from environment if available
         docker_user_agent = os.environ.get("USER_AGENT")
         if docker_user_agent:
             main_logger.info("Using USER_AGENT from environment variables")
             self.headers["USER_AGENT"] = docker_user_agent
-        
+
         # Write to a .env file at the same level as the docker-compose file
         try:
             # Get the path to the root directory (where docker-compose.yml is located)
             root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            env_file_path = os.path.join(root_dir, '.env')
-            
-            with open(env_file_path, 'w') as env_file:
+            env_file_path = os.path.join(root_dir, ".env")
+
+            with open(env_file_path, "w") as env_file:
                 for key, value in self.headers.items():
                     env_file.write(f"{key}={value}\n")
             main_logger.info(f"Environment variables saved to {env_file_path}")
@@ -106,7 +102,9 @@ async def extract_headers() -> Optional[BookingHeaderExtractor]:
     try:
         async with async_playwright() as p:
             # Launch the browser
-            browser = await p.chromium.launch(headless=True)  # Set to True for production
+            browser = await p.chromium.launch(
+                headless=True
+            )  # Set to True for production
             context = await browser.new_context()
 
             # Create a new page
@@ -123,7 +121,9 @@ async def extract_headers() -> Optional[BookingHeaderExtractor]:
             await page.goto("https://www.booking.com/")
 
             # Wait for navigation and some interaction
-            main_logger.info("Waiting for page to load and sending initial interactions...")
+            main_logger.info(
+                "Waiting for page to load and sending initial interactions..."
+            )
             await page.wait_for_load_state("networkidle")
 
             # Click on some elements to trigger API calls
@@ -142,7 +142,9 @@ async def extract_headers() -> Optional[BookingHeaderExtractor]:
             # If headers are not collected yet, try another page
             if not extractor.completed:
                 main_logger.info("Trying to navigate to search results page...")
-                await page.goto("https://www.booking.com/searchresults.html?ss=New+York")
+                await page.goto(
+                    "https://www.booking.com/searchresults.html?ss=New+York"
+                )
                 await page.wait_for_load_state("networkidle")
                 await asyncio.sleep(5)
 
@@ -153,7 +155,9 @@ async def extract_headers() -> Optional[BookingHeaderExtractor]:
                 main_logger.info("Successfully extracted Booking.com headers!")
                 return extractor
             else:
-                main_logger.error("Could not extract all required headers. Please try running the script again.")
+                main_logger.error(
+                    "Could not extract all required headers. Please try running the script again."
+                )
                 return None
     except Exception as e:
         main_logger.error(f"Error during header extraction: {e}")

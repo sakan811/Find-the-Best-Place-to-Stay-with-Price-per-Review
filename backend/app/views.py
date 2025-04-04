@@ -117,10 +117,12 @@ def get_booking_details_from_db(request):  # type: ignore
 def start_web_scraping(request):  # type: ignore
     main_logger.info("Starting web-scraping...")
     try:
-        data = request.data # type: ignore
-        
-        form_data: tuple[str, str, str, str, int, int, bool, int, str] = get_form_data(data) # type: ignore
-        
+        data = request.data  # type: ignore
+
+        form_data: tuple[str, str, str, str, int, int, bool, int, str] = get_form_data(
+            data
+        )  # type: ignore
+
         check_in: str = form_data[0]
         check_out: str = form_data[1]
         city: str = form_data[2]

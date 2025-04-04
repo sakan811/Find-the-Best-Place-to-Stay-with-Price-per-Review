@@ -40,14 +40,14 @@ def get_form_data(form_data: dict[str, str | int | bool]) -> tuple[Any, ...]:
         except (ValueError, TypeError):
             main_logger.warning("group_adults is not an integer. set it to 1")
             group_adults = 1
-    
+
     if not isinstance(group_children, int):
         try:
             group_children = int(group_children) if group_children is not None else 0
         except (ValueError, TypeError):
             main_logger.warning("group_children is not an integer. set it to 0")
             group_children = 0
-          
+
     if not isinstance(num_rooms, int):
         try:
             num_rooms = int(num_rooms) if num_rooms is not None else 1
