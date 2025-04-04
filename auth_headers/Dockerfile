@@ -9,7 +9,7 @@ RUN getent group 2000 || groupadd -g 2000 appgroup && \
 WORKDIR /app
 
 # Install dependencies as root
-RUN uv pip install python-dotenv pytest pytest-asyncio --system
+RUN uv pip install python-dotenv playwright --system
 
 # Set ownership of the application directory to the non-root user
 RUN chown -R 2000:2000 /app
