@@ -42,6 +42,6 @@ jobs:
       - name: Build and push auth-headers
         uses: docker/build-push-action@v6
         with:
-          context: ./auth-headers
+          context: ./auth_headers
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-auth-headers:latest
