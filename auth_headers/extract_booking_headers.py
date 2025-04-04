@@ -81,12 +81,11 @@ class BookingHeaderExtractor:
             main_logger.info("Using USER_AGENT from environment variables")
             self.headers["USER_AGENT"] = docker_user_agent
 
-        # Write to a .env file at the same level as the docker-compose file
+        # Write to a .env file in the application directory
         try:
-            # Get the path to the root directory (where docker-compose.yml is located)
-            root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            env_file_path = os.path.join(root_dir, ".env")
-
+            # Use the current working directory or /app in Docker
+            env_file_path = os.path.join(os.getcwd(), ".env")
+            
             with open(env_file_path, "w") as env_file:
                 for key, value in self.headers.items():
                     env_file.write(f"{key}={value}\n")
