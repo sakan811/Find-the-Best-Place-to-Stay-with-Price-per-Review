@@ -73,7 +73,7 @@ describe('HotelTable Component', () => {
       expect(screen.getByText('Currency', { selector: 'strong' })).toBeInTheDocument();
       expect(screen.getByText(': USD')).toBeInTheDocument();
       expect(screen.getByText('Only Hotel Properties', { selector: 'strong' })).toBeInTheDocument();
-      expect(screen.getByText(': true')).toBeInTheDocument();
+      expect(screen.getByText(': Yes')).toBeInTheDocument();
       expect(screen.getByText('Hotels')).toBeInTheDocument();
     });
   });
