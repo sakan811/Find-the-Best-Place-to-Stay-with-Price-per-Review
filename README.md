@@ -19,17 +19,21 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 ## How to Use the Web App
 
+### Step 0: Prerequisites
+
+- **Docker Desktop** must be installed on your computer.
+- **Make** must be installed on your computer.
+
 ### Step 1: Set Up the Web App
 
 1. Install Docker Desktop
    - [Click here](https://www.docker.com/products/docker-desktop) to download **Docker Desktop**.
    - Follow the instructions on the website to install it on your computer.
-2. Download [Docker Compose](./docker-compose.yml) file from this repo.
+2. Download [Docker Compose](./docker-compose.yml) file from this repository.
 3. Place the file in any directory of your choice.
 4. Create an empty `.env` file in the same directory as the `docker-compose.yml` file.
    - This file will be used to store environment variables.
-   - On Windows: Open PowerShell in your directory and run `New-Item -Path .env -ItemType File -Force`
-   - On Mac: Open Terminal in your directory and run `touch .env`
+   - run `touch ./.env` in Git Bash terminal to create the file.
 
 ### Step 2: Access the Web App
 
@@ -41,35 +45,32 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
    - Paste the **User-Agent** string into the `docker-compose.yml` file.
    - Find the line that starts with `- USER_AGENT=` and replace the value with your copied **User-Agent** string.
 
-3. Run the Docker Compose file:
+3. Run Auth Headers App:
 
-   ```bash
-   docker-compose --profile phase1 up --abort-on-container-exit && \
-   docker-compose --profile phase2 up -d
-   ```
+   3.1 Pull the latest version of the **Auth Headers App** from Docker Hub:
 
-   - This command will start the containers defined in the `docker-compose.yml` file.
-   - The process runs in two phases:
-     - **Phase 1**: Authentication headers setup (may take 1-2 minutes to complete)
-     - **Phase 2**: Starting the backend and frontend services
-   - Please be patient and wait for both phases to complete.
-   - The web app will be accessible at [http://localhost:5000/](http://localhost:5000/) once all services are running.
+      ```bash
+      make docker-compose-auth-headers
+      ```
 
-4. Clean up the containers after use:
+   3.2 Run the **Auth Headers App**:
 
-   ```bash
-   docker-compose --profile phase1 down && \
-   docker-compose --profile phase2 down
-   ```
+      ```bash
+      make extract-headers-with-save
+      ```
 
-   - This command will stop and remove the containers created by the Docker Compose file.
+      - This command will run the **Auth Headers App** in detached mode and save the headers to the `.env` file.
 
-   ```bash
-   docker-compose --profile phase1 down --volumes --remove-orphans && \
-   docker-compose --profile phase2 down --volumes --remove-orphans
-   ```
+4. Run the Web App:
 
-   - This command will stop and remove the containers, volumes, and orphaned containers created by the Docker Compose file.
+   4.1 Pull the latest version of the **Web App** from Docker Hub:
+
+      ```bash
+      make docker-compose-app
+      ```
+
+      - This command will run the **Web App** in detached mode.
+      - The **Web App** will be accessible at <http://localhost:5000>.
 
 ## Disclaimer
 
