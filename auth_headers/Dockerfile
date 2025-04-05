@@ -18,14 +18,14 @@ WORKDIR /app
 # Copy installed packages from builder stage
 COPY --from=builder /usr/local/lib/python3.*/site-packages /usr/local/lib/python3.*/site-packages/
 
-# Copy only necessary application files
-COPY extract_booking_headers.py logging_config.py __init__.py ./
+# Copy necessary application files
+COPY . .
 
 # Set PATH to include user-specific bin directory
 ENV PATH="/home/appuser/.local/bin:${PATH}"
 
-# Install playwright binaries
-RUN pip install playwright
+# Install dependencies
+RUN pip install playwright Flask gunicorn
 
-# Command to run when container starts
-CMD ["python", "extract_booking_headers.py"]
+# Use Gunicorn to run the application with WSGI
+CMD ["gunicorn", "--bind", "0.0.0.0:4000", "app:app"]
