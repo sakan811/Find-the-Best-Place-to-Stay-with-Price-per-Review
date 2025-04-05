@@ -8,7 +8,11 @@ services:
       dockerfile: Dockerfile
     image: sakanbeer88/find-stay-place-auth-headers:latest
     command: >
-      sh -c "python extract_booking_headers.py"
+      sh -c "gunicorn --bind 0.0.0.0:4000 app:app"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./.env:/app/.env
     environment:
       - PYTHONPATH=/app
       - USER_AGENT=

@@ -6,8 +6,10 @@ services:
     image: sakanbeer88/find-stay-place-auth-headers:latest
     volumes:
       - ./.env:/app/.env
+    ports:
+      - "4000:4000"
     command: >
-      sh -c "python extract_booking_headers.py"
+      sh -c "gunicorn --bind 0.0.0.0:4000 app:app"
     environment:
       - PYTHONPATH=/app
       - USER_AGENT=
