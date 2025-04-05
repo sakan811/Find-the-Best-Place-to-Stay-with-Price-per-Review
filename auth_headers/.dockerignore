@@ -43,3 +43,16 @@ logs/
 
 # Misc
 .DS_Store
+
+# Code analysis caches
+.ruff_cache/
+.mypy_cache/
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+
+# Documentation
+README.md
+CONTRIBUTING.md
+docs/

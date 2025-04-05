@@ -1,11 +1,10 @@
-# Finding the Best Place to Stay with Price per Review from Booking.com using Web-Scraping
+# Finding the Best Place to Stay with Price per Review from Booking.com
 
-**Finding** the **best place** to stay with **Price/Review** from Booking.com using **web-scraping** via a local **web-app**.
+**Discover** the **ideal accommodation** with a **Price/Review** analyzer for Booking.com using **web-scraping** technology through an intuitive **web-app**.
 
-Aim to provide **Price/Review Score** of the places located in the specified city,
-when finding a place to stay in that city during a trip.  
+This application helps you identify the best value accommodations in your desired destination by calculating a **Price/Review Score** for each property available during your specified travel dates.
 
-A **lower Price/Review Score** indicates that the place is **not expensive**, yet, with a **great review score**.
+A **lower Price/Review Score** represents exceptional value—a property that offers **high-quality experiences** (as reflected in its reviews) at a **reasonable price point**.
 
 ## Status
 
@@ -19,39 +18,70 @@ A **lower Price/Review Score** indicates that the place is **not expensive**, ye
 
 ## How to Use the Web App
 
+### Step 0: Prerequisites
+
+- **Docker Desktop** must be installed on your system for containerization.
+- **Make** must be installed to use the provided command shortcuts.
+
 ### Step 1: Set Up the Web App
 
 1. Install Docker Desktop
-   - [Click here](https://www.docker.com/products/docker-desktop) to download **Docker Desktop**.
-   - Follow the instructions on the website to install it on your computer.
-2. Download [Docker Compose](./docker-compose.yml) file from this repo.
-3. Place the file in any directory of your choice.
-4. Create an empty `.env` file in the same directory as the `docker-compose.yml` file.
-   - This file will be used to store environment variables.
-   - On Windows: Open PowerShell in your directory and run `New-Item -Path .env -ItemType File -Force`
-   - On Mac: Open Terminal in your directory and run `touch .env`
+   - [Download Docker Desktop here](https://www.docker.com/products/docker-desktop) and follow the installation instructions for your operating system.
+
+2. Obtain the [Docker Compose](./docker-compose.yml) file from this repository.
+
+3. Save the file to a directory of your choice on your local machine.
+
+4. Create an empty `.env` file in the same directory:
+   - This file will store necessary authentication variables.
+   - In a terminal, navigate to your directory and run `touch ./.env` (Git Bash) or create it manually.
 
 ### Step 2: Access the Web App
 
-1. Make sure that the Docker Desktop is running.
-   - If not, start the Docker Desktop.
+1. Ensure Docker Desktop is running on your system.
+   - Launch Docker Desktop if it's not already running.
 
-2. Navigate to <https://www.whatismybrowser.com/detect/what-is-my-user-agent/>
-   - Copy the **User-Agent** string from the website.
-   - Paste the **User-Agent** string into the `docker-compose.yml` file.
-   - Find the line that starts with `- USER_AGENT=` and replace the value with your copied **User-Agent** string.
+2. Obtain your browser's User-Agent:
+   - Visit <https://www.whatismybrowser.com/detect/what-is-my-user-agent/>
+   - Copy the displayed **User-Agent** string.
+   - Edit the `docker-compose.yml` file and replace the value after `- USER_AGENT=` with your copied string.
 
-3. Run the Docker Compose file: `docker-compose up -d`.
-   - This command will start the web app in the background.
-   - The web app will be accessible at [http://localhost:5000/](http://localhost:5000/).
+3. Run the Auth Headers App:
+
+   3.1 Deploy the **Auth Headers App** container:
+
+      ```bash
+      make docker-compose-auth-headers
+      ```
+
+   3.2 Generate and save authentication headers:
+
+      ```bash
+      make extract-headers-with-save
+      ```
+
+      - This process extracts necessary authentication headers from Booking.com and saves them to your `.env` file.
+
+4. Launch the Main Application:
+
+   4.1 Deploy the **Web App** container:
+
+      ```bash
+      make docker-compose-app
+      ```
+
+      - This command starts all necessary services in the background.
+      - Access the application through your browser at <http://localhost:5000>.
 
 ## Disclaimer
 
-- When filling out the form, please use abbreviations for **currency**:
-  - For example, if you want to select the US Dollar, enter **USD** in the currency tab.
+- When specifying currency in the form, use standard three-letter abbreviations:
+  - Example: For US Dollars, enter **USD** in the currency field.
 
-- If you tick the **Scrape Hotel Properties Only** box, the scraper will only gather data on hotels.
-  - If you leave this box unticked, the scraper will retrieve information on all types of places available through Booking.com in the specified city.
+- The "Scrape Hotel Properties Only" option affects search results:
+  - When checked: Only traditional hotels will be included in results.
+  - When unchecked: All accommodation types (apartments, guest houses, etc.) will be included.
 
-- When entering the **country** in the form, please provide the **full name** of the country.
-  - **Do not** use abbreviations.
+- Country names must be entered in full:
+  - Correct: "United Kingdom" or "Thailand"
+  - Incorrect: "UK" or "TH"

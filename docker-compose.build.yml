@@ -3,13 +3,16 @@ version: '3.x'
 services:
   auth-headers:
     profiles: ["phase1"]
+    build:
+      context: ./auth_headers
+      dockerfile: Dockerfile
     image: sakanbeer88/find-stay-place-auth-headers:latest
-    volumes:
-      - ./.env:/app/.env
-    ports:
-      - "4000:4000"
     command: >
       sh -c "gunicorn --bind 0.0.0.0:4000 app:app"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./.env:/app/.env
     environment:
       - PYTHONPATH=/app
       - USER_AGENT=
@@ -20,8 +23,12 @@ services:
       retries: 3
       start_period: 5s
 
+
   backend:
     profiles: ["phase2"]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: sakanbeer88/find-stay-place-backend:latest
     ports:
       - "8000:8000"
@@ -34,6 +41,9 @@ services:
 
   frontend:
     profiles: ["phase2"]
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     image: sakanbeer88/find-stay-place-frontend:latest
     ports:
       - "5000:80"
