@@ -33,6 +33,11 @@ docker-compose-up:
 	docker-compose --profile phase1 up --abort-on-container-exit && \
 	docker-compose --profile phase2 up -d
 
+docker-compose-up-build:
+	touch .env && \
+    docker-compose -f docker-compose.build.yml --profile phase1 up --build --abort-on-container-exit && \
+    docker-compose -f docker-compose.build.yml --profile phase2 up --build -d
+
 docker-compose-down:
 	docker-compose --profile phase1 down && \
 	docker-compose --profile phase2 down
