@@ -27,7 +27,7 @@ A **lower Price/Review Score** represents exceptional value—a property that of
 
 1. Install Docker Desktop
    - [Download Docker Desktop here](https://www.docker.com/products/docker-desktop) and follow the installation instructions for your operating system.
-   
+
 2. Obtain the [Docker Compose](./docker-compose.yml) file from this repository.
 
 3. Save the file to a directory of your choice on your local machine.
