@@ -21,7 +21,6 @@ A **lower Price/Review Score** represents exceptional value—a property that of
 ### Step 0: Prerequisites
 
 - **Docker Desktop** must be installed on your system for containerization.
-- **Make** must be installed to use the provided command shortcuts.
 
 ### Step 1: Set Up the Web App
 
@@ -51,13 +50,13 @@ A **lower Price/Review Score** represents exceptional value—a property that of
    3.1 Deploy the **Auth Headers App** container:
 
       ```bash
-      make docker-compose-auth-headers
+      docker-compose --profile phase1 up -d
       ```
 
    3.2 Generate and save authentication headers:
 
       ```bash
-      make extract-headers-with-save
+      curl -s "http://localhost:4000/extract-headers?save=true"
       ```
 
       - This process extracts necessary authentication headers from Booking.com and saves them to your `.env` file.
@@ -67,7 +66,7 @@ A **lower Price/Review Score** represents exceptional value—a property that of
    4.1 Deploy the **Web App** container:
 
       ```bash
-      make docker-compose-app
+      docker-compose --profile phase2 up -d
       ```
 
       - This command starts all necessary services in the background.
