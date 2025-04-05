@@ -100,7 +100,7 @@ def test_extract_headers_endpoint_exception(mock_run_async, client):
     assert response.status_code == 500
     data = json.loads(response.data)
     assert data["success"] is False
-    assert data["error"] == "Test exception"
+    assert data["error"] == "Failed to extract headers"
 
 
 @patch("os.path.exists")

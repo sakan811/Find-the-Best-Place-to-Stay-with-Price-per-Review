@@ -48,7 +48,7 @@ def extract_booking_headers():
 
     except Exception as e:
         main_logger.error(f"API error: {str(e)}")
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"success": False, "error": "Failed to extract headers"}), 500
 
 
 @app.route("/get-headers", methods=["GET"])
@@ -81,4 +81,4 @@ def get_headers():
 
     except Exception as e:
         main_logger.error(f"API error: {str(e)}")
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"success": False, "error": "Error reading headers from file."}), 500
