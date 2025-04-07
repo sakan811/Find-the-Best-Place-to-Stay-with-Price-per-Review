@@ -49,20 +49,8 @@ const HotelTable: React.FC = () => {
     const fetchBookingDetails = async () => {
         try {
             const response: AxiosResponse<{ booking_data: BookingDetail[] }> = await axios.get('http://localhost:8000/get_booking_details_from_db/');
-            const responseData: BookingDetail[] = response.data.booking_data;
-            
-            // Sort booking details to get the most recent one first
-            // Assuming the backend returns records with an 'id' field
-            const sortedData = [...responseData].sort((a, b) => {
-                // If there's an ID field, sort by ID in descending order
-                if ('id' in a && 'id' in b) {
-                    return (b.id as number) - (a.id as number);
-                }
-                // Fallback to sorting by date if no ID
-                return new Date(b.check_in).getTime() - new Date(a.check_in).getTime();
-            });
-            
-            setBookingDetails(sortedData);
+            const responseData: BookingDetail[] = response.data.booking_data;            
+            setBookingDetails(responseData);
         } catch (error) {
             console.error('Error fetching booking details:', error);
         }

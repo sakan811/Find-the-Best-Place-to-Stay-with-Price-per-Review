@@ -1,6 +1,8 @@
 import datetime
 import json
+from unittest.mock import patch, MagicMock
 
+import pandas as pd
 import pytz
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
@@ -12,7 +14,24 @@ class TestStartWebScrape(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def test_table_page(self):
+    @patch('app.views.Scraper')
+    def test_table_page(self, MockScraper):
+        # Configure mock to return a DataFrame
+        mock_scraper_instance = MagicMock()
+        mock_df = pd.DataFrame({
+            'Hotel': ['Test Hotel'],
+            'Price': [100],
+            'Review': [4.5],
+            'Price/Review': [22.22],
+            'City': ['London'],
+            'AccommodationName': ['Hotel Accommodation'],
+            'CheckIn': ['2025-04-07'],
+            'CheckOut': ['2025-04-08'],
+            'AsOf': ['2025-04-07'],
+        })
+        mock_scraper_instance.scrape_graphql.return_value = mock_df
+        MockScraper.return_value = mock_scraper_instance
+        
         japan_tz = pytz.timezone("Asia/Tokyo")
 
         check_in = datetime.datetime.now(japan_tz).strftime("%Y-%m-%d")

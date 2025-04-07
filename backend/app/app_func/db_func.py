@@ -87,5 +87,6 @@ def truncate_booking_details_table() -> None:
     :return: None.
     """
     main_logger.info("Truncating app_bookingdetails table...")
+    BookingDetails.objects.all().delete()
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM sqlite_sequence")
