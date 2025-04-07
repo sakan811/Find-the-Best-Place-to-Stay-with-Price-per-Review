@@ -71,15 +71,15 @@ def test_graphql_scraper():
     
     # Create empty DataFrame to return from _scrape_all_pages
     mock_df = pd.DataFrame({
-        'name': ['Test Hotel'],
-        'location': ['Test Location'],
-        'review': [4.5],
-        'price': [100],
-        'price_review': [22.22],
-        'url': ['https://example.com'],
-        'image': ['https://example.com/image.jpg'],
-        'review_count': [100],
-        'is_genius_property': [True]
+        'Hotel': ['Test Hotel'],
+        'Review': [4.5],
+        'Price': [100],
+        'AccommodationName': ['Hotel'],
+        'City': [city],
+        'CheckIn': [check_in],
+        'CheckOut': [check_out],
+        'AsOf': [datetime.datetime.now().strftime("%Y-%m-%d")],
+        'Price/Review': [22.22]
     })
 
     scraper = Scraper(
@@ -134,15 +134,15 @@ def test_graphql_scraper_all_properties():
     
     # Create empty DataFrame to return from _scrape_all_pages
     mock_df = pd.DataFrame({
-        'name': ['Test Property'],
-        'location': ['Test Location'],
-        'review': [4.5],
-        'price': [100],
-        'price_review': [22.22],
-        'url': ['https://example.com'],
-        'image': ['https://example.com/image.jpg'],
-        'review_count': [100],
-        'is_genius_property': [False]
+        'Hotel': ['Test Hotel'],
+        'Review': [4.5],
+        'Price': [100],
+        'AccommodationName': ['Hotel'],
+        'City': [city],
+        'CheckIn': [check_in],
+        'CheckOut': [check_out],
+        'AsOf': [datetime.datetime.now().strftime("%Y-%m-%d")],
+        'Price/Review': [22.22]
     })
 
     scraper = Scraper(
