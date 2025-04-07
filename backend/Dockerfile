@@ -1,17 +1,14 @@
 FROM python:3.13.0-alpine3.20
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
+ADD . /app
+
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file
-COPY requirements.txt ./
+RUN uv sync --frozen
 
-# Install dependencies as root
-RUN uv pip install --no-cache-dir -r requirements.txt --system
-
-# Set PATH to include user-specific bin directory
-ENV PATH="/home/appuser/.local/bin:${PATH}"
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy the rest of the application code
 COPY . .
