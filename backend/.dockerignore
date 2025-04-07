@@ -34,3 +34,7 @@ Dockerfile
 # Other
 .git/
 .github/
+
+.venv/
+venv/
+.backend/

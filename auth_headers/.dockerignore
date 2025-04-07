@@ -21,6 +21,7 @@ build/
 env/
 venv/
 ENV/
+.auth_headers/
 
 # IDE specific files
 .idea/
@@ -56,3 +57,5 @@ logs/
 README.md
 CONTRIBUTING.md
 docs/
+
+.vscode/
