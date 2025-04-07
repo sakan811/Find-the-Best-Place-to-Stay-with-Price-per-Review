@@ -5,10 +5,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /app
 
 # Copy the requirements file
-COPY requirements.txt ./
+COPY uv.lock pyproject.toml ./
 
-# Install dependencies as root
-RUN uv pip install --no-cache-dir -r requirements.txt --system
+# Install dependencies
+RUN uv sync
 
 # Set PATH to include user-specific bin directory
 ENV PATH="/home/appuser/.local/bin:${PATH}"

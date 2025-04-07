@@ -407,3 +407,5 @@ cython_debug/
 **/*.env
 /.idea
 **/*.vscode
+/auth_headers/.auth_headers
+/backend/.backend

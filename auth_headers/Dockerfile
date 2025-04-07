@@ -6,10 +6,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /build
 
 # Copy only the requirements file first to leverage Docker cache
-COPY requirements.txt .
+COPY uv.lock pyproject.toml ./
 
 # Install dependencies
-RUN uv pip install --system -r requirements.txt
+RUN uv sync
 
 # Stage 2: Production environment
 FROM mcr.microsoft.com/playwright/python:v1.51.0-noble AS production
