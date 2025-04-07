@@ -26,7 +26,7 @@ jobs:
     - name: "Set up Python"
       uses: actions/setup-python@v5
       with:
-        python-version-file: "pyproject.toml"
+        python-version-file: "./backend/pyproject.toml"
 
     - name: Install the project
       working-directory: ./backend
