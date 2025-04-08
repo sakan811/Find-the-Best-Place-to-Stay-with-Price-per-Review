@@ -47,21 +47,21 @@ test-all-endpoints:
 	curl -s http://localhost:4000/get-headers
 
 docker-compose-auth-headers:
-	docker-compose --profile phase1 up -d
+	docker compose --profile phase1 up -d
 
 docker-compose-app:
-	docker-compose --profile phase2 up -d
+	docker compose --profile phase2 up -d
 
 docker-compose-build-auth-headers:
-	docker-compose -f docker-compose.build.yml --profile phase1 up -d --build
+	docker compose -f docker-compose.build.yml --profile phase1 up -d --build
 
 docker-compose-build-app:
-	docker-compose -f docker-compose.build.yml --profile phase2 up -d --build
+	docker compose -f docker-compose.build.yml --profile phase2 up -d --build
 
 docker-compose-down:
-	docker-compose --profile phase1 down && \
-	docker-compose --profile phase2 down
+	docker compose --profile phase1 down && \
+	docker compose --profile phase2 down
 
 docker-compose-clean:
-	docker-compose --profile phase1 down --volumes --remove-orphans && \
-	docker-compose --profile phase2 down --volumes --remove-orphans
+	docker compose --profile phase1 down --volumes --remove-orphans && \
+	docker compose --profile phase2 down --volumes --remove-orphans

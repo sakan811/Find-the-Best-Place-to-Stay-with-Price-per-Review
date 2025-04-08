@@ -6,7 +6,7 @@ ADD . /app
 # Set the working directory
 WORKDIR /app
 
-RUN uv sync --frozen
+RUN uv sync --frozen --no-install-project --no-cache --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
 

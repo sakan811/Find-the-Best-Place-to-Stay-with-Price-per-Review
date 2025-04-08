@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "pandas>=2.2.3",
-    "pytest>=8.3.5",
     "openpyxl>=3.1.5",
     "requests>=2.32.3",
     "pytz>=2025.2",
@@ -16,7 +15,12 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "gunicorn>=23.0.0",
     "djangorestframework>=3.16.0",
-    "pytest-django>=4.11.1",
     "pydantic>=2.11.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-django>=4.11.1",
     "pytest-asyncio>=0.25.3",
 ]
