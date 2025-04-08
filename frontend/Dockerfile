@@ -1,5 +1,5 @@
 # Step 1: Build the React app
-FROM node:20-alpine AS build
+FROM node:22-alpine3.21 AS build
 
 # Set the working directory and ensure it's owned by the non-root user
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npx vite build
 
 # Step 2: Serve the React app with Nginx
-FROM nginx:alpine
+FROM nginx:1.27.4-alpine3.21-slim
 
 # Copy the build output to Nginx's html directory
 COPY --from=build /app/dist /usr/share/nginx/html
