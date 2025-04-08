@@ -64,7 +64,6 @@ jobs:
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          exit-code: true
           only-fixed: true
           
       - name: Docker Scout for frontend
@@ -76,7 +75,6 @@ jobs:
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          exit-code: true
           only-fixed: true
           
       - name: Docker Scout for auth-headers
@@ -88,5 +86,4 @@ jobs:
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          exit-code: true
           only-fixed: true

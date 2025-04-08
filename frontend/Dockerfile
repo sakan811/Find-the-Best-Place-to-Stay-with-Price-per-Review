@@ -17,7 +17,7 @@ COPY . .
 RUN npx vite build
 
 # Step 2: Serve the React app with Nginx
-FROM nginx:1.27-alpine3.21
+FROM nginx:1.27.4-alpine3.21-slim
 
 # Copy the build output to Nginx's html directory
 COPY --from=build /app/dist /usr/share/nginx/html
