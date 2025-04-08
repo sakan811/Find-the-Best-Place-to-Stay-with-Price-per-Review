@@ -60,6 +60,7 @@ jobs:
           command: compare
           image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-backend:latest
           to-env: production
+          organization: ${{ vars.DOCKERHUB_USERNAME }}
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -71,6 +72,7 @@ jobs:
           command: compare
           image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest
           to-env: production
+          organization: ${{ vars.DOCKERHUB_USERNAME }}
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -82,6 +84,7 @@ jobs:
           command: compare
           image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-auth-headers:latest
           to-env: production
+          organization: ${{ vars.DOCKERHUB_USERNAME }}
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
