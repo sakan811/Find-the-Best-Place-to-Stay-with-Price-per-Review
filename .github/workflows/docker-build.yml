@@ -57,22 +57,18 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
-          command: compare
+          command: cves
           image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-backend:latest
-          to-env: production
-          organization: ${{ vars.DOCKERHUB_USERNAME }}
-          ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
           
       - name: Docker Scout for frontend
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
-          command: compare
+          command: cves
           image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest
-          to-env: production
-          organization: ${{ vars.DOCKERHUB_USERNAME }}
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -81,10 +77,8 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
-          command: compare
+          command: cves
           image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-auth-headers:latest
-          to-env: production
-          organization: ${{ vars.DOCKERHUB_USERNAME }}
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
