@@ -71,7 +71,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
-          command: ccves,recommendationsves
+          command: cves,recommendationsves
           image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest
           ignore-unchanged: true
           only-severities: critical,high
