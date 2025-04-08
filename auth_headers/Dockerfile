@@ -6,10 +6,7 @@ ADD . /app
 # Set the working directory
 WORKDIR /app
 
-RUN uv sync --frozen
-
-# Install dependencies
-RUN uv add playwright Flask gunicorn
+RUN uv sync --frozen --no-install-project --no-cache --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
 
