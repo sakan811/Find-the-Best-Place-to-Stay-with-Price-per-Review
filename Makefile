@@ -65,3 +65,8 @@ docker-compose-down:
 docker-compose-clean:
 	docker compose --profile phase1 down --volumes --remove-orphans && \
 	docker compose --profile phase2 down --volumes --remove-orphans
+
+remove-image:
+	docker rmi sakanbeer88/find-stay-place-auth-headers:latest && \
+	docker rmi sakanbeer88/find-stay-place-backend:latest && \
+	docker rmi sakanbeer88/find-stay-place-frontend:latest
