@@ -28,62 +28,22 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       
-      - name: Build backend
-        id: build-backend
-        uses: docker/build-push-action@v6
-        with:
-          context: ./backend
-          push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-backend:latest
-
-      - name: Build frontend
-        id: build-frontend
-        uses: docker/build-push-action@v6
-        with:
-          context: ./frontend
-          push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest
-      
-      - name: Build auth-headers
+      - name: Docker Build
         id: build-auth-headers
         uses: docker/build-push-action@v6
         with:
-          context: ./auth_headers
           push: ${{ github.event_name != 'pull_request' }}
           load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-auth-headers:latest
-
-      - name: Docker Scout for backend
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/hotel-value-analyzer:latest
+          
+      - name: Docker Scout
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
           command: cves,recommendations
-          image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-backend:latest
+          image: ${{ vars.DOCKERHUB_USERNAME }}/hotel-value-analyzer:latest
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
           only-fixed: true
           
-      - name: Docker Scout for frontend
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: docker/scout-action@v1
-        with:
-          command: cves,recommendations
-          image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-frontend:latest
-          ignore-unchanged: true
-          only-severities: critical,high
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          only-fixed: true
-          
-      - name: Docker Scout for auth-headers
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: docker/scout-action@v1
-        with:
-          command: cves,recommendations
-          image: ${{ vars.DOCKERHUB_USERNAME }}/find-stay-place-auth-headers:latest
-          ignore-unchanged: true
-          only-severities: critical,high
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          only-fixed: true

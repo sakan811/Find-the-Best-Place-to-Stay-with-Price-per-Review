@@ -1,4 +1,4 @@
-name: Frontend Test
+name: Web App Test
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 20
+          - 23
 
     runs-on: ubuntu-latest
 
@@ -30,13 +30,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: './frontend/package-lock.json'
+          cache-dependency-path: './package-lock.json'
 
       - name: Install dependencies
-        working-directory: ./frontend
         run: npm install
 
       - name: Run tests
-        working-directory: ./frontend
         run: npm test
 
