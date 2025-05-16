@@ -8,7 +8,8 @@ export default function AddHotelPage() {
   const [formData, setFormData] = useState({
     name: '',
     price: '',
-    rating: ''
+    rating: '',
+    currency: 'USD'
   });
   const [errors, setErrors] = useState({
     name: '',
@@ -16,7 +17,7 @@ export default function AddHotelPage() {
     rating: ''
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -72,7 +73,8 @@ export default function AddHotelPage() {
       const newHotel = {
         name: formData.name,
         price: parseFloat(formData.price),
-        rating: parseFloat(formData.rating)
+        rating: parseFloat(formData.rating),
+        currency: formData.currency
       };
       
       const updatedHotels = [...existingHotels, newHotel];
@@ -110,17 +112,33 @@ export default function AddHotelPage() {
           <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
             Price per Night
           </label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter price"
-            min="0"
-            step="0.01"
-          />
+          <div className="flex space-x-2">
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter price"
+              min="0"
+              step="0.01"
+            />
+            <select
+              id="currency"
+              name="currency"
+              value={formData.currency}
+              onChange={handleChange}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="JPY">JPY</option>
+              <option value="CAD">CAD</option>
+              <option value="AUD">AUD</option>
+            </select>
+          </div>
           {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
         </div>
         
