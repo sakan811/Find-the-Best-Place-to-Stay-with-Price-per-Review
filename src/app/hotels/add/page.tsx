@@ -52,8 +52,8 @@ export default function AddHotelPage() {
     }
 
     const rating = parseFloat(formData.rating);
-    if (isNaN(rating) || rating < 0 || rating > 5) {
-      newErrors.rating = 'Rating must be between 0 and 5';
+    if (isNaN(rating) || rating < 0 || rating > 10) {
+      newErrors.rating = 'Rating must be between 0 and 10';
       isValid = false;
     }
 
@@ -108,7 +108,7 @@ export default function AddHotelPage() {
         
         <div className="mb-4">
           <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-            Price per Night ($)
+            Price per Night
           </label>
           <input
             type="number"
@@ -126,7 +126,7 @@ export default function AddHotelPage() {
         
         <div className="mb-6">
           <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-1">
-            Rating (0-5)
+            Rating (0-10)
           </label>
           <input
             type="number"
@@ -137,7 +137,7 @@ export default function AddHotelPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter rating"
             min="0"
-            max="5"
+            max="10"
             step="0.1"
           />
           {errors.rating && <p className="mt-1 text-sm text-red-600">{errors.rating}</p>}
