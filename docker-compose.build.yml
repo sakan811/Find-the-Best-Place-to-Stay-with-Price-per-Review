@@ -1,52 +1,14 @@
-version: '3.x'
-
 services:
-  auth-headers:
-    profiles: ["phase1"]
+  hotel-value-analyzer:
     build:
-      context: ./auth_headers
+      context: .
       dockerfile: Dockerfile
-    image: sakanbeer88/find-stay-place-auth-headers:latest
-    command: >
-      sh -c "gunicorn --bind 0.0.0.0:4000 app:app"
+    image: hotel-value-analyzer
+    container_name: hotel-value-analyzer
     ports:
-      - "4000:4000"
+      - "3000:3000"
     volumes:
-      - ./.env:/app/.env
-    environment:
-      - PYTHONPATH=/app
-      - USER_AGENT=
-    healthcheck:
-      test: ["CMD", "python", "-c", "import os; exit(0 if os.path.exists('/app/.env') else 1)"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
+      - hotel-value-analyzer-data:/app
 
-
-  backend:
-    profiles: ["phase2"]
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: sakanbeer88/find-stay-place-backend:latest
-    ports:
-      - "8000:8000"
-    env_file:
-      - ./.env
-    command: > 
-      sh -c "
-             python manage.py migrate &&
-             gunicorn --bind 0.0.0.0:8000 django_project.wsgi:application"
-
-  frontend:
-    profiles: ["phase2"]
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: sakanbeer88/find-stay-place-frontend:latest
-    ports:
-      - "5000:80"
-    depends_on:
-      backend:
-        condition: service_started
+volumes:
+  hotel-value-analyzer-data:
