@@ -57,7 +57,7 @@ export default function CompareHotelsPage() {
       
       {hotels.length === 0 ? (
         <div className="text-center my-8">
-          <p className="mb-4">No hotels have been added yet.</p>
+          <p className="mb-10">No hotels have been added yet.</p>
           <Link href="/hotels/add" className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
             Add Your First Hotel
           </Link>
