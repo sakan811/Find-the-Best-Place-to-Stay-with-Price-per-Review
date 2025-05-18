@@ -1,11 +1,20 @@
 import { describe, expect, it } from "vitest";
 
+// Define the Hotel interface to match the application's Hotel type
+interface Hotel {
+  name: string;
+  price: number;
+  rating: number;
+  currency?: string;
+  valueScore: number;
+}
+
 // Utility functions for testing (could be extracted to a separate file in a real app)
 export const calculateValueScore = (rating: number, price: number): number => {
   return parseFloat((rating / price).toFixed(4));
 };
 
-export const sortHotelsByValueScore = (hotels: any[]): any[] => {
+export const sortHotelsByValueScore = (hotels: Hotel[]): Hotel[] => {
   return [...hotels].sort((a, b) => b.valueScore - a.valueScore);
 };
 
@@ -26,9 +35,9 @@ describe("Hotel Utility Functions", () => {
   describe("sortHotelsByValueScore", () => {
     it("should sort hotels by value score in descending order", () => {
       const hotels = [
-        { name: "Hotel A", valueScore: 0.05 },
-        { name: "Hotel B", valueScore: 0.08 },
-        { name: "Hotel C", valueScore: 0.06 },
+        { name: "Hotel A", price: 100, rating: 8, valueScore: 0.05 },
+        { name: "Hotel B", price: 100, rating: 9, valueScore: 0.08 },
+        { name: "Hotel C", price: 100, rating: 9, valueScore: 0.06 },
       ];
 
       const sorted = sortHotelsByValueScore(hotels);
@@ -40,9 +49,9 @@ describe("Hotel Utility Functions", () => {
 
     it("should maintain original array order for equal value scores", () => {
       const hotels = [
-        { name: "Hotel A", valueScore: 0.05 },
-        { name: "Hotel B", valueScore: 0.05 },
-        { name: "Hotel C", valueScore: 0.06 },
+        { name: "Hotel A", price: 100, rating: 8, valueScore: 0.05 },
+        { name: "Hotel B", price: 150, rating: 9, valueScore: 0.05 },
+        { name: "Hotel C", price: 150, rating: 9, valueScore: 0.06 },
       ];
 
       const sorted = sortHotelsByValueScore(hotels);
