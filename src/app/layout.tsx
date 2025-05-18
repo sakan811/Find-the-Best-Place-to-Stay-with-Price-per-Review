@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Hotel Value Analyzer",
-  description: "Analyze hotel prices and find the best deals",
+  description: "Compare hotels based on review-per-price ratio to get the most value for your money",
 };
 
 export default function RootLayout({

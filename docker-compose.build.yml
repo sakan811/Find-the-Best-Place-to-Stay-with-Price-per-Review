@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: hotel-value-analyzer
+    image: sakanbeer88/hotel-value-analyzer:latest
     container_name: hotel-value-analyzer
     ports:
       - "3000:3000"

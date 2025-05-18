@@ -12,7 +12,7 @@ export default function Home() {
             Find the Best Value Hotels for Your Stay
           </h1>
           <p className="text-xl mb-8">
-            Compare hotels based on price-per-review ratio to get the most value for your money
+            Compare hotels based on review-per-price ratio to get the most value for your money
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
