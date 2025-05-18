@@ -1,5 +1,8 @@
-import '@testing-library/jest-dom/vitest';
-import { beforeEach, vi } from 'vitest';
+import { beforeEach, vi, expect } from 'vitest';
+import * as matchers from '@testing-library/jest-dom/matchers';
+
+// Extend Vitest's expect with Jest DOM matchers
+expect.extend(matchers);
 
 // Mock Next.js router
 vi.mock('next/navigation', () => ({

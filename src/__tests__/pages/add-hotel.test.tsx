@@ -18,13 +18,12 @@ describe('AddHotelPage', () => {
     localStorage.clear();
     mockPush.mockClear();
   });
-
   it('renders the add hotel form', () => {
     render(<AddHotelPage />);
     
     expect(screen.getByText('Add Hotel Information')).toBeTruthy();
     expect(screen.getByLabelText(/Hotel Name/i)).toBeTruthy();
-    expect(screen.getByLabelText(/Price per Night/i)).toBeTruthy();
+    expect(screen.getByLabelText(/Price/i)).toBeTruthy();
     expect(screen.getByLabelText(/Rating/i)).toBeTruthy();
     expect(screen.getByText(/Submit & Compare/i)).toBeTruthy();
   });
@@ -44,10 +43,9 @@ describe('AddHotelPage', () => {
 
   it('validates field values appropriately', async () => {
     render(<AddHotelPage />);
-    
-    // Fill invalid values
+      // Fill invalid values
     await userEvent.type(screen.getByLabelText(/Hotel Name/i), 'Test Hotel');
-    await userEvent.type(screen.getByLabelText(/Price per Night/i), '-50');
+    await userEvent.type(screen.getByLabelText(/Price/i), '-50');
     await userEvent.type(screen.getByLabelText(/Rating/i), '11');
     
     // Submit form
@@ -62,10 +60,9 @@ describe('AddHotelPage', () => {
 
   it('successfully submits the form with valid data', async () => {
     render(<AddHotelPage />);
-    
-    // Fill valid form data
+      // Fill valid form data
     await userEvent.type(screen.getByLabelText(/Hotel Name/i), 'Grand Hotel');
-    await userEvent.type(screen.getByLabelText(/Price per Night/i), '150');
+    await userEvent.type(screen.getByLabelText(/Price/i), '150');
     await userEvent.type(screen.getByLabelText(/Rating/i), '8.5');
     
     // Select a currency
@@ -96,11 +93,9 @@ describe('AddHotelPage', () => {
     ];
     localStorage.setItem('hotels', JSON.stringify(existingHotels));
     
-    render(<AddHotelPage />);
-
-    // Fill valid form data
+    render(<AddHotelPage />);    // Fill valid form data
     await userEvent.type(screen.getByLabelText(/Hotel Name/i), 'New Hotel');
-    await userEvent.type(screen.getByLabelText(/Price per Night/i), '200');
+    await userEvent.type(screen.getByLabelText(/Price/i), '200');
     await userEvent.type(screen.getByLabelText(/Rating/i), '9');
     
     // Submit form
