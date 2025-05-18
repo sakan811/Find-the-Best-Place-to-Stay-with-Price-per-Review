@@ -43,7 +43,7 @@ export default function CompareHotelsPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-6 text-center">
         Hotel Value Comparison
       </h1>
@@ -95,7 +95,7 @@ export default function CompareHotelsPage() {
                       {index === 0 && (
                         <span className="ml-1 text-green-600 text-xs">★</span>
                       )}
-                    </td>{" "}
+                    </td>
                     <td className="py-2 px-3 whitespace-nowrap">
                       {hotel.price.toFixed(2)} {hotel.currency}
                     </td>
