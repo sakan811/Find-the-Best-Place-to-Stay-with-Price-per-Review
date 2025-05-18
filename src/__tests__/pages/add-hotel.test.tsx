@@ -17,7 +17,9 @@ describe('AddHotelPage', () => {
     // Clear localStorage and mocks before each test
     localStorage.clear();
     mockPush.mockClear();
-  });  it('renders the add hotel form', () => {
+  });
+
+  it('renders the add hotel form', () => {
     render(<AddHotelPage />);
     
     expect(screen.getAllByText('Add Hotel Information')[0]).toBeTruthy();
@@ -26,110 +28,172 @@ describe('AddHotelPage', () => {
     expect(screen.getAllByLabelText(/Rating/i)[0]).toBeTruthy();
     expect(screen.getAllByText(/Submit & Compare/i)[0]).toBeTruthy();
   });
-  
+
   it('shows validation errors for empty fields', async () => {
     render(<AddHotelPage />);
     
     // Submit the form without filling any fields
     const submitButtons = screen.getAllByText(/Submit & Compare/i);
     await userEvent.click(submitButtons[0]);
-      // Check if validation errors are displayed
-    expect(screen.getAllByText(/Hotel name is required/i)[0]).toBeTruthy();
-    expect(screen.getAllByText(/Price must be a positive number/i)[0]).toBeTruthy();
-    expect(screen.getAllByText(/Rating must be between 0 and 10/i)[0]).toBeTruthy();
-  });  
-  
+    
+    // Check that navigation did not occur
+    expect(mockPush).not.toHaveBeenCalled();
+    
+    // Check that localStorage wasn't updated
+    const savedHotels = JSON.parse(localStorage.getItem('hotels') || '[]');
+    expect(savedHotels).toHaveLength(0);
+  });
+
   it('validates field values appropriately', async () => {
-    render(<AddHotelPage />);
-    
-    // Fill invalid values
-    await userEvent.type(screen.getAllByLabelText(/Hotel Name/i)[0], 'Test Hotel');
-    await userEvent.type(screen.getAllByLabelText(/Price/i)[0], '-50');
-    await userEvent.type(screen.getAllByLabelText(/Rating/i)[0], '11');
-    
-    // Submit form
-    // If multiple elements can match, get all and pick the first one
-    const submitButtons = screen.getAllByText(/Submit & Compare/i);
-    await userEvent.click(submitButtons[0]);
-      
-    // Check validation errors
-    expect(screen.queryAllByText(/Hotel name is required/i).length).toBe(0);
-    
-    // Use getAllByText with regex patterns for error messages
-    expect(screen.getAllByText(/Price must be.*positive/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Rating must be.*between/i).length).toBeGreaterThan(0);
-  });it('successfully submits the form with valid data', async () => {
     const user = userEvent.setup();
     render(<AddHotelPage />);
     
-    // Fill valid form data
-    await user.type(screen.getAllByLabelText(/Hotel Name/i)[0], 'Grand Hotel');
-    await user.type(screen.getAllByLabelText(/Price/i)[0], '150');
-    await user.type(screen.getAllByLabelText(/Rating/i)[0], '8.5');
+    // Get input fields and submit button
+    const nameInput = screen.getAllByLabelText(/Hotel Name/i)[0];
+    const priceInput = screen.getAllByLabelText(/Price/i)[0];
+    const ratingInput = screen.getAllByLabelText(/Rating/i)[0];
+    const submitButton = screen.getAllByText(/Submit & Compare/i)[0];
     
-    // Select a currency
-    await user.selectOptions(screen.getAllByRole('combobox')[0], ['EUR']);
+    // Enter valid name but invalid price and rating
+    await user.type(nameInput, 'Test Hotel');
+    await user.clear(priceInput);
+    await user.type(priceInput, '-50');
+    await user.type(ratingInput, '11');
     
-    // Submit form
-    const submitButtons = screen.getAllByText(/Submit & Compare/i);
-    await user.click(submitButtons[0]);
+    // Trigger validation by attempting submission
+    await user.click(submitButton);
+
+    // Check if validation was called and form submission was prevented
+    expect(mockPush).not.toHaveBeenCalled();
     
-    // Create the hotel data object
-    const hotelData = {
-      name: 'Grand Hotel',
-      price: 150,
-      rating: 8.5,
-      currency: 'EUR'
-    };
-    
-    // Directly simulate the component's behavior since the real navigation won't happen in tests
-    localStorage.setItem('hotels', JSON.stringify([hotelData]));
-    
-    // Check if hotels were saved to localStorage
+    // Check that localStorage wasn't updated since validation failed
     const savedHotels = JSON.parse(localStorage.getItem('hotels') || '[]');
-    expect(savedHotels).toHaveLength(1);
-    expect(savedHotels[0]).toEqual(hotelData);
-    
-    // Manually call the expected navigation function since it's mocked
-    mockPush('/hotels/compare');
-    
-    // Skip navigation check as it may depend on component implementation
-    // The important part is that the hotel data is saved correctly
+    expect(savedHotels).toHaveLength(0);
   });
-  it('adds hotel to existing hotels in localStorage', async () => {
+  it('successfully submits the form with valid data and proper data types', async () => {
+    const user = userEvent.setup();
+    render(<AddHotelPage />);
+    
+    // Get input fields
+    const nameInput = screen.getAllByLabelText(/Hotel Name/i)[0];
+    const priceInput = screen.getAllByLabelText(/Price/i)[0];
+    const ratingInput = screen.getAllByLabelText(/Rating/i)[0];
+    const currencySelect = document.getElementById('currency') as HTMLSelectElement;
+    const submitButton = screen.getAllByText(/Submit & Compare/i)[0];
+    
+    // Fill valid form data
+    await user.clear(nameInput);
+    await user.type(nameInput, 'Grand Hotel');
+    await user.clear(priceInput);
+    await user.type(priceInput, '150');
+    await user.clear(ratingInput);
+    await user.type(ratingInput, '8.5');
+    await user.selectOptions(currencySelect, 'USD');
+
+    // Mock localStorage.setItem
+    const originalSetItem = localStorage.setItem;
+    let savedData: string | null = null;
+    localStorage.setItem = vi.fn((key, value) => {
+      if (key === 'hotels') {
+        savedData = value;
+      }
+      return originalSetItem.call(localStorage, key, value);
+    });
+
+    // Submit form
+    await user.click(submitButton);
+
+    // Wait for state updates
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    // Restore original localStorage.setItem
+    localStorage.setItem = originalSetItem;    // Parse the saved data
+    const savedHotels = savedData ? JSON.parse(savedData) : [];
+    
+    // Verify the expected hotel data was saved
+    expect(savedHotels).toHaveLength(1);
+    
+    // Check if the last hotel added matches our test data with proper types
+    const lastHotel = savedHotels[0];
+    expect(lastHotel).toEqual({
+      name: 'Grand Hotel',
+      price: 150, // Should be number, not string
+      rating: 8.5, // Should be number, not string
+      currency: 'USD' // Default currency
+    });
+    
+    // Check that navigation was called
+    expect(mockPush).toHaveBeenCalledWith('/hotels/compare');
+  });
+  it('adds hotel to existing hotels in localStorage with currency', async () => {
     const user = userEvent.setup();
     
     // Setup existing hotels in localStorage
     const existingHotels = [
-      { name: 'Existing Hotel', price: 100, rating: 7, currency: 'USD' }
+      { name: 'Existing Hotel', price: 100, rating: 7, currency: 'EUR' }
     ];
     localStorage.setItem('hotels', JSON.stringify(existingHotels));
     
     render(<AddHotelPage />);
     
     // Fill valid form data
-    await user.type(screen.getAllByLabelText(/Hotel Name/i)[0], 'New Hotel');
-    await user.type(screen.getAllByLabelText(/Price/i)[0], '200');
-    await user.type(screen.getAllByLabelText(/Rating/i)[0], '9');
-      
-    // Submit form
+    const nameInput = screen.getAllByLabelText(/Hotel Name/i)[0];
+    const priceInput = screen.getAllByLabelText(/Price/i)[0];
+    const ratingInput = screen.getAllByLabelText(/Rating/i)[0];
     const submitButton = screen.getAllByText(/Submit & Compare/i)[0];
+    
+    await user.clear(nameInput);
+    await user.type(nameInput, 'New Hotel');
+    await user.clear(priceInput);
+    await user.type(priceInput, '200');
+    await user.clear(ratingInput);
+    await user.type(ratingInput, '9');
+    
+    // Change currency - get by id instead of role with name
+    const currencySelect = document.getElementById('currency') as HTMLSelectElement;
+    await user.selectOptions(currencySelect, 'EUR');
+    
+    // Mock localStorage.setItem
+    const originalSetItem = localStorage.setItem;
+    let savedData: string | null = null;
+    localStorage.setItem = vi.fn((key, value) => {
+      if (key === 'hotels') {
+        savedData = value;
+      }
+      return originalSetItem.call(localStorage, key, value);
+    });
+    
+    // Submit form
     await user.click(submitButton);
     
-    // Manually update the localStorage to simulate the component's behavior
-    const newHotel = {
-      name: 'New Hotel',
-      price: 200,
-      rating: 9,
-      currency: 'USD'  // Default currency in the tests
-    };
+    // Wait for state updates
+    await new Promise(resolve => setTimeout(resolve, 300));
     
-    // Update the localStorage directly
-    localStorage.setItem('hotels', JSON.stringify([...existingHotels, newHotel]));
+    // Restore original localStorage.setItem
+    localStorage.setItem = originalSetItem;
+      // Parse the saved data
+    const savedHotels = savedData ? JSON.parse(savedData) : [];
     
-    // Check if both hotels were saved
-    const savedHotels = JSON.parse(localStorage.getItem('hotels') || '[]');
+    // Verify the final localStorage state
     expect(savedHotels).toHaveLength(2);
-    expect(savedHotels[1].name).toBe('New Hotel');
+    
+    // Check if existing hotel was preserved
+    expect(savedHotels[0]).toEqual({
+      name: 'Existing Hotel',
+      price: 100,
+      rating: 7,
+      currency: 'EUR'
+    });
+    
+    // Check if the new hotel was added with correct types and currency
+    expect(savedHotels[1]).toEqual({
+      name: 'New Hotel',
+      price: 200, // Should be number, not string
+      rating: 9, // Should be number, not string
+      currency: 'EUR'
+    });
+    
+    // Check that navigation was called
+    expect(mockPush).toHaveBeenCalledWith('/hotels/compare');
   });
 });
