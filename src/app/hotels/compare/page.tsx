@@ -11,14 +11,6 @@ interface Hotel {
   valueScore?: number;
 }
 
-// Currency symbols mapping
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 
-  'CAD': 'C$', 'AUD': 'A$', 'CNY': '¥', 'KRW': '₩',
-  'INR': '₹', 'RUB': '₽', 'THB': '฿', 'BRL': 'R$',
-  'MXN': '$', 'ZAR': 'R'
-};
-
 export default function CompareHotelsPage() {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,14 +28,10 @@ export default function CompareHotelsPage() {
       
       setHotels(processedHotels);
     } catch (error) {
-      console.error('Error loading hotels:', error);
-    } finally {
+      console.error('Error loading hotels:', error);    } finally {
       setIsLoading(false);
     }
   }, []);
-
-  const getCurrencySymbol = (currency: string): string => 
-    CURRENCY_SYMBOLS[currency] || currency;
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">Loading hotel comparisons...</div>;
@@ -83,9 +71,8 @@ export default function CompareHotelsPage() {
                     <td className="py-2 px-3 whitespace-nowrap font-medium">
                       {hotel.name}
                       {index === 0 && <span className="ml-1 text-green-600 text-xs">★</span>}
-                    </td>
-                    <td className="py-2 px-3 whitespace-nowrap">
-                      {getCurrencySymbol(hotel.currency)}{hotel.price.toFixed(2)}
+                    </td>                    <td className="py-2 px-3 whitespace-nowrap">
+                      {hotel.price.toFixed(2)} {hotel.currency}
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">{hotel.rating.toFixed(1)}</td>
                     <td className="py-2 px-3 whitespace-nowrap">{hotel.valueScore}</td>

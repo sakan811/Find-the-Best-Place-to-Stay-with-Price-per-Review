@@ -110,7 +110,7 @@ export default function AddHotelPage() {
         
         <div className="mb-4">
           <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-            Price per Night
+            Price
           </label>
           <div className="flex space-x-2">
             <input
