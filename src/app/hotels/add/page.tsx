@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -18,6 +18,22 @@ export default function AddHotelPage() {
     rating: "",
   });
 
+  // Load previously selected currency on component mount
+  useEffect(() => {
+    try {
+      // Try to get the last used currency from localStorage
+      const savedCurrency = localStorage.getItem("lastUsedCurrency");
+      if (savedCurrency) {
+        setFormData(prev => ({
+          ...prev,
+          currency: savedCurrency
+        }));
+      }
+    } catch (error) {
+      console.error("Error loading saved currency:", error);
+    }
+  }, []);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -26,6 +42,15 @@ export default function AddHotelPage() {
       ...prev,
       [name]: value,
     }));
+
+    // If currency is changed, save it to localStorage
+    if (name === "currency") {
+      try {
+        localStorage.setItem("lastUsedCurrency", value);
+      } catch (error) {
+        console.error("Error saving currency preference:", error);
+      }
+    }
 
     // Clear errors when user starts typing
     if (errors[name as keyof typeof errors]) {
@@ -84,6 +109,9 @@ export default function AddHotelPage() {
 
       // Save to local storage
       localStorage.setItem("hotels", JSON.stringify(updatedHotels));
+      
+      // Save the currency for future use
+      localStorage.setItem("lastUsedCurrency", formData.currency);
 
       // Navigate to results page
       router.push("/hotels/compare");
