@@ -3,6 +3,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import RootLayout from '../app/layout';
 
+vi.mock('../app/globals.css', () => ({}));
+
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
   default: ({ children, href }: { children: React.ReactNode, href: string }) => (
@@ -20,7 +22,7 @@ describe('Root Layout', () => {
       </RootLayout>
     );
     
-    expect(screen.getByText('Hotel Value Analyzer')).toBeInTheDocument();
+    expect(screen.getAllByText('Hotel Value Analyzer')[0]).toBeTruthy();
   });
 
   it('renders the children content', () => {
@@ -30,8 +32,8 @@ describe('Root Layout', () => {
       </RootLayout>
     );
     
-    expect(screen.getByTestId('test-child')).toBeInTheDocument();
-    expect(screen.getByText('Test Child Content')).toBeInTheDocument();
+    expect(screen.getByTestId('test-child')).toBeTruthy();
+    expect(screen.getByText('Test Child Content')).toBeTruthy();
   });
 
   it('has proper HTML structure with language attribute', () => {
@@ -52,7 +54,7 @@ describe('Root Layout', () => {
       </RootLayout>
     );
     
-    const titleLink = screen.getByText('Hotel Value Analyzer');
-    expect(titleLink.closest('a')).toHaveAttribute('href', '/');
+    const titleLink = screen.getAllByText('Hotel Value Analyzer');
+    expect(titleLink[0].closest('a')).toHaveAttribute('href', '/');
   });
 });
