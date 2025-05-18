@@ -1,0 +1,33 @@
+# General development artifacts
+**/node_modules
+.git
+.gitignore
+.DS_Store
+.vscode
+
+# Build artifacts
+.next
+dist
+out
+coverage
+
+# Testing files
+**/__tests__
+**/*.test.*
+**/vitest*
+
+# Environment files
+.env*.local
+.npmrc
+.env
+
+# Logs and debug files
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Local configuration overrides
+docker-compose*.yml
+.dockerignore
+Makefile
