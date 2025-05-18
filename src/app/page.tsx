@@ -1,7 +1,6 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Home() {
-
   return (
     <div className="space-y-10">
       {/* Hero Section */}
@@ -12,7 +11,8 @@ export default function Home() {
             Find the Best Value Hotels for Your Stay
           </h1>
           <p className="text-xl mb-8">
-            Compare hotels based on review-per-price ratio to get the most value for your money
+            Compare hotels based on review-per-price ratio to get the most value
+            for your money
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
