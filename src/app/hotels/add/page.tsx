@@ -1,61 +1,63 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AddHotelPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    rating: '',
-    currency: 'USD'
+    name: "",
+    price: "",
+    rating: "",
+    currency: "USD",
   });
   const [errors, setErrors] = useState({
-    name: '',
-    price: '',
-    rating: ''
+    name: "",
+    price: "",
+    rating: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear errors when user starts typing
     if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {
-      name: '',
-      price: '',
-      rating: ''
+      name: "",
+      price: "",
+      rating: "",
     };
     let isValid = true;
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Hotel name is required';
+      newErrors.name = "Hotel name is required";
       isValid = false;
     }
 
     const price = parseFloat(formData.price);
     if (isNaN(price) || price <= 0) {
-      newErrors.price = 'Price must be a positive number';
+      newErrors.price = "Price must be a positive number";
       isValid = false;
     }
 
     const rating = parseFloat(formData.rating);
     if (isNaN(rating) || rating < 0 || rating > 10) {
-      newErrors.rating = 'Rating must be between 0 and 10';
+      newErrors.rating = "Rating must be between 0 and 10";
       isValid = false;
     }
 
@@ -65,36 +67,41 @@ export default function AddHotelPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       // Get existing hotels from local storage or initialize empty array
-      const existingHotels = JSON.parse(localStorage.getItem('hotels') || '[]');
-      
+      const existingHotels = JSON.parse(localStorage.getItem("hotels") || "[]");
+
       // Add new hotel to the array
       const newHotel = {
         name: formData.name,
         price: parseFloat(formData.price),
         rating: parseFloat(formData.rating),
-        currency: formData.currency
+        currency: formData.currency,
       };
-      
+
       const updatedHotels = [...existingHotels, newHotel];
-      
+
       // Save to local storage
-      localStorage.setItem('hotels', JSON.stringify(updatedHotels));
-      
+      localStorage.setItem("hotels", JSON.stringify(updatedHotels));
+
       // Navigate to results page
-      router.push('/hotels/compare');
+      router.push("/hotels/compare");
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">Add Hotel Information</h1>
-      
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        Add Hotel Information
+      </h1>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Hotel Name
           </label>
           <input
@@ -106,11 +113,16 @@ export default function AddHotelPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter hotel name"
           />
-          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+          {errors.name && (
+            <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+          )}
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="price"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Price
           </label>
           <div className="flex space-x-2">
@@ -186,11 +198,16 @@ export default function AddHotelPage() {
               <option value="XOF">XOF - West African CFA Franc</option>
             </select>
           </div>
-          {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
+          {errors.price && (
+            <p className="mt-1 text-sm text-red-600">{errors.price}</p>
+          )}
         </div>
-        
+
         <div className="mb-6">
-          <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="rating"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Rating (0-10)
           </label>
           <input
@@ -205,9 +222,11 @@ export default function AddHotelPage() {
             max="10"
             step="0.1"
           />
-          {errors.rating && <p className="mt-1 text-sm text-red-600">{errors.rating}</p>}
+          {errors.rating && (
+            <p className="mt-1 text-sm text-red-600">{errors.rating}</p>
+          )}
         </div>
-        
+
         <div className="flex justify-between">
           <button
             type="submit"
@@ -215,11 +234,11 @@ export default function AddHotelPage() {
           >
             Submit & Compare
           </button>
-        </div>        
-          <div className="flex justify-center mt-4.5">
-          <Link 
+        </div>
+        <div className="flex justify-center mt-4.5">
+          <Link
             href="/hotels/compare"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center" 
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
           >
             Compare Page
           </Link>

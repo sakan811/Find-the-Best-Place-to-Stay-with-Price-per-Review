@@ -1,11 +1,11 @@
-import { beforeEach, vi, expect } from 'vitest';
-import * as matchers from '@testing-library/jest-dom/matchers';
+import { beforeEach, vi, expect } from "vitest";
+import * as matchers from "@testing-library/jest-dom/matchers";
 
 // Extend Vitest's expect with Jest DOM matchers
 expect.extend(matchers);
 
 // Mock Next.js router
-vi.mock('next/navigation', () => ({
+vi.mock("next/navigation", () => ({
   useRouter: vi.fn(() => ({
     push: vi.fn(),
     back: vi.fn(),
@@ -31,7 +31,7 @@ const localStorageMock = (() => {
 })();
 
 // Set up global mocks
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
 });
 

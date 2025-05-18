@@ -22,12 +22,12 @@ jobs:
         uses: dependabot/fetch-metadata@v1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      
+
       - name: Enable Auto-Merge
         run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url || github.event.repository.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Auto-merge (retry mechanism)
         # This is a fallback if the first attempt fails
         if: failure()

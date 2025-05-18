@@ -25,6 +25,7 @@ A **lower Price/Review Score** represents exceptional value—a property that of
 ### Step 1: Set Up the Web App
 
 1. Install Docker Desktop
+
    - [Download Docker Desktop here](https://www.docker.com/products/docker-desktop) and follow the installation instructions for your operating system.
 
 2. Obtain the [Docker Compose](./docker-compose.yml) file from this repository.
@@ -38,9 +39,11 @@ A **lower Price/Review Score** represents exceptional value—a property that of
 ### Step 2: Access the Web App
 
 1. Ensure Docker Desktop is running on your system.
+
    - Launch Docker Desktop if it's not already running.
 
 2. Obtain your browser's User-Agent:
+
    - Visit <https://www.whatismybrowser.com/detect/what-is-my-user-agent/>
    - Copy the displayed **User-Agent** string.
    - Edit the `docker-compose.yml` file and replace the value after `- USER_AGENT=` with your copied string.
@@ -49,35 +52,37 @@ A **lower Price/Review Score** represents exceptional value—a property that of
 
    3.1 Deploy the **Auth Headers App** container:
 
-      ```bash
-      docker-compose --profile phase1 up -d
-      ```
+   ```bash
+   docker-compose --profile phase1 up -d
+   ```
 
    3.2 Generate and save authentication headers:
 
-      ```bash
-      curl -s "http://localhost:4000/extract-headers?save=true"
-      ```
+   ```bash
+   curl -s "http://localhost:4000/extract-headers?save=true"
+   ```
 
-      - This process extracts necessary authentication headers from Booking.com and saves them to your `.env` file.
+   - This process extracts necessary authentication headers from Booking.com and saves them to your `.env` file.
 
 4. Launch the Main Application:
 
    4.1 Deploy the **Web App** container:
 
-      ```bash
-      docker-compose --profile phase2 up -d
-      ```
+   ```bash
+   docker-compose --profile phase2 up -d
+   ```
 
-      - This command starts all necessary services in the background.
-      - Access the application through your browser at <http://localhost:5000>.
+   - This command starts all necessary services in the background.
+   - Access the application through your browser at <http://localhost:5000>.
 
 ## Disclaimer
 
 - When specifying currency in the form, use standard three-letter abbreviations:
+
   - Example: For US Dollars, enter **USD** in the currency field.
 
 - The "Scrape Hotel Properties Only" option affects search results:
+
   - When checked: Only traditional hotels will be included in results.
   - When unchecked: All accommodation types (apartments, guest houses, etc.) will be included.
 
