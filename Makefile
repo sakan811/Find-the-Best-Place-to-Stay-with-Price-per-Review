@@ -10,16 +10,16 @@ lint:
 format:
 	npm run format
 
-compose:
+up:
 	docker compose up -d
 
-compose-build:
-	docker compose -f docker-compose.build.yml -d --build
+build:
+	docker compose -f docker-compose.build.yml up -d --build
 
-compose-down:
+down:
 	docker compose down
 
-compose-clean:
+clean:
 	docker compose down --volumes --remove-orphans
 
 rm-image:
