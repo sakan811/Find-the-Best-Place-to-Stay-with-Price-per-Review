@@ -1,72 +1,34 @@
-backend-dev:
-	cd backend && python manage.py runserver
+dev:
+	npm run dev
 
-backend-test:
-	cd backend && pytest
+build:
+	npm run build
 
-backend-migrations:
-	cd backend && python manage.py makemigrations
+test:
+	npm run test
 
-backend-migrate:
-	cd backend && python manage.py migrate
+lint:
+	npm run lint
 
-backend-ruff:
-	cd backend && ruff check . --fix && ruff format .
+format:
+	npm run format
 
-auth-headers:
-	cd auth_headers && python app.py
+up:
+	docker compose --profile pull up -d
 
-auth-headers-ruff:
-	cd auth_headers && ruff check . --fix && ruff format .
+up-build:
+	docker compose --profile build up -d --build
 
-auth-headers-test:
-	cd auth_headers && python -m pytest
+down:
+	docker compose --profile pull down
 
-frontend-dev:
-	cd frontend && npm run dev
+down-build:
+	docker compose --profile build down
 
-frontend-test:
-	cd frontend && npm run test
+clean:
+	docker compose --profile pull down --volumes --remove-orphans && \
+	docker rmi sakanbeer88/hotel-value-analyzer:latest
 
-health-endpoint:
-	curl -s http://localhost:4000/health
-
-extract-headers-endpoint:
-	curl -s http://localhost:4000/extract-headers
-
-extract-headers-with-save:
-	curl -s "http://localhost:4000/extract-headers?save=true"
-
-get-headers-endpoint:
-	curl -s http://localhost:4000/get-headers
-
-test-all-endpoints:
-	curl -s http://localhost:4000/health && \
-	curl -s http://localhost:4000/extract-headers && \
-	curl -s "http://localhost:4000/extract-headers?save=true" && \
-	curl -s http://localhost:4000/get-headers
-
-docker-compose-auth-headers:
-	docker compose --profile phase1 up -d
-
-docker-compose-app:
-	docker compose --profile phase2 up -d
-
-docker-compose-build-auth-headers:
-	docker compose -f docker-compose.build.yml --profile phase1 up -d --build
-
-docker-compose-build-app:
-	docker compose -f docker-compose.build.yml --profile phase2 up -d --build
-
-docker-compose-down:
-	docker compose --profile phase1 down && \
-	docker compose --profile phase2 down
-
-docker-compose-clean:
-	docker compose --profile phase1 down --volumes --remove-orphans && \
-	docker compose --profile phase2 down --volumes --remove-orphans
-
-remove-image:
-	docker rmi sakanbeer88/find-stay-place-auth-headers:latest && \
-	docker rmi sakanbeer88/find-stay-place-backend:latest && \
-	docker rmi sakanbeer88/find-stay-place-frontend:latest
+clean-build:
+	docker compose --profile build down --volumes --remove-orphans && \
+	docker rmi sakanbeer88/hotel-value-analyzer:latest
