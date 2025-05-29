@@ -36,107 +36,175 @@ export default function CompareHotelsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        Loading hotel comparisons...
+      <div className="flex flex-col justify-center items-center h-64 space-y-4">
+        <div className="text-6xl animate-pulse">🌸</div>
+        <div className="text-xl text-pink-600 font-medium">
+          Loading hotel comparisons...
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">
-        Hotel Value Comparison
-      </h1>
+    <div className="max-w-5xl mx-auto">
+      {/* Header */}
+      <div className="text-center mb-10">
+        <div className="text-6xl mb-4">🏨</div>
+        <h1 className="text-4xl font-bold text-pink-800 mb-4">
+          Hotel Value Comparison
+        </h1>
+        <p className="text-pink-600 text-lg">
+          Discover the best value accommodations with sakura-inspired elegance
+        </p>
+      </div>
 
       {hotels.length === 0 ? (
-        <div className="text-center my-8">
-          <p className="mb-6">No hotels have been added yet.</p>
+        /* Empty State */
+        <div className="text-center bg-gradient-to-br from-pink-50 via-white to-rose-50 p-12 rounded-3xl shadow-xl border-2 border-pink-200">
+          <div className="text-8xl mb-6">🌸</div>
+          <h2 className="text-2xl font-bold text-pink-800 mb-4">
+            No Hotels Added Yet
+          </h2>
+          <p className="text-pink-600 mb-8 text-lg">
+            Start your journey by adding your first hotel to compare
+          </p>
           <Link
             href="/hotels/add"
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="inline-block bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 px-8 rounded-2xl font-bold text-lg hover:from-pink-600 hover:to-rose-600 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Add Your First Hotel
+            🌸 Add Your First Hotel
           </Link>
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto mb-6">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rank
-                  </th>
-                  <th className="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Hotel
-                  </th>
-                  <th className="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Price
-                  </th>
-                  <th className="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rating
-                  </th>
-                  <th className="py-2 px-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Value
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {hotels.map((hotel, index) => (
-                  <tr
-                    key={index}
-                    className={
-                      index === 0 ? "bg-green-50" : "border-t border-gray-200"
-                    }
-                  >
-                    <td className="py-2 px-3 whitespace-nowrap">{index + 1}</td>
-                    <td className="py-2 px-3 whitespace-nowrap font-medium">
-                      {hotel.name}
-                      {index === 0 && (
-                        <span className="ml-1 text-green-600 text-xs">★</span>
-                      )}
-                    </td>
-                    <td className="py-2 px-3 whitespace-nowrap">
-                      {hotel.price.toFixed(2)} {hotel.currency}
-                    </td>
-                    <td className="py-2 px-3 whitespace-nowrap">
-                      {hotel.rating.toFixed(1)}
-                    </td>
-                    <td className="py-2 px-3 whitespace-nowrap">
-                      {hotel.valueScore}
-                    </td>
+          {/* Table Container */}
+          <div className="bg-gradient-to-br from-white via-pink-50 to-rose-50 rounded-3xl shadow-2xl border-2 border-pink-200 overflow-hidden mb-8">
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead className="bg-gradient-to-r from-pink-500 to-rose-500">
+                  <tr>
+                    <th className="py-4 px-6 text-left text-sm font-bold text-white uppercase tracking-wider">
+                      🏆 Rank
+                    </th>
+                    <th className="py-4 px-6 text-left text-sm font-bold text-white uppercase tracking-wider">
+                      🏨 Hotel
+                    </th>
+                    <th className="py-4 px-6 text-left text-sm font-bold text-white uppercase tracking-wider">
+                      💰 Price
+                    </th>
+                    <th className="py-4 px-6 text-left text-sm font-bold text-white uppercase tracking-wider">
+                      ⭐ Rating
+                    </th>
+                    <th className="py-4 px-6 text-left text-sm font-bold text-white uppercase tracking-wider">
+                      🌸 Value Score
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {hotels.map((hotel, index) => (
+                    <tr
+                      key={index}
+                      className={`
+                        ${index === 0 
+                          ? "bg-gradient-to-r from-pink-100 via-rose-100 to-pink-100 border-l-4 border-pink-400" 
+                          : index % 2 === 0 
+                            ? "bg-white/70" 
+                            : "bg-pink-50/50"
+                        }
+                        hover:bg-gradient-to-r hover:from-pink-100 hover:to-rose-100 transition-all duration-300
+                        ${index !== hotels.length - 1 ? "border-b border-pink-200" : ""}
+                      `}
+                    >
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg font-bold text-pink-700">
+                            {index + 1}
+                          </span>
+                          {index === 0 && (
+                            <span className="text-yellow-500 text-xl">👑</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <div className="font-bold text-pink-800 text-lg">
+                          {hotel.name}
+                          {index === 0 && (
+                            <span className="ml-2 text-pink-500 text-sm font-normal">
+                              🌸 Best Value
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <span className="font-semibold text-pink-700 text-lg">
+                          {hotel.price.toFixed(2)} {hotel.currency}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <div className="flex items-center space-x-1">
+                          <span className="font-semibold text-pink-700 text-lg">
+                            {hotel.rating.toFixed(1)}
+                          </span>
+                          <span className="text-yellow-500">⭐</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 whitespace-nowrap">
+                        <span className={`
+                          font-bold text-lg px-3 py-1 rounded-full
+                          ${index === 0 
+                            ? "bg-gradient-to-r from-pink-200 to-rose-200 text-pink-800" 
+                            : "bg-pink-100 text-pink-700"
+                          }
+                        `}>
+                          {hotel.valueScore}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div className="mb-6 p-3 bg-gray-50 rounded-md text-sm">
-            <p>
-              <strong>Value Score</strong> = Rating ÷ Price (higher is better
-              value)
+          {/* Value Score Explanation */}
+          <div className="bg-gradient-to-r from-pink-100 via-white to-rose-100 p-6 rounded-2xl border-2 border-pink-200 shadow-lg mb-8">
+            <div className="flex items-center space-x-3 mb-2">
+              <span className="text-2xl">🧮</span>
+              <h3 className="text-lg font-bold text-pink-800">Value Score Calculation</h3>
+            </div>
+            <p className="text-pink-700">
+              <strong className="text-pink-800">Value Score</strong> = Rating ÷ Price 
+              <span className="ml-2 text-sm">(higher score = better value for money)</span>
             </p>
           </div>
 
-          <div className="flex justify-between space-x-4">
+          {/* Action Buttons */}
+          <div className="grid sm:grid-cols-2 gap-6">
             <Link
               href="/hotels/add"
-              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
+              className="bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-pink-600 hover:to-rose-600 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-center"
             >
-              Add Another Hotel
+              🌸 Add Another Hotel
             </Link>
             <button
               onClick={() => {
                 localStorage.removeItem("hotels");
                 setHotels([]);
               }}
-              className="flex-1 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="bg-gradient-to-r from-red-400 to-pink-400 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-red-500 hover:to-pink-500 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
-              Clear All Hotels
+              🗑️ Clear All Hotels
             </button>
           </div>
         </>
       )}
+
+      {/* Decorative Elements */}
+      <div className="text-center mt-12 space-x-6">
+        <span className="text-3xl opacity-60 animate-pulse">🌸</span>
+        <span className="text-4xl opacity-80 animate-pulse delay-1000">🌸</span>
+        <span className="text-3xl opacity-60 animate-pulse delay-2000">🌸</span>
+      </div>
     </div>
   );
 }
