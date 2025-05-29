@@ -27,12 +27,15 @@ export default function RootLayout({
 
         <header className="relative z-10 bg-gradient-to-r from-pink-500 via-rose-400 to-pink-600 shadow-lg border-b-4 border-pink-200">
           <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold text-white hover:text-pink-100 transition-colors duration-300 drop-shadow-sm">
+            <Link
+              href="/"
+              className="text-2xl font-bold text-white hover:text-pink-100 transition-colors duration-300 drop-shadow-sm"
+            >
               🌸 Hotel Value Analyzer
             </Link>
           </div>
         </header>
-        
+
         <main className="relative z-10 container mx-auto px-4 py-8">
           {children}
         </main>

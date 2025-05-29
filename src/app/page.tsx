@@ -10,7 +10,7 @@ export default function Home() {
         <div className="absolute top-4 right-4 text-6xl opacity-20">🌸</div>
         <div className="absolute bottom-4 left-4 text-4xl opacity-15">🌸</div>
         <div className="absolute top-1/2 left-1/4 text-2xl opacity-10">🌸</div>
-        
+
         <div className="relative z-10 px-8 py-20 md:py-28 max-w-5xl mx-auto text-center">
           <div className="mb-4">
             <span className="text-6xl">🌸</span>

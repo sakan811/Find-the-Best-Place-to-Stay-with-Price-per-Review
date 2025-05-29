@@ -24,9 +24,9 @@ export default function AddHotelPage() {
       // Try to get the last used currency from localStorage
       const savedCurrency = localStorage.getItem("lastUsedCurrency");
       if (savedCurrency) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          currency: savedCurrency
+          currency: savedCurrency,
         }));
       }
     } catch (error) {
@@ -109,7 +109,7 @@ export default function AddHotelPage() {
 
       // Save to local storage
       localStorage.setItem("hotels", JSON.stringify(updatedHotels));
-      
+
       // Save the currency for future use
       localStorage.setItem("lastUsedCurrency", formData.currency);
 
@@ -152,7 +152,9 @@ export default function AddHotelPage() {
               placeholder="Enter hotel name"
             />
             {errors.name && (
-              <p className="mt-2 text-sm text-red-500 font-medium">{errors.name}</p>
+              <p className="mt-2 text-sm text-red-500 font-medium">
+                {errors.name}
+              </p>
             )}
           </div>
 
@@ -238,7 +240,9 @@ export default function AddHotelPage() {
               </select>
             </div>
             {errors.price && (
-              <p className="mt-2 text-sm text-red-500 font-medium">{errors.price}</p>
+              <p className="mt-2 text-sm text-red-500 font-medium">
+                {errors.price}
+              </p>
             )}
           </div>
 
@@ -263,7 +267,9 @@ export default function AddHotelPage() {
               step="0.1"
             />
             {errors.rating && (
-              <p className="mt-2 text-sm text-red-500 font-medium">{errors.rating}</p>
+              <p className="mt-2 text-sm text-red-500 font-medium">
+                {errors.rating}
+              </p>
             )}
           </div>
 

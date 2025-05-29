@@ -105,11 +105,12 @@ export default function CompareHotelsPage() {
                     <tr
                       key={index}
                       className={`
-                        ${index === 0 
-                          ? "bg-gradient-to-r from-pink-100 via-rose-100 to-pink-100 border-l-4 border-pink-400" 
-                          : index % 2 === 0 
-                            ? "bg-white/70" 
-                            : "bg-pink-50/50"
+                        ${
+                          index === 0
+                            ? "bg-gradient-to-r from-pink-100 via-rose-100 to-pink-100 border-l-4 border-pink-400"
+                            : index % 2 === 0
+                              ? "bg-white/70"
+                              : "bg-pink-50/50"
                         }
                         hover:bg-gradient-to-r hover:from-pink-100 hover:to-rose-100 transition-all duration-300
                         ${index !== hotels.length - 1 ? "border-b border-pink-200" : ""}
@@ -149,13 +150,16 @@ export default function CompareHotelsPage() {
                         </div>
                       </td>
                       <td className="py-4 px-6 whitespace-nowrap">
-                        <span className={`
+                        <span
+                          className={`
                           font-bold text-lg px-3 py-1 rounded-full
-                          ${index === 0 
-                            ? "bg-gradient-to-r from-pink-200 to-rose-200 text-pink-800" 
-                            : "bg-pink-100 text-pink-700"
+                          ${
+                            index === 0
+                              ? "bg-gradient-to-r from-pink-200 to-rose-200 text-pink-800"
+                              : "bg-pink-100 text-pink-700"
                           }
-                        `}>
+                        `}
+                        >
                           {hotel.valueScore}
                         </span>
                       </td>
@@ -170,11 +174,16 @@ export default function CompareHotelsPage() {
           <div className="bg-gradient-to-r from-pink-100 via-white to-rose-100 p-6 rounded-2xl border-2 border-pink-200 shadow-lg mb-8">
             <div className="flex items-center space-x-3 mb-2">
               <span className="text-2xl">🧮</span>
-              <h3 className="text-lg font-bold text-pink-800">Value Score Calculation</h3>
+              <h3 className="text-lg font-bold text-pink-800">
+                Value Score Calculation
+              </h3>
             </div>
             <p className="text-pink-700">
-              <strong className="text-pink-800">Value Score</strong> = Rating ÷ Price 
-              <span className="ml-2 text-sm">(higher score = better value for money)</span>
+              <strong className="text-pink-800">Value Score</strong> = Rating ÷
+              Price
+              <span className="ml-2 text-sm">
+                (higher score = better value for money)
+              </span>
             </p>
           </div>
 
