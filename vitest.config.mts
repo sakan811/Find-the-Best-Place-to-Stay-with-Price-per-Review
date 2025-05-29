@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
     environment: "jsdom",
-    setupFiles: ["./src/__tests__/vitest-setup.ts"],
+    setupFiles: ["./__tests__/vitest-setup.ts"],
     css: false,
   },
 });
