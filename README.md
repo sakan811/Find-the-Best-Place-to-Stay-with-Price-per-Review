@@ -1,40 +1,65 @@
 # Hotel Value Analyzer
 
-**Discover** the **ideal accommodation** with a **Review/Price** analyzer.
+A web application that helps you find the best value accommodations by calculating a **Review/Price Score** for each hotel you input.
 
-This application helps you identify the best value accommodations by calculating a **Review/Price Score** for each property you input.
+## What it does
 
-A **higher Review/Price Score** represents exceptional value—a property that offers **high-quality experiences** (as reflected in its reviews) at a **reasonable price point**.
+- Add hotel information (name, price, rating, currency)
+- Automatically calculates value scores (Rating ÷ Price)
+- Ranks hotels by best value
+- Compare multiple hotels side-by-side
+
+Higher scores = better value for money! 🌸
 
 ## Status
 
 [![Docker CI](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-ci.yml)
 
-## The Web-App
+[![Web App Test](https://github.com/sakan811/hotel-value-analyzer/actions/workflows/web-app-test.yml/badge.svg)](https://github.com/sakan811/hotel-value-analyzer/actions/workflows/web-app-test.yml)
 
-Navigate to
+## How to Use
 
-## How to Use the Web App Locally
+### 🌐 Vercel (Recommended)
 
-### Step 0: Prerequisites
+Simply visit: **<https://hotel-value-analyzer.vercel.app/>**
 
-- **Docker Desktop** must be installed on your system for containerization.
+### 🐳 Docker
 
-### Step 1: Set Up the Web App
-
-1. Clone the repository:
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Clone this repository:
 
    ```bash
-   git clone
-   cd Find-the-Best-Place-to-Stay-with-Price-per-Review
+   git clone https://github.com/sakan811/hotel-value-analyzer.git
+   cd hotel-value-analyzer
    ```
 
-2. Deploy the web app using Docker:
+3. Run with Docker Compose:
 
    ```bash
    docker compose up -d
    ```
 
-### Step 2: Access the Web App
+4. Open <http://localhost:3000>
 
-1. Open your web browser and navigate to: <http://localhost:3000>
+### 💻 Local Development
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/sakan811/hotel-value-analyzer.git
+   cd hotel-value-analyzer
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open <http://localhost:3000>
