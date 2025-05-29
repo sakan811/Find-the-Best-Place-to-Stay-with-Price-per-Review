@@ -200,4 +200,36 @@ describe("AddHotelPage", () => {
     // Check that navigation was called
     expect(mockPush).toHaveBeenCalledWith("/hotels/compare");
   });
+
+  it("has a working link to compare page", async () => {
+    render(<AddHotelPage />);
+
+    const comparePageLink = screen.getAllByText("View Compare Page");
+    expect(comparePageLink[0]).toBeTruthy();
+
+    const link = comparePageLink[0].closest("a");
+    expect(link).not.toBeNull();
+    if (link) {
+      expect(link.getAttribute("href")).toBe("/hotels/compare");
+    }
+  });
+
+  it("saves and loads currency preference", async () => {
+    const user = userEvent.setup();
+
+    // Set a currency preference
+    localStorage.setItem("lastUsedCurrency", "EUR");
+
+    render(<AddHotelPage />);
+
+    // Check if the saved currency is selected
+    const currencySelect = document.getElementById(
+      "currency",
+    ) as HTMLSelectElement;
+    expect(currencySelect.value).toBe("EUR");
+
+    // Change currency and verify it's saved
+    await user.selectOptions(currencySelect, "GBP");
+    expect(localStorage.getItem("lastUsedCurrency")).toBe("GBP");
+  });
 });
