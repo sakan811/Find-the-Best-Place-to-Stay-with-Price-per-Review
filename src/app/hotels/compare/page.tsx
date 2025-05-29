@@ -54,7 +54,7 @@ export default function CompareHotelsPage() {
           Hotel Value Comparison
         </h1>
         <p className="text-pink-600 text-lg">
-          Discover the best value accommodations with sakura-inspired elegance
+          Discover the best value accommodations
         </p>
       </div>
 
