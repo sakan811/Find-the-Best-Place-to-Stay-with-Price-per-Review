@@ -1,6 +1,9 @@
 dev:
 	npm run dev
 
+build:
+	npm run build
+
 test:
 	npm run test
 
@@ -11,16 +14,21 @@ format:
 	npm run format
 
 up:
-	docker compose up -d
+	docker compose --profile pull up -d
 
-build:
-	docker compose -f docker-compose.build.yml up -d --build
+up-build:
+	docker compose --profile build up -d --build
 
 down:
-	docker compose down
+	docker compose --profile pull down
+
+down-build:
+	docker compose --profile build down
 
 clean:
-	docker compose down --volumes --remove-orphans
+	docker compose --profile pull down --volumes --remove-orphans && \
+	docker rmi sakanbeer88/hotel-value-analyzer:latest
 
-rm-image:
+clean-build:
+	docker compose --profile build down --volumes --remove-orphans && \
 	docker rmi sakanbeer88/hotel-value-analyzer:latest

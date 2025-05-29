@@ -1,5 +1,20 @@
 services:
   hotel-value-analyzer:
+    profiles:
+      - pull
+    image: sakanbeer88/hotel-value-analyzer:latest
+    container_name: hotel-value-analyzer
+    ports:
+      - "3000:3000"
+    volumes:
+      - hotel-value-analyzer-data:/app
+
+  hotel-value-analyzer-build:
+    profiles:
+      - build
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: sakanbeer88/hotel-value-analyzer:latest
     container_name: hotel-value-analyzer
     ports:
