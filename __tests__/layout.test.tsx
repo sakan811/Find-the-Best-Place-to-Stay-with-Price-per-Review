@@ -1,7 +1,7 @@
 // __tests__/layout.test.tsx
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import RootLayout from "../app/layout";
+import RootLayout from "../src/app/layout";
 
 vi.mock("../app/globals.css", () => ({}));
 

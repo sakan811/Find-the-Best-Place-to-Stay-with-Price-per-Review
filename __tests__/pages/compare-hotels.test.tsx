@@ -2,7 +2,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import CompareHotelsPage from "../../app/hotels/compare/page";
+import CompareHotelsPage from "../../src/app/hotels/compare/page";
 
 // Mock Next.js useRouter
 vi.mock("next/navigation", () => ({

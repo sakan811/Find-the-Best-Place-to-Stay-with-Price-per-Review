@@ -1,7 +1,7 @@
 // __tests__/pages/home.test.tsx
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
-import Home from "../../app/page";
+import Home from "../../src/app/page";
 
 // Mock Next.js Link component
 vi.mock("next/link", () => ({

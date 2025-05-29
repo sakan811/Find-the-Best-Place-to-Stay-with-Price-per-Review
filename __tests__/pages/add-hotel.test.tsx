@@ -2,7 +2,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import AddHotelPage from "../../app/hotels/add/page";
+import AddHotelPage from "../../src/app/hotels/add/page";
 
 // Mock the Next.js useRouter hook
 const mockPush = vi.fn();
