@@ -1,39 +1,160 @@
 name: Dependabot Auto-Merge
+
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
   check_suite:
     types: [completed]
   workflow_run:
-    workflows: ["*"]
+    workflows: ["Web App Test", "Docker CI"]
     types: [completed]
+  # Manual trigger added
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to auto-merge (optional - will process all open Dependabot PRs if not specified)'
+        required: false
+        type: string
 
 permissions:
   contents: write
   pull-requests: write
+  checks: read
 
 jobs:
   auto_merge_dependabot:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]'
+    if: >
+      github.actor == 'dependabot[bot]' || 
+      github.event.pull_request.user.login == 'dependabot[bot]' ||
+      github.event_name == 'workflow_dispatch'
     steps:
-      - name: Fetch Metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable Auto-Merge
-        run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url || github.event.repository.html_url }}"
+      - name: Get PR number for workflow_dispatch
+        if: github.event_name == 'workflow_dispatch'
+        id: get_pr
+        run: |
+          if [ -n "${{ inputs.pr_number }}" ]; then
+            echo "pr_number=${{ inputs.pr_number }}" >> $GITHUB_OUTPUT
+          else
+            # Get all open Dependabot PRs
+            pr_numbers=$(gh pr list --author "dependabot[bot]" --state open --json number --jq '.[].number' | head -1)
+            echo "pr_number=$pr_numbers" >> $GITHUB_OUTPUT
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Auto-merge (retry mechanism)
-        # This is a fallback if the first attempt fails
-        if: failure()
-        uses: pascalgn/automerge-action@v0.15.6
+      - name: Set PR number for regular events
+        if: github.event_name != 'workflow_dispatch'
+        id: set_pr
+        run: |
+          echo "pr_number=${{ github.event.pull_request.number || github.event.workflow_run.pull_requests[0].number }}" >> $GITHUB_OUTPUT
+
+      - name: Get PR details
+        id: pr_details
+        run: |
+          PR_NUM="${{ steps.get_pr.outputs.pr_number || steps.set_pr.outputs.pr_number }}"
+          if [ -z "$PR_NUM" ]; then
+            echo "No PR number found, exiting"
+            exit 1
+          fi
+          
+          PR_INFO=$(gh pr view $PR_NUM --json author,mergeable,statusCheckRollupState,url,title)
+          echo "pr_info=$PR_INFO" >> $GITHUB_OUTPUT
+          echo "pr_url=$(echo $PR_INFO | jq -r '.url')" >> $GITHUB_OUTPUT
+          echo "pr_author=$(echo $PR_INFO | jq -r '.author.login')" >> $GITHUB_OUTPUT
+          echo "pr_mergeable=$(echo $PR_INFO | jq -r '.mergeable')" >> $GITHUB_OUTPUT
+          echo "pr_status=$(echo $PR_INFO | jq -r '.statusCheckRollupState')" >> $GITHUB_OUTPUT
+          echo "pr_title=$(echo $PR_INFO | jq -r '.title')" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch Dependabot Metadata
+        if: steps.pr_details.outputs.pr_author == 'dependabot[bot]'
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Check if PR is ready to merge
+        id: check_ready
+        run: |
+          if [ "${{ steps.pr_details.outputs.pr_author }}" != "dependabot[bot]" ]; then
+            echo "Not a Dependabot PR, skipping"
+            echo "ready=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          if [ "${{ steps.pr_details.outputs.pr_mergeable }}" != "MERGEABLE" ]; then
+            echo "PR is not mergeable, skipping"
+            echo "ready=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          if [ "${{ steps.pr_details.outputs.pr_status }}" != "SUCCESS" ]; then
+            echo "PR status checks are not passing, skipping"
+            echo "ready=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "PR is ready to merge"
+          echo "ready=true" >> $GITHUB_OUTPUT
+
+      - name: Wait for checks to complete
+        if: steps.check_ready.outputs.ready == 'true'
+        run: |
+          echo "Waiting for final check completion..."
+          sleep 30
+          
+          # Re-check status
+          PR_NUM="${{ steps.get_pr.outputs.pr_number || steps.set_pr.outputs.pr_number }}"
+          FINAL_STATUS=$(gh pr view $PR_NUM --json statusCheckRollupState --jq '.statusCheckRollupState')
+          
+          if [ "$FINAL_STATUS" != "SUCCESS" ]; then
+            echo "Final status check failed: $FINAL_STATUS"
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable Auto-Merge
+        if: steps.check_ready.outputs.ready == 'true'
+        run: |
+          PR_URL="${{ steps.pr_details.outputs.pr_url }}"
+          echo "Attempting to auto-merge PR: $PR_URL"
+          echo "PR Title: ${{ steps.pr_details.outputs.pr_title }}"
+          
+          # Try to enable auto-merge first
+          gh pr merge --auto --squash "$PR_URL" || gh pr merge --squash "$PR_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify merge completion
+        if: steps.check_ready.outputs.ready == 'true'
+        run: |
+          PR_NUM="${{ steps.get_pr.outputs.pr_number || steps.set_pr.outputs.pr_number }}"
+          sleep 10
+          
+          # Check if PR was successfully merged
+          PR_STATE=$(gh pr view $PR_NUM --json state --jq '.state')
+          if [ "$PR_STATE" = "MERGED" ]; then
+            echo "✅ PR successfully merged!"
+          else
+            echo "⚠️ PR merge status unclear, current state: $PR_STATE"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge fallback
+        if: failure() && steps.check_ready.outputs.ready == 'true'
+        uses: pascalgn/automerge-action@v0.16.3
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          MERGE_METHOD: "merge"
-          MERGE_RETRY_SLEEP: "60000" # 1 minute
-          MERGE_RETRIES: "10"
+          MERGE_METHOD: "squash"
+          MERGE_RETRY_SLEEP: "30000" # 30 seconds
+          MERGE_RETRIES: "5"
+          MERGE_DELETE_BRANCH: "true"
