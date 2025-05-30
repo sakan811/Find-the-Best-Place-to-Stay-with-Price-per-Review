@@ -26,9 +26,7 @@ down-build:
 	docker compose --profile build down
 
 clean:
-	docker compose --profile pull down --volumes --remove-orphans && \
-	docker rmi sakanbeer88/hotel-value-analyzer:latest
+	docker compose --profile pull down --rmi local --remove-orphans --volumes
 
 clean-build:
-	docker compose --profile build down --volumes --remove-orphans && \
-	docker rmi sakanbeer88/hotel-value-analyzer:latest
+	docker compose --profile build down --rmi local --remove-orphans --volumes
