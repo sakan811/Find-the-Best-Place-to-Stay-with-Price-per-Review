@@ -4,8 +4,21 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Hotel Value Analyzer",
-  description:
-    "Compare hotels based on review-per-price ratio to get the most value for your money",
+  description: "Compare hotels based on review-per-price ratio to get the most value for your money",
+  keywords: ['hotel comparison', 'travel deals', 'value analyzer', 'accommodation', 'hotel reviews'],
+  openGraph: {
+      title: "Hotel Value Analyzer",
+      description: "Compare hotels based on review-per-price ratio to get the most value for your money",
+      url: 'https://hotel-value-analyzer.vercel.app',
+      siteName: 'Hotel Value Analyzer',
+      images: [
+        {
+          url: 'src/app/favicon.ico',
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
 };
 
 export default function RootLayout({
