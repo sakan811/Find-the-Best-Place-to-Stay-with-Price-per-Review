@@ -36,7 +36,7 @@ Simply visit: **<https://hotel-value-analyzer.vercel.app/>**
 3. Run with Docker Compose:
 
    ```bash
-   docker compose up -d
+   docker compose --profile pull up -d
    ```
 
 4. Open <http://localhost:3000>
