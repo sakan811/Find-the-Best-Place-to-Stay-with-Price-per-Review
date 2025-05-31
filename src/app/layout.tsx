@@ -4,21 +4,52 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Hotel Value Analyzer",
-  description: "Compare hotels based on review-per-price ratio to get the most value for your money",
-  keywords: ['hotel comparison', 'travel deals', 'value analyzer', 'accommodation', 'hotel reviews'],
+  description:
+    "Compare hotels based on review-per-price ratio to get the most value for your money",
+  keywords: [
+    "hotel comparison",
+    "travel deals",
+    "value analyzer",
+    "accommodation",
+    "hotel reviews",
+  ],
   openGraph: {
-      title: "Hotel Value Analyzer",
-      description: "Compare hotels based on review-per-price ratio to get the most value for your money",
-      url: 'https://hotel-value-analyzer.vercel.app',
-      siteName: 'Hotel Value Analyzer',
-      images: [
-        {
-          url: 'src/app/favicon.ico',
-        },
-      ],
-      locale: 'en_US',
-      type: 'website',
-    },
+    title: "Hotel Value Analyzer",
+    description:
+      "Compare hotels based on review-per-price ratio to get the most value for your money",
+    url: "https://hotel-value-analyzer.vercel.app",
+    siteName: "Hotel Value Analyzer",
+    images: [
+      {
+        url: "src/app/favicon.ico",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+};
+
+const organizationStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Hotel Value Analyzer",
+  description:
+    "Compare hotels based on review-per-price ratio to get the most value for your money",
+  url: "https://hotel-value-analyzer.vercel.app",
+  applicationCategory: "TravelApplication",
+  operatingSystem: "Any",
+  browserRequirements: "Requires JavaScript",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  featureList: [
+    "Hotel price comparison",
+    "Value score calculation",
+    "Multi-currency support",
+    "Rating analysis",
+  ],
 };
 
 export default function RootLayout({
@@ -29,6 +60,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-100">
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationStructuredData),
+          }}
+        />
+
         {/* Decorative sakura petals background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
           <div className="absolute top-10 left-10 w-4 h-4 bg-pink-300 rounded-full opacity-20 animate-pulse"></div>

@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'PR number to auto-merge (optional - will process all open Dependabot PRs if not specified)'
+        description: "PR number to auto-merge (optional - will process all open Dependabot PRs if not specified)"
         required: false
         type: string
 
@@ -71,29 +71,29 @@ jobs:
             echo "No PR number found, exiting"
             exit 1
           fi
-          
+
           # Validate PR number is numeric
           if ! [[ "$PR_NUM" =~ ^[0-9]+$ ]]; then
             echo "Invalid PR number: $PR_NUM"
             exit 1
           fi
-          
+
           PR_INFO=$(gh pr view "$PR_NUM" --json author,mergeable,statusCheckRollupState,url,title)
           echo "pr_info=$PR_INFO" >> $GITHUB_OUTPUT
-          
+
           # Extract individual fields safely
           PR_URL=$(echo "$PR_INFO" | jq -r '.url')
           PR_AUTHOR=$(echo "$PR_INFO" | jq -r '.author.login')
           PR_MERGEABLE=$(echo "$PR_INFO" | jq -r '.mergeable')
           PR_STATUS=$(echo "$PR_INFO" | jq -r '.statusCheckRollupState')
           PR_TITLE=$(echo "$PR_INFO" | jq -r '.title')
-          
+
           # Validate PR URL format
           if ! [[ "$PR_URL" =~ ^https://github\.com/.+/pull/[0-9]+$ ]]; then
             echo "Invalid PR URL format: $PR_URL"
             exit 1
           fi
-          
+
           echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
           echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
           echo "pr_mergeable=$PR_MERGEABLE" >> $GITHUB_OUTPUT
@@ -119,19 +119,19 @@ jobs:
             echo "ready=false" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           if [ "$PR_MERGEABLE" != "MERGEABLE" ]; then
             echo "PR is not mergeable, skipping (status: $PR_MERGEABLE)"
             echo "ready=false" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           if [ "$PR_STATUS" != "SUCCESS" ]; then
             echo "PR status checks are not passing, skipping (status: $PR_STATUS)"
             echo "ready=false" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           echo "PR is ready to merge"
           echo "ready=true" >> $GITHUB_OUTPUT
 
@@ -144,11 +144,11 @@ jobs:
         run: |
           echo "Waiting for final check completion..."
           sleep 30
-          
+
           # Re-check status
           PR_NUM="${PR_NUMBER_FROM_GET:-$PR_NUMBER_FROM_SET}"
           FINAL_STATUS=$(gh pr view "$PR_NUM" --json statusCheckRollupState --jq '.statusCheckRollupState')
-          
+
           if [ "$FINAL_STATUS" != "SUCCESS" ]; then
             echo "Final status check failed: $FINAL_STATUS"
             exit 1
@@ -166,10 +166,10 @@ jobs:
             echo "Invalid PR URL: $PR_URL"
             exit 1
           fi
-          
+
           echo "Attempting to auto-merge PR: $PR_URL"
           echo "PR Title: $PR_TITLE"
-          
+
           # Try to enable auto-merge first, fallback to direct merge
           if ! gh pr merge --auto --squash "$PR_URL"; then
             echo "Auto-merge failed, trying direct merge..."
@@ -185,7 +185,7 @@ jobs:
         run: |
           PR_NUM="${PR_NUMBER_FROM_GET:-$PR_NUMBER_FROM_SET}"
           sleep 10
-          
+
           # Check if PR was successfully merged
           PR_STATE=$(gh pr view "$PR_NUM" --json state --jq '.state')
           if [ "$PR_STATE" = "MERGED" ]; then
