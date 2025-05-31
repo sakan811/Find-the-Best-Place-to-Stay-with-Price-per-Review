@@ -45,8 +45,77 @@ export default function CompareHotelsPage() {
     );
   }
 
+  const hotelComparisonStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Hotel Value Comparison",
+    description: "Compare hotels by value score (rating/price ratio)",
+    numberOfItems: hotels.length,
+    itemListElement: hotels.map((hotel, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "LodgingBusiness",
+        name: hotel.name,
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: hotel.rating,
+          bestRating: "10",
+          worstRating: "1",
+        },
+        priceRange: `${hotel.price} ${hotel.currency}`,
+        additionalProperty: {
+          "@type": "PropertyValue",
+          name: "Value Score",
+          value: hotel.valueScore,
+        },
+      },
+    })),
+  };
+
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How is the hotel value score calculated?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "The value score is calculated by dividing the hotel rating by the price (Rating ÷ Price). Higher scores indicate better value for money.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What makes a hotel good value?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "A good value hotel offers high ratings relative to its price. Our system ranks hotels by their value score to help you find the best deals.",
+        },
+      },
+    ],
+  };
+
   return (
     <div className="max-w-5xl mx-auto">
+      {/* Structured Data Scripts */}
+      {hotels.length > 0 && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(hotelComparisonStructuredData),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(faqStructuredData),
+            }}
+          />
+        </>
+      )}
+
       {/* Header */}
       <div className="text-center mb-10">
         <div className="text-6xl mb-4">🏨</div>
