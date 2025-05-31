@@ -18,6 +18,38 @@ export default function AddHotelPage() {
     rating: "",
   });
 
+  const addHotelPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Add Hotel Information",
+    description:
+      "Add hotel details to compare value and find the best accommodation deals",
+    url: "https://hotel-value-analyzer.vercel.app/hotels/add",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Hotel Value Analyzer",
+      url: "https://hotel-value-analyzer.vercel.app",
+    },
+    mainEntity: {
+      "@type": "WebApplication",
+      name: "Hotel Information Form",
+      description:
+        "Input hotel name, price, rating and currency for value comparison",
+      applicationCategory: "TravelApplication",
+      featureList: [
+        "Hotel data input",
+        "Multi-currency support",
+        "Rating validation",
+        "Value score calculation",
+      ],
+    },
+    potentialAction: {
+      "@type": "UseAction",
+      target: "https://hotel-value-analyzer.vercel.app/hotels/compare",
+      name: "Compare Hotels",
+    },
+  };
+
   // Load previously selected currency on component mount
   useEffect(() => {
     try {
@@ -120,6 +152,13 @@ export default function AddHotelPage() {
 
   return (
     <div className="max-w-md mx-auto mt-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(addHotelPageSchema),
+        }}
+      />
+
       {/* Header Card */}
       <div className="text-center mb-8">
         <div className="text-6xl mb-4">🌸</div>
