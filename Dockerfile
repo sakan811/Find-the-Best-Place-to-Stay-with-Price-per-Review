@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1
 
-FROM node:23.11.1-alpine3.21 AS base
+FROM 23.11.1-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
