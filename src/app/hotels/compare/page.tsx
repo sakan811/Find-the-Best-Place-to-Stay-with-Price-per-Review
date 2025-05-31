@@ -73,47 +73,16 @@ export default function CompareHotelsPage() {
     })),
   };
 
-  const faqStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "How is the hotel value score calculated?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The value score is calculated by dividing the hotel rating by the price (Rating ÷ Price). Higher scores indicate better value for money.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What makes a hotel good value?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "A good value hotel offers high ratings relative to its price. Our system ranks hotels by their value score to help you find the best deals.",
-        },
-      },
-    ],
-  };
-
   return (
     <div className="max-w-5xl mx-auto">
       {/* Structured Data Scripts */}
       {hotels.length > 0 && (
-        <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(hotelComparisonStructuredData),
-            }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(faqStructuredData),
-            }}
-          />
-        </>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(hotelComparisonStructuredData),
+          }}
+        />
       )}
 
       {/* Header */}
