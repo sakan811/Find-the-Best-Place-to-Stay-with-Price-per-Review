@@ -21,20 +21,20 @@ export default function AddHotelPage() {
   const addHotelPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Add Hotel Information",
+    name: "Add Hotel Information - SakuYado",
     description:
-      "Add hotel details to compare value and find the best accommodation deals",
-    url: "https://hotel-value-analyzer.vercel.app/hotels/add",
+      "Add hotel details to compare value and find the best accommodation deals with SakuYado",
+    url: "https://saku-yado.vercel.app/hotels/add",
     isPartOf: {
       "@type": "WebSite",
-      name: "Hotel Value Analyzer",
-      url: "https://hotel-value-analyzer.vercel.app",
+      name: "SakuYado",
+      url: "https://saku-yado.vercel.app",
     },
     mainEntity: {
       "@type": "WebApplication",
-      name: "Hotel Information Form",
+      name: "SakuYado Hotel Information Form",
       description:
-        "Input hotel name, price, rating and currency for value comparison",
+        "Input hotel name, price, rating and currency for value comparison with SakuYado",
       applicationCategory: "TravelApplication",
       featureList: [
         "Hotel data input",
@@ -45,8 +45,8 @@ export default function AddHotelPage() {
     },
     potentialAction: {
       "@type": "UseAction",
-      target: "https://hotel-value-analyzer.vercel.app/hotels/compare",
-      name: "Compare Hotels",
+      target: "https://saku-yado.vercel.app/hotels/compare",
+      name: "Compare Hotels with SakuYado",
     },
   };
 
