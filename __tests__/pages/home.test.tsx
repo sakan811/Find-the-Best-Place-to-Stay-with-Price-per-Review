@@ -31,7 +31,7 @@ describe("Home Page", () => {
 
     // Test both parts of the title since they're in separate elements
     expect(screen.getByText("Find the Best Value Hotels")).toBeTruthy();
-    expect(screen.getByText("for Your Stay")).toBeTruthy();
+    expect(screen.getByText("with SakuYado")).toBeTruthy();
   });
 
   it("renders the description text", () => {
