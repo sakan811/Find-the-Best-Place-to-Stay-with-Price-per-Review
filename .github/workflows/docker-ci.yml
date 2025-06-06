@@ -35,6 +35,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           load: ${{ github.event_name == 'pull_request' }}
           tags: ${{ vars.DOCKERHUB_USERNAME }}/saku-yado:latest
+          sbom: ${{ github.event_name != 'pull_request' }}
+          provenance: ${{ github.event_name != 'pull_request' && 'mode=max' || 'false' }}
 
       - name: Docker Scout
         if: ${{ github.event_name == 'pull_request' }}
