@@ -29,8 +29,8 @@ Simply visit: **<https://saku-yado.vercel.app/>**
 2. Clone this repository:
 
    ```bash
-   git clone https://github.com/sakan811/hotel-value-analyzer.git
-   cd hotel-value-analyzer
+   git clone https://github.com/sakan811/SakuYado.git
+   cd SakuYado
    ```
 
 3. Run with Docker Compose:
@@ -43,23 +43,25 @@ Simply visit: **<https://saku-yado.vercel.app/>**
 
 ### 💻 Local Development
 
-1. Clone the repository:
+1. Setup [pnpm](https://pnpm.io/installation)
+
+2. Clone the repository:
 
    ```bash
-   git clone https://github.com/sakan811/hotel-value-analyzer.git
-   cd hotel-value-analyzer
+   git clone https://github.com/sakan811/SakuYado.git
+   cd SakuYado
    ```
 
-2. Install dependencies:
+3. Install dependencies:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
-3. Run the development server:
+4. Run the development server:
 
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
-4. Open <http://localhost:3000>
+5. Open <http://localhost:3000>
