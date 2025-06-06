@@ -17,11 +17,11 @@ export default function Home() {
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
             Find the Best Value Hotels
-            <span className="block text-pink-100">for Your Stay</span>
+            <span className="block text-pink-100">with SakuYado</span>
           </h1>
           <p className="text-xl md:text-2xl mb-10 text-pink-50 max-w-3xl mx-auto leading-relaxed">
             Compare hotels based on review-per-price ratio to get the most value
-            for your money, with the elegance of sakura season
+            for your money
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link

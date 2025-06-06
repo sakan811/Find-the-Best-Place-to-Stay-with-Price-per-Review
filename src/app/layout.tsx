@@ -3,22 +3,24 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Hotel Value Analyzer",
+  title: "SakuYado - Hotel Value Analyzer",
   description:
-    "Compare hotels based on review-per-price ratio to get the most value for your money",
+    "Compare hotels based on review-per-price ratio to get the most value for your money with SakuYado",
   keywords: [
     "hotel comparison",
     "travel deals",
     "value analyzer",
     "accommodation",
     "hotel reviews",
+    "SakuYado",
+    "sakura hotels",
   ],
   openGraph: {
-    title: "Hotel Value Analyzer",
+    title: "SakuYado - Hotel Value Analyzer",
     description:
-      "Compare hotels based on review-per-price ratio to get the most value for your money",
-    url: "https://hotel-value-analyzer.vercel.app",
-    siteName: "Hotel Value Analyzer",
+      "Compare hotels based on review-per-price ratio to get the most value for your money with SakuYado",
+    url: "https://saku-yado.vercel.app",
+    siteName: "SakuYado",
     images: [
       {
         url: "src/app/favicon.ico",
@@ -32,10 +34,11 @@ export const metadata: Metadata = {
 const organizationStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "Hotel Value Analyzer",
+  name: "SakuYado",
+  alternateName: "SakuYado Hotel Value Analyzer",
   description:
-    "Compare hotels based on review-per-price ratio to get the most value for your money",
-  url: "https://hotel-value-analyzer.vercel.app",
+    "Compare hotels based on review-per-price ratio to get the most value for your money with SakuYado",
+  url: "https://saku-yado.vercel.app",
   applicationCategory: "TravelApplication",
   operatingSystem: "Any",
   browserRequirements: "Requires JavaScript",
@@ -83,7 +86,7 @@ export default function RootLayout({
               href="/"
               className="text-2xl font-bold text-white hover:text-pink-100 transition-colors duration-300 drop-shadow-sm"
             >
-              🌸 Hotel Value Analyzer
+              🌸 SakuYado
             </Link>
           </div>
         </header>
