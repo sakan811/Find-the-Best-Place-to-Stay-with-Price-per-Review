@@ -13,9 +13,9 @@ Higher scores = better value for money! 🌸
 
 ## Status
 
-[![Docker CI](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/sakan811/Find-the-Best-Place-to-Stay-with-Price-per-Review/actions/workflows/docker-ci.yml)
+[![Docker CI](https://github.com/sakan811/SakuYado/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/sakan811/SakuYado/actions/workflows/docker-ci.yml)
 
-[![Web App Test](https://github.com/sakan811/hotel-value-analyzer/actions/workflows/web-app-test.yml/badge.svg)](https://github.com/sakan811/hotel-value-analyzer/actions/workflows/web-app-test.yml)
+[![Web App Test](https://github.com/sakan811/SakuYado/actions/workflows/web-app-test.yml/badge.svg)](https://github.com/sakan811/SakuYado/actions/workflows/web-app-test.yml)
 
 ## How to Use
 
