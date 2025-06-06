@@ -1,26 +1,26 @@
 services:
-  hotel-value-analyzer:
+  saku-yado:
     profiles:
       - pull
-    image: sakanbeer88/hotel-value-analyzer:latest
-    container_name: hotel-value-analyzer
+    image: sakanbeer88/saku-yado:latest
+    container_name: saku-yado
     ports:
       - "3000:3000"
     volumes:
-      - hotel-value-analyzer-data:/app
+      - saku-yado:/app
 
-  hotel-value-analyzer-build:
+  saku-yado-build:
     profiles:
       - build
     build:
       context: .
       dockerfile: Dockerfile
-    image: sakanbeer88/hotel-value-analyzer:latest
-    container_name: hotel-value-analyzer
+    image: sakanbeer88/saku-yado:latest
+    container_name: saku-yado
     ports:
       - "3000:3000"
     volumes:
-      - hotel-value-analyzer-data:/app
+      - saku-yado-data:/app
 
 volumes:
-  hotel-value-analyzer-data:
+  saku-yado-data:

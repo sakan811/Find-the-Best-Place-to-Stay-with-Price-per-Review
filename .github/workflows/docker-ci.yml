@@ -34,14 +34,14 @@ jobs:
         with:
           push: ${{ github.event_name != 'pull_request' }}
           load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/hotel-value-analyzer:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/saku-yado:latest
 
       - name: Docker Scout
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
           command: cves,recommendations
-          image: ${{ vars.DOCKERHUB_USERNAME }}/hotel-value-analyzer:latest
+          image: ${{ vars.DOCKERHUB_USERNAME }}/saku-yado:latest
           ignore-unchanged: true
           only-severities: critical,high
           github-token: ${{ secrets.GITHUB_TOKEN }}
