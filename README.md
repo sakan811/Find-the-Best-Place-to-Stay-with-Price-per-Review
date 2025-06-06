@@ -1,6 +1,6 @@
-# Hotel Value Analyzer
+# SakuYado 🌸
 
-A web application that helps you find the best value accommodations by calculating a **Review/Price Score** for each hotel you input.
+A beautiful web application that helps you find the best value accommodations by calculating a **Review/Price Score** for each hotel you input.
 
 ## What it does
 
@@ -21,7 +21,7 @@ Higher scores = better value for money! 🌸
 
 ### 🌐 Vercel (Recommended)
 
-Simply visit: **<https://hotel-value-analyzer.vercel.app/>**
+Simply visit: **<https://saku-yado.vercel.app/>**
 
 ### 🐳 Docker
 
