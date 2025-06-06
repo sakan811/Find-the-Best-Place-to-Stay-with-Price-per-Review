@@ -2,9 +2,9 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Hotel Value Analyzer",
-    short_name: "HotelValue",
-    description: "Compare hotels based on review-per-price ratio",
+    name: "SakuYado - Hotel Value Analyzer",
+    short_name: "SakuYado",
+    description: "Compare hotels based on review-per-price ratio with SakuYado",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
