@@ -206,11 +206,11 @@ describe("AddHotelPage", () => {
   it("has a working link to compare page", async () => {
     render(<AddHotelPage />);
 
-    // Fix: Look for the text with emoji prefix using partial match
-    const comparePageLink = screen.getByText(/View Compare Page/);
-    expect(comparePageLink).toBeTruthy();
+    // Fix: Use getAllByText to handle multiple instances, consistent with other tests
+    const comparePageLinks = screen.getAllByText(/View Compare Page/);
+    expect(comparePageLinks.length).toBeGreaterThan(0);
 
-    const link = comparePageLink.closest("a");
+    const link = comparePageLinks[0].closest("a");
     expect(link).not.toBeNull();
     if (link) {
       expect(link.getAttribute("href")).toBe("/hotels/compare");

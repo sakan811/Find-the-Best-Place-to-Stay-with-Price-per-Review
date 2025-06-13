@@ -101,8 +101,12 @@ describe("Home Page", () => {
     render(<Home />);
 
     const titleElement = screen.getByText("Find the Best Value Hotels");
-    expect(titleElement.classList.contains("text-4xl")).toBe(true);
-    expect(titleElement.classList.contains("md:text-6xl")).toBe(true);
+    expect(titleElement.classList.contains("text-3xl")).toBe(true);
+    // Fix: Check for the actual responsive classes used in the component
+    // Based on the component: "text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+    expect(titleElement.classList.contains("sm:text-4xl")).toBe(true);
+    expect(titleElement.classList.contains("md:text-5xl")).toBe(true);
+    expect(titleElement.classList.contains("lg:text-6xl")).toBe(true);
 
     // Check button container has responsive classes
     const addButton = screen.getByText("🌸 Add a Hotel");
