@@ -31,7 +31,6 @@ interface Hotel {
 export default function CompareHotelsPage() {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState('auto'); // 'cards', 'table', 'auto'
 
   useEffect(() => {
     try {
@@ -202,7 +201,7 @@ export default function CompareHotelsPage() {
         ) : (
           <>
             {/* Mobile Cards View (default on mobile) */}
-            <div className={`${viewMode === 'table' ? 'lg:hidden' : 'block lg:hidden'}`}>
+            <div className="block lg:hidden">
               <div className="space-y-4">
                 {hotels.map((hotel, index) => (
                   <HotelCard key={index} hotel={hotel} index={index} />
@@ -211,7 +210,7 @@ export default function CompareHotelsPage() {
             </div>
 
             {/* Desktop Table View */}
-            <div className={`${viewMode === 'cards' ? 'hidden' : 'hidden lg:block'}`}>
+            <div className="hidden lg:block">
               <div className="bg-gradient-to-br from-white via-pink-50 to-rose-50 rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl border-2 border-pink-200 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="min-w-full">

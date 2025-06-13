@@ -36,6 +36,38 @@ export default function AddHotelPage() {
     general: "", // Add general error for storage issues
   });
 
+  const addHotelPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Add Hotel Information - SakuYado",
+    description:
+      "Add hotel details to compare value and find the best accommodation deals with SakuYado",
+    url: "https://saku-yado.vercel.app/hotels/add",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "SakuYado",
+      url: "https://saku-yado.vercel.app",
+    },
+    mainEntity: {
+      "@type": "WebApplication",
+      name: "SakuYado Hotel Information Form",
+      description:
+        "Input hotel name, price, rating and currency for value comparison with SakuYado",
+      applicationCategory: "TravelApplication",
+      featureList: [
+        "Hotel data input",
+        "Multi-currency support",
+        "Rating validation",
+        "Value score calculation",
+      ],
+    },
+    potentialAction: {
+      "@type": "UseAction",
+      target: "https://saku-yado.vercel.app/hotels/compare",
+      name: "Compare Hotels with SakuYado",
+    },
+  };
+
   // Load previously selected currency on component mount
   useEffect(() => {
     try {
@@ -152,6 +184,12 @@ export default function AddHotelPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-100 px-4 py-4 sm:py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(addHotelPageSchema),
+        }}
+      />
       {/* Container with responsive max-width */}
       <div className="max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
         
@@ -212,9 +250,10 @@ export default function AddHotelPage() {
                 💰 Price
               </label>
               
-              {/* Mobile: stacked, Tablet+: side-by-side */}
+              {/* Mobile: stacked, Tablet+: side-by-side with equal widths */}
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                <div className="flex-1">
+                {/* Price Input - equal width on desktop */}
+                <div className="flex-1 sm:flex-1">
                   <input
                     type="number"
                     id="price"
@@ -228,8 +267,8 @@ export default function AddHotelPage() {
                   />
                 </div>
                 
-                {/* Currency dropdown - responsive width */}
-                <div className="w-full sm:w-32 md:w-36 lg:w-40">
+                {/* Currency dropdown - equal width on desktop */}
+                <div className="w-full sm:flex-1">
                   <select
                     id="currency"
                     name="currency"
@@ -237,10 +276,58 @@ export default function AddHotelPage() {
                     onChange={handleChange}
                     className="w-full px-2 sm:px-3 py-2 sm:py-3 border-2 border-pink-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white/80 backdrop-blur transition-all duration-300 text-xs sm:text-sm"
                   >
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                    {/* Add more currencies as needed */}
+                    <option value="AED">AED - United Arab Emirates Dirham</option>
+                    <option value="ARS">ARS - Argentine Peso</option>
+                    <option value="AUD">AUD - Australian Dollar</option>
+                    <option value="AZN">AZN - Azerbaijani Manat</option>
+                    <option value="BHD">BHD - Bahraini Dinar</option>
+                    <option value="BGN">BGN - Bulgarian Lev</option>
+                    <option value="BRL">BRL - Brazilian Real</option>
+                    <option value="CAD">CAD - Canadian Dollar</option>
+                    <option value="CHF">CHF - Swiss Franc</option>
+                    <option value="CLP">CLP - Chilean Peso</option>
+                    <option value="CNY">CNY - Chinese Yuan</option>
+                    <option value="COP">COP - Colombian Peso</option>
+                    <option value="CZK">CZK - Czech Koruna</option>
+                    <option value="DKK">DKK - Danish Krone</option>
+                    <option value="EGP">EGP - Egyptian Pound</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="FJD">FJD - Fijian Dollar</option>
+                    <option value="GBP">GBP - Pound Sterling</option>
+                    <option value="GEL">GEL - Georgian Lari</option>
+                    <option value="HKD">HKD - Hong Kong Dollar</option>
+                    <option value="HUF">HUF - Hungarian Forint</option>
+                    <option value="IDR">IDR - Indonesian Rupiah</option>
+                    <option value="ILS">ILS - Israeli New Shekel</option>
+                    <option value="INR">INR - Indian Rupee</option>
+                    <option value="ISK">ISK - Icelandic Króna</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                    <option value="JOD">JOD - Jordanian Dinar</option>
+                    <option value="KRW">KRW - South Korean Won</option>
+                    <option value="KWD">KWD - Kuwaiti Dinar</option>
+                    <option value="KZT">KZT - Kazakhstani Tenge</option>
+                    <option value="MDL">MDL - Moldovan Leu</option>
+                    <option value="MOP">MOP - Macanese Pataca</option>
+                    <option value="MXN">MXN - Mexican Peso</option>
+                    <option value="MYR">MYR - Malaysian Ringgit</option>
+                    <option value="NAD">NAD - Namibian Dollar</option>
+                    <option value="NOK">NOK - Norwegian Krone</option>
+                    <option value="NZD">NZD - New Zealand Dollar</option>
+                    <option value="OMR">OMR - Omani Rial</option>
+                    <option value="PLN">PLN - Polish Złoty</option>
+                    <option value="QAR">QAR - Qatari Riyal</option>
+                    <option value="RON">RON - Romanian Leu</option>
+                    <option value="RUB">RUB - Russian Rouble</option>
+                    <option value="SAR">SAR - Saudi Arabian Riyal</option>
+                    <option value="SEK">SEK - Swedish Krona</option>
+                    <option value="SGD">SGD - Singapore Dollar</option>
+                    <option value="THB">THB - Thai Baht</option>
+                    <option value="TRY">TRY - Turkish Lira</option>
+                    <option value="TWD">TWD - New Taiwan Dollar</option>
+                    <option value="UAH">UAH - Ukrainian Hryvnia</option>
+                    <option value="USD">USD - United States Dollar</option>
+                    <option value="XOF">XOF - West African CFA Franc</option>
+                    <option value="ZAR">ZAR - South African Rand</option>
                   </select>
                 </div>
               </div>
