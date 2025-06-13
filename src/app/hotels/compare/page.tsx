@@ -1,17 +1,17 @@
 /*
  * SakuYado - A web application that helps you find the best value accommodations
  * Copyright (C) 2025  Sakan Nirattisaykul
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -61,30 +61,36 @@ export default function CompareHotelsPage() {
     <div
       className={`
         bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 p-4 mb-4 transition-all duration-300
-        ${index === 0 
-          ? "border-pink-400 bg-gradient-to-br from-pink-50 to-rose-50" 
-          : "border-pink-200 hover:border-pink-300"
+        ${
+          index === 0
+            ? "border-pink-400 bg-gradient-to-br from-pink-50 to-rose-50"
+            : "border-pink-200 hover:border-pink-300"
         }
       `}
     >
       {/* Card Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-2">
-          <div className={`
+          <div
+            className={`
             w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
             ${index === 0 ? "bg-pink-500 text-white" : "bg-gray-200 text-gray-700"}
-          `}>
+          `}
+          >
             {index + 1}
           </div>
           {index === 0 && <span className="text-lg">👑</span>}
         </div>
-        <div className={`
+        <div
+          className={`
           px-3 py-1 rounded-full text-xs font-bold
-          ${index === 0 
-            ? "bg-pink-200 text-pink-800" 
-            : "bg-gray-100 text-gray-700"
+          ${
+            index === 0
+              ? "bg-pink-200 text-pink-800"
+              : "bg-gray-100 text-gray-700"
           }
-        `}>
+        `}
+        >
           {hotel.valueScore}
         </div>
       </div>
@@ -169,10 +175,11 @@ export default function CompareHotelsPage() {
       )}
 
       <div className="max-w-7xl mx-auto">
-        
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8 md:mb-10">
-          <div className="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4">🏨</div>
+          <div className="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4">
+            🏨
+          </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-pink-800 mb-2 sm:mb-4">
             Hotel Value Comparison
           </h1>
@@ -184,7 +191,9 @@ export default function CompareHotelsPage() {
         {hotels.length === 0 ? (
           /* Empty State */
           <div className="text-center bg-gradient-to-br from-pink-50 via-white to-rose-50 p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl shadow-xl border-2 border-pink-200 max-w-2xl mx-auto">
-            <div className="text-6xl sm:text-7xl md:text-8xl mb-4 sm:mb-6">🌸</div>
+            <div className="text-6xl sm:text-7xl md:text-8xl mb-4 sm:mb-6">
+              🌸
+            </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-800 mb-3 sm:mb-4">
               No Hotels Added Yet
             </h2>
@@ -255,7 +264,9 @@ export default function CompareHotelsPage() {
                                 {index + 1}
                               </span>
                               {index === 0 && (
-                                <span className="text-yellow-500 text-lg lg:text-xl">👑</span>
+                                <span className="text-yellow-500 text-lg lg:text-xl">
+                                  👑
+                                </span>
                               )}
                             </div>
                           </td>
@@ -313,7 +324,8 @@ export default function CompareHotelsPage() {
                 </h3>
               </div>
               <p className="text-sm sm:text-base text-pink-700">
-                <strong className="text-pink-800">Value Score</strong> = Rating ÷ Price
+                <strong className="text-pink-800">Value Score</strong> = Rating
+                ÷ Price
                 <span className="block sm:inline sm:ml-2 text-xs sm:text-sm">
                   (higher score = better value for money)
                 </span>
@@ -339,26 +351,38 @@ export default function CompareHotelsPage() {
             {/* Statistics Section - Mobile Friendly */}
             <div className="mt-6 sm:mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <div className="bg-white/80 backdrop-blur p-3 sm:p-4 rounded-xl border border-pink-200 text-center">
-                <div className="text-lg sm:text-xl font-bold text-pink-800">{hotels.length}</div>
+                <div className="text-lg sm:text-xl font-bold text-pink-800">
+                  {hotels.length}
+                </div>
                 <div className="text-xs sm:text-sm text-pink-600">Hotels</div>
               </div>
               <div className="bg-white/80 backdrop-blur p-3 sm:p-4 rounded-xl border border-pink-200 text-center">
                 <div className="text-lg sm:text-xl font-bold text-rose-800">
                   {hotels[0]?.valueScore || 0}
                 </div>
-                <div className="text-xs sm:text-sm text-rose-600">Top Score</div>
+                <div className="text-xs sm:text-sm text-rose-600">
+                  Top Score
+                </div>
               </div>
               <div className="bg-white/80 backdrop-blur p-3 sm:p-4 rounded-xl border border-pink-200 text-center col-span-2 lg:col-span-1">
                 <div className="text-lg sm:text-xl font-bold text-pink-800">
-                  {hotels.length > 0 ? Math.min(...hotels.map(h => h.price)).toFixed(2) : 0}
+                  {hotels.length > 0
+                    ? Math.min(...hotels.map((h) => h.price)).toFixed(2)
+                    : 0}
                 </div>
-                <div className="text-xs sm:text-sm text-pink-600">Lowest Price</div>
+                <div className="text-xs sm:text-sm text-pink-600">
+                  Lowest Price
+                </div>
               </div>
               <div className="bg-white/80 backdrop-blur p-3 sm:p-4 rounded-xl border border-pink-200 text-center col-span-2 lg:col-span-1">
                 <div className="text-lg sm:text-xl font-bold text-rose-800">
-                  {hotels.length > 0 ? Math.max(...hotels.map(h => h.rating)).toFixed(1) : 0}
+                  {hotels.length > 0
+                    ? Math.max(...hotels.map((h) => h.rating)).toFixed(1)
+                    : 0}
                 </div>
-                <div className="text-xs sm:text-sm text-rose-600">Highest Rating</div>
+                <div className="text-xs sm:text-sm text-rose-600">
+                  Highest Rating
+                </div>
               </div>
             </div>
           </>
@@ -376,9 +400,15 @@ export default function CompareHotelsPage() {
 
         {/* Decorative Elements */}
         <div className="text-center mt-8 sm:mt-12 space-x-3 sm:space-x-6">
-          <span className="text-2xl sm:text-3xl opacity-60 animate-pulse">🌸</span>
-          <span className="text-3xl sm:text-4xl opacity-80 animate-pulse delay-1000">🌸</span>
-          <span className="text-2xl sm:text-3xl opacity-60 animate-pulse delay-2000">🌸</span>
+          <span className="text-2xl sm:text-3xl opacity-60 animate-pulse">
+            🌸
+          </span>
+          <span className="text-3xl sm:text-4xl opacity-80 animate-pulse delay-1000">
+            🌸
+          </span>
+          <span className="text-2xl sm:text-3xl opacity-60 animate-pulse delay-2000">
+            🌸
+          </span>
         </div>
       </div>
     </div>
