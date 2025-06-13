@@ -46,16 +46,19 @@ describe("Navigation Flow Integration", () => {
     const user = userEvent.setup();
 
     // ===== TEST HOME PAGE NAVIGATION =====
-    render(<Home />);
+    const { unmount: unmountHome } = render(<Home />);
+    
     const addHotelLink = screen.getByText("🌸 Add a Hotel");
     expect(addHotelLink.closest("a")).toHaveAttribute("href", "/hotels/add");
 
     const compareLink = screen.getByText("Compare Hotels");
     expect(compareLink.closest("a")).toHaveAttribute("href", "/hotels/compare");
-    cleanup();
+    
+    // Clean up home page before moving to next
+    unmountHome();
 
     // ===== TEST ADD HOTEL PAGE FUNCTIONALITY =====
-    render(<AddHotelPage />);
+    const { unmount: unmountAdd } = render(<AddHotelPage />);
 
     // Fill and submit form
     const nameInput = screen.getByLabelText(/Hotel Name/i);
@@ -70,7 +73,7 @@ describe("Navigation Flow Integration", () => {
     await user.type(ratingInput, "8");
 
     // Verify compare page link exists
-    const comparePageLink = screen.getByText("View Compare Page");
+    const comparePageLink = screen.getByText("👀 View Compare Page");
     expect(comparePageLink.closest("a")).toHaveAttribute(
       "href",
       "/hotels/compare",
@@ -82,7 +85,9 @@ describe("Navigation Flow Integration", () => {
 
     // Check that navigation was called
     expect(mockPush).toHaveBeenCalledWith("/hotels/compare");
-    cleanup();
+    
+    // Clean up add page before moving to next
+    unmountAdd();
 
     // ===== TEST COMPARE PAGE WITH DATA =====
     // Manually set up the localStorage data as if the form was submitted
@@ -91,13 +96,17 @@ describe("Navigation Flow Integration", () => {
     ];
     localStorage.setItem("hotels", JSON.stringify(testHotels));
 
-    render(<CompareHotelsPage />);
+    const { unmount: unmountCompare } = render(<CompareHotelsPage />);
 
-    // Verify hotel is displayed
-    expect(screen.getByText("Test Hotel")).toBeTruthy();
+    // Wait for component to load data - use getAllByText for duplicate elements
+    await vi.waitFor(() => {
+      const hotelElements = screen.getAllByText("Test Hotel");
+      expect(hotelElements.length).toBeGreaterThan(0);
+    });
+
     expect(screen.getByText("Hotel Value Comparison")).toBeTruthy();
 
-    // Verify add another hotel link
+    // Verify add another hotel link - use getAllByText since there are multiple
     const addAnotherLinks = screen.getAllByText("🌸 Add Another Hotel");
     expect(addAnotherLinks[0].closest("a")).toHaveAttribute(
       "href",
@@ -108,14 +117,20 @@ describe("Navigation Flow Integration", () => {
     const clearButton = screen.getByText("🗑️ Clear All Hotels");
     await user.click(clearButton);
 
-    expect(screen.getByText("No Hotels Added Yet")).toBeTruthy();
+    // Wait for state update after clearing
+    await vi.waitFor(() => {
+      expect(screen.getByText("No Hotels Added Yet")).toBeTruthy();
+    });
+    
     expect(screen.getByText("🌸 Add Your First Hotel")).toBeTruthy();
-    cleanup();
+    
+    // Clean up compare page
+    unmountCompare();
   });
 
   it("handles empty state navigation properly", () => {
     // Test compare page with no data
-    render(<CompareHotelsPage />);
+    const { unmount } = render(<CompareHotelsPage />);
 
     expect(screen.getByText("No Hotels Added Yet")).toBeTruthy();
     const addFirstHotelLink = screen.getByText("🌸 Add Your First Hotel");
@@ -123,13 +138,15 @@ describe("Navigation Flow Integration", () => {
       "href",
       "/hotels/add",
     );
+
+    unmount();
   });
 
   it("validates form data persistence across navigation", async () => {
     const user = userEvent.setup();
 
     // Add first hotel
-    render(<AddHotelPage />);
+    const { unmount: unmountAdd } = render(<AddHotelPage />);
 
     const nameInput = screen.getByLabelText(/Hotel Name/i);
     const priceInput = screen.getByLabelText(/Price/i);
@@ -154,13 +171,28 @@ describe("Navigation Flow Integration", () => {
       rating: 9,
       currency: "USD",
     });
-    cleanup();
+    
+    // Clean up add page before testing compare page
+    unmountAdd();
 
     // Now test that compare page shows the data
-    render(<CompareHotelsPage />);
-    expect(screen.getByText("First Hotel")).toBeTruthy();
-    expect(screen.getByText(/150\.00 USD/)).toBeTruthy();
-    expect(screen.getByText("9.0")).toBeTruthy();
+    const { unmount: unmountCompare } = render(<CompareHotelsPage />);
+    
+    // Wait for component to load and display data - handle duplicates
+    await vi.waitFor(() => {
+      const hotelElements = screen.getAllByText("First Hotel");
+      expect(hotelElements.length).toBeGreaterThan(0);
+    });
+    
+    // Check price display - use getAllByText and check the first occurrence
+    const priceElements = screen.getAllByText(/150\.00 USD/);
+    expect(priceElements.length).toBeGreaterThan(0);
+    
+    // Check rating display 
+    const ratingElements = screen.getAllByText("9.0");
+    expect(ratingElements.length).toBeGreaterThan(0);
+    
+    unmountCompare();
   });
 
   it("handles currency selection across navigation", async () => {
@@ -169,13 +201,13 @@ describe("Navigation Flow Integration", () => {
     // Set a currency preference
     localStorage.setItem("lastUsedCurrency", "EUR");
 
-    render(<AddHotelPage />);
+    const { unmount: unmountAdd } = render(<AddHotelPage />);
 
-    // Check if the saved currency is selected
-    const currencySelect = document.getElementById(
-      "currency",
-    ) as HTMLSelectElement;
-    expect(currencySelect.value).toBe("EUR");
+    // Wait for component to load saved currency
+    await vi.waitFor(() => {
+      const currencySelect = document.getElementById("currency") as HTMLSelectElement;
+      expect(currencySelect.value).toBe("EUR");
+    });
 
     // Add hotel with EUR currency
     const nameInput = screen.getByLabelText(/Hotel Name/i);
@@ -191,11 +223,20 @@ describe("Navigation Flow Integration", () => {
 
     const submitButton = screen.getByText(/Submit & Compare/i);
     await user.click(submitButton);
-    cleanup();
+    
+    // Clean up add page before testing compare page
+    unmountAdd();
 
     // Verify currency is preserved in compare page
-    render(<CompareHotelsPage />);
-    expect(screen.getByText(/120\.00 EUR/)).toBeTruthy();
+    const { unmount: unmountCompare } = render(<CompareHotelsPage />);
+    
+    // Wait for component to load and display data - handle duplicates
+    await vi.waitFor(() => {
+      const priceElements = screen.getAllByText(/120\.00 EUR/);
+      expect(priceElements.length).toBeGreaterThan(0);
+    });
+    
+    unmountCompare();
   });
 
   it("tests complete multi-hotel comparison workflow", async () => {
@@ -209,21 +250,34 @@ describe("Navigation Flow Integration", () => {
     ];
     localStorage.setItem("hotels", JSON.stringify(multipleHotels));
 
-    render(<CompareHotelsPage />);
+    const { unmount } = render(<CompareHotelsPage />);
 
-    // Check all hotels are displayed
-    expect(screen.getByText("Budget Hotel")).toBeTruthy();
-    expect(screen.getByText("Luxury Hotel")).toBeTruthy();
-    expect(screen.getByText("Mid Range")).toBeTruthy();
+    // Wait for component to load and process data - handle duplicates
+    await vi.waitFor(() => {
+      const budgetHotelElements = screen.getAllByText("Budget Hotel");
+      expect(budgetHotelElements.length).toBeGreaterThan(0);
+    });
+
+    // Check all hotels are displayed - use getAllByText for duplicates
+    const luxuryElements = screen.getAllByText("Luxury Hotel");
+    expect(luxuryElements.length).toBeGreaterThan(0);
+    
+    const midRangeElements = screen.getAllByText("Mid Range");
+    expect(midRangeElements.length).toBeGreaterThan(0);
 
     // Check sorting - Budget Hotel should be first (highest value score)
-    const rows = screen.getAllByRole("row");
-    const firstDataRow = rows[1]; // Skip header row
-    expect(firstDataRow.textContent).toContain("Budget Hotel");
-    expect(firstDataRow.textContent).toContain("👑"); // Crown for best value
+    // Look for the table structure specifically to avoid mobile/desktop confusion
+    const tables = screen.getAllByRole("table");
+    if (tables.length > 0) {
+      const rows = screen.getAllByRole("row");
+      const firstDataRow = rows[1]; // Skip header row
+      expect(firstDataRow.textContent).toContain("Budget Hotel");
+      expect(firstDataRow.textContent).toContain("👑"); // Crown for best value
+    }
 
-    // Test that value scores are displayed
-    expect(screen.getByText("0.0875")).toBeTruthy(); // Budget Hotel value score
+    // Test that value scores are displayed - use getAllByText for duplicates
+    const valueScoreElements = screen.getAllByText("0.0875");
+    expect(valueScoreElements.length).toBeGreaterThan(0);
 
     // Test navigation to add more hotels
     const addAnotherLinks = screen.getAllByText("🌸 Add Another Hotel");
@@ -231,5 +285,33 @@ describe("Navigation Flow Integration", () => {
       "href",
       "/hotels/add",
     );
+
+    unmount();
+  });
+
+  it("handles responsive design properly", async () => {
+    // Test that both mobile and desktop views are rendered
+    const testHotels = [
+      { name: "Responsive Hotel", price: 100, rating: 8, currency: "USD" },
+    ];
+    localStorage.setItem("hotels", JSON.stringify(testHotels));
+
+    const { unmount } = render(<CompareHotelsPage />);
+
+    // Wait for component to load
+    await vi.waitFor(() => {
+      const hotelElements = screen.getAllByText("Responsive Hotel");
+      // Should have both mobile card and desktop table views
+      expect(hotelElements.length).toBe(2);
+    });
+
+    // Verify both views exist
+    expect(screen.getByRole("table")).toBeTruthy(); // Desktop table
+    
+    // Check for mobile card structure
+    const mobileCards = document.querySelectorAll(".space-y-4 > div");
+    expect(mobileCards.length).toBeGreaterThan(0);
+
+    unmount();
   });
 });
