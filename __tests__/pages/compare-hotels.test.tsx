@@ -17,7 +17,7 @@ describe("CompareHotelsPage", () => {
     localStorage.clear();
     cleanup();
   });
-  
+
   it("shows empty state when no hotels are added", () => {
     render(<CompareHotelsPage />);
 
@@ -35,7 +35,7 @@ describe("CompareHotelsPage", () => {
     localStorage.setItem("hotels", JSON.stringify(testHotels));
 
     render(<CompareHotelsPage />);
-    
+
     // Check if all hotels are displayed (using getAllByText since they appear in both views)
     expect(screen.getAllByText("Budget Inn").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Luxury Resort").length).toBeGreaterThan(0);
@@ -61,7 +61,7 @@ describe("CompareHotelsPage", () => {
     const valueScores = [7 / 50, 9 / 200, 8 / 80];
     const bestValueIndex = valueScores.indexOf(Math.max(...valueScores));
     const bestHotelName = testHotels[bestValueIndex].name;
-    
+
     // The best hotel should appear in both mobile and desktop views
     const bestHotelElements = screen.getAllByText(bestHotelName);
     expect(bestHotelElements.length).toBeGreaterThan(0);
@@ -77,7 +77,7 @@ describe("CompareHotelsPage", () => {
     localStorage.setItem("hotels", JSON.stringify(testHotels));
 
     render(<CompareHotelsPage />);
-    
+
     // Verify hotels are displayed (using getAllByText for responsive views)
     expect(screen.getAllByText("Hotel A").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Hotel B").length).toBeGreaterThan(0);
@@ -104,7 +104,7 @@ describe("CompareHotelsPage", () => {
     localStorage.setItem("hotels", JSON.stringify(testHotels));
 
     render(<CompareHotelsPage />);
-    
+
     // Check if currencies are correctly displayed (will appear in both mobile and desktop)
     expect(screen.getAllByText(/100\.00 USD/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/90\.00 EUR/).length).toBeGreaterThan(0);
@@ -122,7 +122,9 @@ describe("CompareHotelsPage", () => {
 
     // Check if explanation is displayed (should be unique text)
     expect(screen.getByText(/Value Score Calculation/i)).toBeTruthy();
-    expect(screen.getByText(/higher score = better value for money/i)).toBeTruthy();
+    expect(
+      screen.getByText(/higher score = better value for money/i),
+    ).toBeTruthy();
   });
 
   it("has working links to add hotel page", () => {
@@ -139,7 +141,7 @@ describe("CompareHotelsPage", () => {
     expect(addHotelLinks.length).toBeGreaterThan(0);
 
     // Check that all links have correct href
-    addHotelLinks.forEach(link => {
+    addHotelLinks.forEach((link) => {
       const anchorElement = link.closest("a");
       expect(anchorElement).not.toBeNull();
       if (anchorElement) {
@@ -200,7 +202,7 @@ describe("CompareHotelsPage", () => {
   it("handles loading state properly", () => {
     // Test the loading state briefly (component loads data on mount)
     render(<CompareHotelsPage />);
-    
+
     // The component should either show loading or empty state immediately
     // Since localStorage is empty, it should show empty state
     expect(screen.getByText("No Hotels Added Yet")).toBeTruthy();
@@ -209,9 +211,9 @@ describe("CompareHotelsPage", () => {
   it("handles malformed localStorage data gracefully", () => {
     // Test with corrupted data
     localStorage.setItem("hotels", "invalid json");
-    
+
     render(<CompareHotelsPage />);
-    
+
     // Should show empty state instead of crashing
     expect(screen.getByText("No Hotels Added Yet")).toBeTruthy();
   });
@@ -227,15 +229,15 @@ describe("CompareHotelsPage", () => {
       { name: "Zero Price", price: 0, rating: 8, currency: "USD" }, // Edge case: zero price
     ];
     localStorage.setItem("hotels", JSON.stringify(mixedData));
-    
+
     render(<CompareHotelsPage />);
-    
+
     // The component should either show valid hotels or empty state
     // Check if any valid hotels are displayed
     const validHotelElements = screen.queryAllByText("Valid Hotel");
     const anotherValidElements = screen.queryAllByText("Another Valid");
     const emptyStateElement = screen.queryByText("No Hotels Added Yet");
-    
+
     if (emptyStateElement) {
       // Component shows empty state due to strict validation
       expect(emptyStateElement).toBeTruthy();
@@ -258,9 +260,9 @@ describe("CompareHotelsPage", () => {
       123,
     ];
     localStorage.setItem("hotels", JSON.stringify(invalidData));
-    
+
     render(<CompareHotelsPage />);
-    
+
     // Should show empty state
     expect(screen.getByText("No Hotels Added Yet")).toBeTruthy();
     expect(screen.getByText("🌸 Add Your First Hotel")).toBeTruthy();
@@ -274,9 +276,9 @@ describe("CompareHotelsPage", () => {
       { name: "Complete Hotel", price: 100, rating: 8, currency: "USD" },
     ];
     localStorage.setItem("hotels", JSON.stringify(incompleteData));
-    
+
     render(<CompareHotelsPage />);
-    
+
     // Should show the valid hotel
     expect(screen.getAllByText("Complete Hotel").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/100\.00 USD/).length).toBeGreaterThan(0);
@@ -289,13 +291,13 @@ describe("CompareHotelsPage", () => {
       { name: "High Price", price: 1000, rating: 10, currency: "USD" }, // Valid: high values
     ];
     localStorage.setItem("hotels", JSON.stringify(edgeCaseData));
-    
+
     render(<CompareHotelsPage />);
-    
+
     // Should show both hotels
     expect(screen.getAllByText("Zero Rating").length).toBeGreaterThan(0);
     expect(screen.getAllByText("High Price").length).toBeGreaterThan(0);
-    
+
     // Check value score calculations work with edge cases
     // Note: Component displays "0" for zero values and "0.01" for the calculated value
     expect(screen.getAllByText("0").length).toBeGreaterThan(0); // 0/100 = 0 (displayed as "0")

@@ -47,13 +47,13 @@ describe("Navigation Flow Integration", () => {
 
     // ===== TEST HOME PAGE NAVIGATION =====
     const { unmount: unmountHome } = render(<Home />);
-    
+
     const addHotelLink = screen.getByText("🌸 Add a Hotel");
     expect(addHotelLink.closest("a")).toHaveAttribute("href", "/hotels/add");
 
     const compareLink = screen.getByText("Compare Hotels");
     expect(compareLink.closest("a")).toHaveAttribute("href", "/hotels/compare");
-    
+
     // Clean up home page before moving to next
     unmountHome();
 
@@ -85,7 +85,7 @@ describe("Navigation Flow Integration", () => {
 
     // Check that navigation was called
     expect(mockPush).toHaveBeenCalledWith("/hotels/compare");
-    
+
     // Clean up add page before moving to next
     unmountAdd();
 
@@ -121,9 +121,9 @@ describe("Navigation Flow Integration", () => {
     await vi.waitFor(() => {
       expect(screen.getByText("No Hotels Added Yet")).toBeTruthy();
     });
-    
+
     expect(screen.getByText("🌸 Add Your First Hotel")).toBeTruthy();
-    
+
     // Clean up compare page
     unmountCompare();
   });
@@ -171,27 +171,27 @@ describe("Navigation Flow Integration", () => {
       rating: 9,
       currency: "USD",
     });
-    
+
     // Clean up add page before testing compare page
     unmountAdd();
 
     // Now test that compare page shows the data
     const { unmount: unmountCompare } = render(<CompareHotelsPage />);
-    
+
     // Wait for component to load and display data - handle duplicates
     await vi.waitFor(() => {
       const hotelElements = screen.getAllByText("First Hotel");
       expect(hotelElements.length).toBeGreaterThan(0);
     });
-    
+
     // Check price display - use getAllByText and check the first occurrence
     const priceElements = screen.getAllByText(/150\.00 USD/);
     expect(priceElements.length).toBeGreaterThan(0);
-    
-    // Check rating display 
+
+    // Check rating display
     const ratingElements = screen.getAllByText("9.0");
     expect(ratingElements.length).toBeGreaterThan(0);
-    
+
     unmountCompare();
   });
 
@@ -205,7 +205,9 @@ describe("Navigation Flow Integration", () => {
 
     // Wait for component to load saved currency
     await vi.waitFor(() => {
-      const currencySelect = document.getElementById("currency") as HTMLSelectElement;
+      const currencySelect = document.getElementById(
+        "currency",
+      ) as HTMLSelectElement;
       expect(currencySelect.value).toBe("EUR");
     });
 
@@ -223,19 +225,19 @@ describe("Navigation Flow Integration", () => {
 
     const submitButton = screen.getByText(/Submit & Compare/i);
     await user.click(submitButton);
-    
+
     // Clean up add page before testing compare page
     unmountAdd();
 
     // Verify currency is preserved in compare page
     const { unmount: unmountCompare } = render(<CompareHotelsPage />);
-    
+
     // Wait for component to load and display data - handle duplicates
     await vi.waitFor(() => {
       const priceElements = screen.getAllByText(/120\.00 EUR/);
       expect(priceElements.length).toBeGreaterThan(0);
     });
-    
+
     unmountCompare();
   });
 
@@ -261,7 +263,7 @@ describe("Navigation Flow Integration", () => {
     // Check all hotels are displayed - use getAllByText for duplicates
     const luxuryElements = screen.getAllByText("Luxury Hotel");
     expect(luxuryElements.length).toBeGreaterThan(0);
-    
+
     const midRangeElements = screen.getAllByText("Mid Range");
     expect(midRangeElements.length).toBeGreaterThan(0);
 
@@ -307,7 +309,7 @@ describe("Navigation Flow Integration", () => {
 
     // Verify both views exist
     expect(screen.getByRole("table")).toBeTruthy(); // Desktop table
-    
+
     // Check for mobile card structure
     const mobileCards = document.querySelectorAll(".space-y-4 > div");
     expect(mobileCards.length).toBeGreaterThan(0);

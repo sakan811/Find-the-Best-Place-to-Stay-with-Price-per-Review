@@ -1,17 +1,17 @@
 /*
  * SakuYado - A web application that helps you find the best value accommodations
  * Copyright (C) 2025  Sakan Nirattisaykul
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -150,7 +150,9 @@ export default function AddHotelPage() {
     if (validateForm()) {
       try {
         // Get existing hotels from local storage or initialize empty array
-        const existingHotels = JSON.parse(localStorage.getItem("hotels") || "[]");
+        const existingHotels = JSON.parse(
+          localStorage.getItem("hotels") || "[]",
+        );
 
         // Add new hotel to the array
         const newHotel = {
@@ -172,11 +174,12 @@ export default function AddHotelPage() {
         router.push("/hotels/compare");
       } catch (error) {
         console.error("Error saving hotel data:", error);
-        
+
         // Set user-friendly error message
         setErrors((prev) => ({
           ...prev,
-          general: "Unable to save hotel data. Please try again or check your browser storage settings.",
+          general:
+            "Unable to save hotel data. Please try again or check your browser storage settings.",
         }));
       }
     }
@@ -192,10 +195,11 @@ export default function AddHotelPage() {
       />
       {/* Container with responsive max-width */}
       <div className="max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
-        
         {/* Header Card - responsive spacing */}
         <div className="text-center mb-6 sm:mb-8">
-          <div className="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4">🌸</div>
+          <div className="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4">
+            🌸
+          </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-pink-800 mb-2">
             Add Hotel Information
           </h1>
@@ -207,7 +211,6 @@ export default function AddHotelPage() {
         {/* Form Card - enhanced responsive design */}
         <div className="bg-gradient-to-br from-white via-pink-50 to-rose-50 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border-2 border-pink-200">
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-            
             {/* General Error Message */}
             {errors.general && (
               <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4">
@@ -216,7 +219,7 @@ export default function AddHotelPage() {
                 </p>
               </div>
             )}
-            
+
             {/* Hotel Name - responsive input */}
             <div>
               <label
@@ -249,7 +252,7 @@ export default function AddHotelPage() {
               >
                 💰 Price
               </label>
-              
+
               {/* Mobile: stacked, Tablet+: side-by-side with equal widths */}
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 {/* Price Input - equal width on desktop */}
@@ -266,7 +269,7 @@ export default function AddHotelPage() {
                     step="0.01"
                   />
                 </div>
-                
+
                 {/* Currency dropdown - equal width on desktop */}
                 <div className="w-full sm:flex-1">
                   <select
@@ -276,7 +279,9 @@ export default function AddHotelPage() {
                     onChange={handleChange}
                     className="w-full px-2 sm:px-3 py-2 sm:py-3 border-2 border-pink-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white/80 backdrop-blur transition-all duration-300 text-xs sm:text-sm"
                   >
-                    <option value="AED">AED - United Arab Emirates Dirham</option>
+                    <option value="AED">
+                      AED - United Arab Emirates Dirham
+                    </option>
                     <option value="ARS">ARS - Argentine Peso</option>
                     <option value="AUD">AUD - Australian Dollar</option>
                     <option value="AZN">AZN - Azerbaijani Manat</option>
@@ -331,7 +336,7 @@ export default function AddHotelPage() {
                   </select>
                 </div>
               </div>
-              
+
               {errors.price && (
                 <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-500 font-medium">
                   {errors.price}
@@ -382,7 +387,7 @@ export default function AddHotelPage() {
               >
                 👀 View Compare Page
               </Link>
-              
+
               <Link
                 href="/"
                 className="block w-full text-center text-sm sm:text-base text-pink-600 hover:text-pink-800 font-medium transition-colors duration-300"
