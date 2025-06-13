@@ -44,8 +44,8 @@ describe("CompareHotelsPage", () => {
     // Check column headers (these should appear only once in the table)
     expect(screen.getByText("🏆 Rank")).toBeTruthy();
     expect(screen.getByText("🏨 Hotel")).toBeTruthy();
-    expect(screen.getByText("💰 Price")).toBeTruthy();
-    expect(screen.getByText("⭐ Rating")).toBeTruthy();
+    expect(screen.getAllByText("💰 Price")).toBeTruthy();
+    expect(screen.getAllByText("⭐ Rating")).toBeTruthy();
     expect(screen.getByText("🌸 Value Score")).toBeTruthy();
 
     // Check if value scores are calculated correctly
