@@ -30,3 +30,12 @@ clean:
 
 clean-build:
 	docker compose --profile build down --rmi local --remove-orphans --volumes
+
+license-add:
+	node scripts/manage-license-headers.js add
+
+license-remove:
+	node scripts/manage-license-headers.js remove
+
+license-check:
+	node scripts/manage-license-headers.js check
