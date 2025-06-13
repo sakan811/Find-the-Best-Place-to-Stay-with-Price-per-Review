@@ -33,39 +33,8 @@ export default function AddHotelPage() {
     name: "",
     price: "",
     rating: "",
+    general: "", // Add general error for storage issues
   });
-
-  const addHotelPageSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Add Hotel Information - SakuYado",
-    description:
-      "Add hotel details to compare value and find the best accommodation deals with SakuYado",
-    url: "https://saku-yado.vercel.app/hotels/add",
-    isPartOf: {
-      "@type": "WebSite",
-      name: "SakuYado",
-      url: "https://saku-yado.vercel.app",
-    },
-    mainEntity: {
-      "@type": "WebApplication",
-      name: "SakuYado Hotel Information Form",
-      description:
-        "Input hotel name, price, rating and currency for value comparison with SakuYado",
-      applicationCategory: "TravelApplication",
-      featureList: [
-        "Hotel data input",
-        "Multi-currency support",
-        "Rating validation",
-        "Value score calculation",
-      ],
-    },
-    potentialAction: {
-      "@type": "UseAction",
-      target: "https://saku-yado.vercel.app/hotels/compare",
-      name: "Compare Hotels with SakuYado",
-    },
-  };
 
   // Load previously selected currency on component mount
   useEffect(() => {
@@ -80,6 +49,7 @@ export default function AddHotelPage() {
       }
     } catch (error) {
       console.error("Error loading saved currency:", error);
+      // Don't show error to user for loading preferences
     }
   }, []);
 
@@ -98,6 +68,7 @@ export default function AddHotelPage() {
         localStorage.setItem("lastUsedCurrency", value);
       } catch (error) {
         console.error("Error saving currency preference:", error);
+        // Don't show error for preference saving
       }
     }
 
@@ -106,6 +77,7 @@ export default function AddHotelPage() {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
+        general: "", // Clear general error too
       }));
     }
   };
@@ -115,6 +87,7 @@ export default function AddHotelPage() {
       name: "",
       price: "",
       rating: "",
+      general: "",
     };
     let isValid = true;
 
@@ -143,39 +116,42 @@ export default function AddHotelPage() {
     e.preventDefault();
 
     if (validateForm()) {
-      // Get existing hotels from local storage or initialize empty array
-      const existingHotels = JSON.parse(localStorage.getItem("hotels") || "[]");
+      try {
+        // Get existing hotels from local storage or initialize empty array
+        const existingHotels = JSON.parse(localStorage.getItem("hotels") || "[]");
 
-      // Add new hotel to the array
-      const newHotel = {
-        name: formData.name,
-        price: parseFloat(formData.price),
-        rating: parseFloat(formData.rating),
-        currency: formData.currency,
-      };
+        // Add new hotel to the array
+        const newHotel = {
+          name: formData.name,
+          price: parseFloat(formData.price),
+          rating: parseFloat(formData.rating),
+          currency: formData.currency,
+        };
 
-      const updatedHotels = [...existingHotels, newHotel];
+        const updatedHotels = [...existingHotels, newHotel];
 
-      // Save to local storage
-      localStorage.setItem("hotels", JSON.stringify(updatedHotels));
+        // Save to local storage - this might throw an error
+        localStorage.setItem("hotels", JSON.stringify(updatedHotels));
 
-      // Save the currency for future use
-      localStorage.setItem("lastUsedCurrency", formData.currency);
+        // Save the currency for future use
+        localStorage.setItem("lastUsedCurrency", formData.currency);
 
-      // Navigate to results page
-      router.push("/hotels/compare");
+        // Navigate to results page
+        router.push("/hotels/compare");
+      } catch (error) {
+        console.error("Error saving hotel data:", error);
+        
+        // Set user-friendly error message
+        setErrors((prev) => ({
+          ...prev,
+          general: "Unable to save hotel data. Please try again or check your browser storage settings.",
+        }));
+      }
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-100 px-4 py-4 sm:py-8">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(addHotelPageSchema),
-        }}
-      />
-
       {/* Container with responsive max-width */}
       <div className="max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
         
@@ -193,6 +169,15 @@ export default function AddHotelPage() {
         {/* Form Card - enhanced responsive design */}
         <div className="bg-gradient-to-br from-white via-pink-50 to-rose-50 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border-2 border-pink-200">
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            
+            {/* General Error Message */}
+            {errors.general && (
+              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4">
+                <p className="text-sm sm:text-base text-red-700 font-medium">
+                  {errors.general}
+                </p>
+              </div>
+            )}
             
             {/* Hotel Name - responsive input */}
             <div>
@@ -252,58 +237,10 @@ export default function AddHotelPage() {
                     onChange={handleChange}
                     className="w-full px-2 sm:px-3 py-2 sm:py-3 border-2 border-pink-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white/80 backdrop-blur transition-all duration-300 text-xs sm:text-sm"
                   >
-                    <option value="AED">AED - United Arab Emirates Dirham</option>
-                    <option value="ARS">ARS - Argentine Peso</option>
-                    <option value="AUD">AUD - Australian Dollar</option>
-                    <option value="AZN">AZN - Azerbaijani Manat</option>
-                    <option value="BHD">BHD - Bahraini Dinar</option>
-                    <option value="BGN">BGN - Bulgarian Lev</option>
-                    <option value="BRL">BRL - Brazilian Real</option>
-                    <option value="CAD">CAD - Canadian Dollar</option>
-                    <option value="CHF">CHF - Swiss Franc</option>
-                    <option value="CLP">CLP - Chilean Peso</option>
-                    <option value="CNY">CNY - Chinese Yuan</option>
-                    <option value="COP">COP - Colombian Peso</option>
-                    <option value="CZK">CZK - Czech Koruna</option>
-                    <option value="DKK">DKK - Danish Krone</option>
-                    <option value="EGP">EGP - Egyptian Pound</option>
-                    <option value="EUR">EUR - Euro</option>
-                    <option value="FJD">FJD - Fijian Dollar</option>
-                    <option value="GBP">GBP - Pound Sterling</option>
-                    <option value="GEL">GEL - Georgian Lari</option>
-                    <option value="HKD">HKD - Hong Kong Dollar</option>
-                    <option value="HUF">HUF - Hungarian Forint</option>
-                    <option value="IDR">IDR - Indonesian Rupiah</option>
-                    <option value="ILS">ILS - Israeli New Shekel</option>
-                    <option value="INR">INR - Indian Rupee</option>
-                    <option value="ISK">ISK - Icelandic Króna</option>
-                    <option value="JPY">JPY - Japanese Yen</option>
-                    <option value="JOD">JOD - Jordanian Dinar</option>
-                    <option value="KRW">KRW - South Korean Won</option>
-                    <option value="KWD">KWD - Kuwaiti Dinar</option>
-                    <option value="KZT">KZT - Kazakhstani Tenge</option>
-                    <option value="MDL">MDL - Moldovan Leu</option>
-                    <option value="MOP">MOP - Macanese Pataca</option>
-                    <option value="MXN">MXN - Mexican Peso</option>
-                    <option value="MYR">MYR - Malaysian Ringgit</option>
-                    <option value="NAD">NAD - Namibian Dollar</option>
-                    <option value="NOK">NOK - Norwegian Krone</option>
-                    <option value="NZD">NZD - New Zealand Dollar</option>
-                    <option value="OMR">OMR - Omani Rial</option>
-                    <option value="PLN">PLN - Polish Złoty</option>
-                    <option value="QAR">QAR - Qatari Riyal</option>
-                    <option value="RON">RON - Romanian Leu</option>
-                    <option value="RUB">RUB - Russian Rouble</option>
-                    <option value="SAR">SAR - Saudi Arabian Riyal</option>
-                    <option value="SEK">SEK - Swedish Krona</option>
-                    <option value="SGD">SGD - Singapore Dollar</option>
-                    <option value="THB">THB - Thai Baht</option>
-                    <option value="TRY">TRY - Turkish Lira</option>
-                    <option value="TWD">TWD - New Taiwan Dollar</option>
-                    <option value="UAH">UAH - Ukrainian Hryvnia</option>
-                    <option value="USD">USD - United States Dollar</option>
-                    <option value="XOF">XOF - West African CFA Franc</option>
-                    <option value="ZAR">ZAR - South African Rand</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    {/* Add more currencies as needed */}
                   </select>
                 </div>
               </div>
