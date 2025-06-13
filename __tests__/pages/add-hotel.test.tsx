@@ -70,6 +70,7 @@ describe("AddHotelPage", () => {
     const savedHotels = JSON.parse(localStorage.getItem("hotels") || "[]");
     expect(savedHotels).toHaveLength(0);
   });
+
   it("successfully submits the form with valid data and proper data types", async () => {
     const user = userEvent.setup();
     render(<AddHotelPage />);
@@ -127,6 +128,7 @@ describe("AddHotelPage", () => {
     // Check that navigation was called
     expect(mockPush).toHaveBeenCalledWith("/hotels/compare");
   });
+
   it("adds hotel to existing hotels in localStorage with currency", async () => {
     const user = userEvent.setup();
 
@@ -204,10 +206,11 @@ describe("AddHotelPage", () => {
   it("has a working link to compare page", async () => {
     render(<AddHotelPage />);
 
-    const comparePageLink = screen.getAllByText("View Compare Page");
-    expect(comparePageLink[0]).toBeTruthy();
+    // Fix: Look for the text with emoji prefix using partial match
+    const comparePageLink = screen.getByText(/View Compare Page/);
+    expect(comparePageLink).toBeTruthy();
 
-    const link = comparePageLink[0].closest("a");
+    const link = comparePageLink.closest("a");
     expect(link).not.toBeNull();
     if (link) {
       expect(link.getAttribute("href")).toBe("/hotels/compare");

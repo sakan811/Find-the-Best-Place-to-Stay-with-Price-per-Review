@@ -356,7 +356,8 @@ describe("Form Validation Edge Cases", () => {
     const user = userEvent.setup();
     render(<AddHotelPage />);
 
-    const currencySelect = screen.getByLabelText(/Currency/i) || document.getElementById("currency") as HTMLSelectElement;
+    // Fix: Use document.getElementById directly since the select doesn't have a label
+    const currencySelect = document.getElementById("currency") as HTMLSelectElement;
     
     // Change currency to EUR
     await user.selectOptions(currencySelect, "EUR");
