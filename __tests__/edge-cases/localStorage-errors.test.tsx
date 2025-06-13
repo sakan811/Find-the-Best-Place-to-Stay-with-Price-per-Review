@@ -147,8 +147,7 @@ describe("localStorage Error Handling", () => {
 
     render(<AddHotelPage />);
     
-    // Change currency (this should fail silently)
-    const currencySelect = screen.getByRole("combobox", { name: /currency/i }) || document.getElementById("currency");
+    const currencySelect = document.getElementById("currency");
     await user.selectOptions(currencySelect as HTMLElement, "EUR");
     
     // Should not show any error for currency preference failure
