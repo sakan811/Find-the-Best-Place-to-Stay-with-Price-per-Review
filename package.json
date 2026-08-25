@@ -44,7 +44,7 @@
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@vitejs/plugin-react": "^6.1.0",
     "@vitest/coverage-v8": "4.1.4",
     "cypress": "^15.20.1",
     "eslint": "^9.39.4",
